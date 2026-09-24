@@ -30,6 +30,19 @@ animation:snowFall 12s linear infinite;opacity:.9}
 .entryNote{text-align:center;color:#7892aa;font-size:12px;margin-top:15px}
 .entryMsg{text-align:center;min-height:20px;color:#5eead4;font-size:13px;margin-top:9px}
 </style></head><body><div id="entryGate"><div class="snow"></div><div class="snow s2"></div><div class="entryGlow"></div><div class="entryBox"><div class="entryLogo">💚</div><h1 class="entryTitle">Health Hub</h1><p class="entrySub">เรียน • เล่นเกม • พัก • นอน อย่างสมดุล</p><div class="entryTabs"><button id="tabReg" class="active" onclick="entryTab('reg')">สมัครสมาชิก</button><button id="tabLogin" onclick="entryTab('login')">เข้าสู่ระบบ</button></div><div id="entryReg" class="entryForm active"><input id="regUser" class="input entryInput" placeholder="ชื่อผู้ใช้"><input id="regPass" class="input entryInput" type="password" placeholder="รหัสผ่าน"><input id="regPass2" class="input entryInput" type="password" placeholder="ยืนยันรหัสผ่าน"><button class="entryBtn" onclick="registerGate()">🚀 สร้างบัญชี</button></div><div id="entryLogin" class="entryForm"><input id="loginUser" class="input entryInput" placeholder="ชื่อผู้ใช้"><input id="loginPass" class="input entryInput" type="password" placeholder="รหัสผ่าน"><button class="entryBtn" onclick="loginGate()">🔐 เข้าสู่ Health Hub</button></div><p id="entryMsg" class="entryMsg"></p><p class="entryNote">บัญชีนี้ใช้บนเครื่องนี้ก่อน • เชื่อม Firebase ได้ภายหลัง</p></div></div><div id="app"></div>
+<script>
+/* Health Hub emergency local fallback: keeps the welcome/login buttons working even if Firebase modules are unavailable. */
+(function(){
+ const KEY='health_hub_accounts_v1';
+ function accounts(){try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return {}}}
+ function msg(t,bad){const e=document.getElementById('entryMsg');if(e){e.textContent=t;e.style.color=bad?'#fb7185':'#5eead4'}}
+ function tab(w){document.getElementById('entryReg').classList.toggle('active',w==='reg');document.getElementById('entryLogin').classList.toggle('active',w==='login');document.getElementById('tabReg').classList.toggle('active',w==='reg');document.getElementById('tabLogin').classList.toggle('active',w==='login');msg('')}
+ function enter(name){localStorage.setItem('health_hub_current_user',name);const g=document.getElementById('entryGate');if(g)g.classList.add('hide');const a=document.getElementById('app');if(a&&!a.innerHTML.trim())a.innerHTML='<main class="wrap"><section class="card"><h1>สวัสดี '+String(name).replace(/[&<>]/g,'')+' 👋</h1><p class="muted">เข้าสู่ Health Hub แล้ว</p><div class="grid"><div class="card"><h3>🎮 เกม</h3><p>ระบบเกมและ RPG</p></div><div class="card"><h3>📚 Quiz</h3><p>ด่านคำถามและ Boss</p></div><div class="card"><h3>😴 สุขภาพ</h3><p>ตารางเรียนและการนอน</p></div></div></section></main>'}
+ function reg(){const u=document.getElementById('regUser').value.trim(),p=document.getElementById('regPass').value,p2=document.getElementById('regPass2').value;if(u.length<3)return msg('ชื่อผู้ใช้ต้องมีอย่างน้อย 3 ตัวอักษร',1);if(p.length<4)return msg('รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร',1);if(p!==p2)return msg('รหัสผ่านไม่ตรงกัน',1);const a=accounts();if(a[u])return msg('ชื่อผู้ใช้นี้มีแล้ว ลองเข้าสู่ระบบ',1);a[u]={password:p};localStorage.setItem(KEY,JSON.stringify(a));enter(u)}
+ function log(){const u=document.getElementById('loginUser').value.trim(),p=document.getElementById('loginPass').value,a=accounts();if(u==='admin'&&p==='HHadmin2026!')return enter(u);if(!a[u]||a[u].password!==p)return msg('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง',1);enter(u)}
+ window.entryTab=tab;window.registerGate=reg;window.loginGate=log;
+})();
+</script>
 <script type="module">
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js';
 import {getAuth,onAuthStateChanged,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,updateProfile} from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js';
