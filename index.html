@@ -29,7 +29,7 @@ animation:snowFall 12s linear infinite;opacity:.9}
 .entryBtn{width:100%;padding:13px;margin-top:5px;font-weight:800;background:linear-gradient(135deg,#06b6d4,#2563eb);box-shadow:0 8px 25px #0ea5e955}
 .entryNote{text-align:center;color:#7892aa;font-size:12px;margin-top:15px}
 .entryMsg{text-align:center;min-height:20px;color:#5eead4;font-size:13px;margin-top:9px}
-</style></head><body><div id="app"></div>
+</style></head><body><div id="entryGate"><div class="snow"></div><div class="snow s2"></div><div class="entryGlow"></div><div class="entryBox"><div class="entryLogo">💚</div><h1 class="entryTitle">Health Hub</h1><p class="entrySub">เรียน • เล่นเกม • พัก • นอน อย่างสมดุล</p><div class="entryTabs"><button id="tabReg" class="active" onclick="entryTab('reg')">สมัครสมาชิก</button><button id="tabLogin" onclick="entryTab('login')">เข้าสู่ระบบ</button></div><div id="entryReg" class="entryForm active"><input id="regUser" class="input entryInput" placeholder="ชื่อผู้ใช้"><input id="regPass" class="input entryInput" type="password" placeholder="รหัสผ่าน"><input id="regPass2" class="input entryInput" type="password" placeholder="ยืนยันรหัสผ่าน"><button class="entryBtn" onclick="registerGate()">🚀 สร้างบัญชี</button></div><div id="entryLogin" class="entryForm"><input id="loginUser" class="input entryInput" placeholder="ชื่อผู้ใช้"><input id="loginPass" class="input entryInput" type="password" placeholder="รหัสผ่าน"><button class="entryBtn" onclick="loginGate()">🔐 เข้าสู่ Health Hub</button></div><p id="entryMsg" class="entryMsg"></p><p class="entryNote">บัญชีนี้ใช้บนเครื่องนี้ก่อน • เชื่อม Firebase ได้ภายหลัง</p></div></div><div id="app"></div>
 <script type="module">
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js';
 import {getAuth,onAuthStateChanged,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,updateProfile} from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js';
@@ -299,9 +299,11 @@ function entryTab(which){
  document.getElementById('tabLogin').classList.toggle('active',which==='login');
  entryMsg('');
 }
-function enterHub(user){
- localStorage.setItem('health_hub_current_user',user);
+function enterHub(name){
+ localStorage.setItem('health_hub_current_user',name);
  document.getElementById('entryGate').classList.add('hide');
+ user={displayName:name,email:name+'@local.healthhub',uid:'local-'+name};
+ if(configured && auth){ home(); } else { A.innerHTML=shell('<section class="card"><h1>สวัสดี '+esc(name)+' 👋</h1><p class="muted">เข้าสู่ Health Hub แล้ว พร้อมใช้งานโหมดในเครื่อง</p><div class="grid"><div class="card"><h3>🎮 เกม</h3><p>ระบบเกมและ RPG อยู่ในเมนูด้านบน</p></div><div class="card"><h3>📚 เรียน</h3><p>Quiz และด่าน Boss</p></div><div class="card"><h3>😴 สุขภาพ</h3><p>ตารางและการนอน</p></div></div></section>'); }
 }
 function registerGate(){
  const u=document.getElementById('regUser').value.trim();
