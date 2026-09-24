@@ -43,7 +43,11 @@ animation:snowFall 12s linear infinite;opacity:.9}
  window.entryTab=tab;window.registerGate=reg;window.loginGate=log;
 })();
 </script>
-<script type="module">
+<script>
+/* Firebase is loaded dynamically so a network/Firebase error cannot disable the whole page. */
+(async()=>{
+try{
+
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js';
 import {getAuth,onAuthStateChanged,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,updateProfile} from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js';
 import {getDatabase,ref,set,push,onValue,update,remove} from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js';
@@ -374,5 +378,11 @@ window.loadLeaderboard=loadLeaderboard;
 (function(){
  const u=localStorage.getItem('health_hub_current_user');
  if(u) enterHub(u);
+})();
+}catch(err){
+ console.error('Health Hub Firebase module error:',err);
+ const e=document.getElementById('entryMsg');
+ if(e && !document.getElementById('entryGate')?.classList.contains('hide')) e.textContent='โหมดออฟไลน์: Firebase ยังไม่พร้อม แต่สามารถเข้าสู่ระบบในเครื่องได้';
+}
 })();
 </script></body></html>
