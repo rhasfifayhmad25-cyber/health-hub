@@ -326,8 +326,40 @@ function loginGate(){
  if(!a[u] || a[u].password!==p)return entryMsg('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง',true);
  enterHub(u);
 }
+/* Expose functions used by inline HTML onclick handlers (module scripts are not global). */
+window.entryTab=entryTab;
+window.registerGate=registerGate;
+window.loginGate=loginGate;
+window.enterHub=enterHub;
+window.home=home;
+window.login=login;
+window.setup=setup;
+window.schedule=schedule;
+window.multiplayer=multiplayer;
+window.notify=notify;
+window.sleep=sleep;
+window.quiz=quiz;
+window.character=character;
+window.shop=shop;
+window.shop135=shop135;
+window.skills135=skills135;
+window.boss135=boss135;
+window.leaderboard=leaderboard;
+window.logout=logout;
+window.addSchedule=addSchedule;
+window.createRoom=createRoom;
+window.joinRoom=joinRoom;
+window.startRoom=startRoom;
+window.addScore=addScore;
+window.startQuiz=startQuiz;
+window.saveSetup=saveSetup;
+window.clearSetup=clearSetup;
+window.addXP=addXP;
+window.addCoins=addCoins;
+window.publishScore=publishScore;
+window.loadLeaderboard=loadLeaderboard;
 (function(){
  const u=localStorage.getItem('health_hub_current_user');
- if(u)document.getElementById('entryGate').classList.add('hide');
+ if(u) enterHub(u);
 })();
 </script></body></html>
