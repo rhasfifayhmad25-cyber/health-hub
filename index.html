@@ -37,6 +37,24 @@ animation:snowFall 12s linear infinite;opacity:.9}
  function accounts(){try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return {}}}
  function msg(t,bad){const e=document.getElementById('entryMsg');if(e){e.textContent=t;e.style.color=bad?'#fb7185':'#5eead4'}}
  function tab(w){document.getElementById('entryReg').classList.toggle('active',w==='reg');document.getElementById('entryLogin').classList.toggle('active',w==='login');document.getElementById('tabReg').classList.toggle('active',w==='reg');document.getElementById('tabLogin').classList.toggle('active',w==='login');msg('')}
+ function localEnterHub(name){
+   localStorage.setItem('health_hub_current_user',name);
+   const gate=document.getElementById('entryGate'); if(gate) gate.classList.add('hide');
+   const app=document.getElementById('app');
+   const isAdmin=name==='admin';
+   app.innerHTML=`<header><div class="brand">💚 Health Hub V13</div><div class="nav"><button onclick="localHome()">🏠 หน้าหลัก</button><button onclick="localQuiz()">🎯 Quiz</button><button onclick="localRpg()">🧙 RPG</button><button onclick="localSchedule()">🗓️ ตาราง</button><button onclick="localSleep()">😴 การนอน</button><button onclick="localGames()">🎮 เกม</button>${isAdmin?'<button onclick="localAdmin()">🛡️ หลังบ้าน</button>':''}<button onclick="localLogout()">🚪 ออก</button></div></header><main class="wrap"><section id="localView" class="card"></section></main><footer>Health Hub • Offline mode</footer>`;
+   window.localHome();
+ }
+ function localHome(){document.getElementById('localView').innerHTML=`<h1>สวัสดี ${document.getElementById('localView')?localStorage.getItem('health_hub_current_user'):''} 👋</h1><p class="muted">เข้าสู่ Health Hub แล้ว ระบบโหมดในเครื่องพร้อมใช้งาน</p><div class="grid"><div class="card"><h3>🎮 เกม</h3><p>รวมเกมและระบบ RPG</p><button onclick="localGames()">เข้าเกม</button></div><div class="card"><h3>📚 Quiz</h3><p>ด่านคำถามและ Boss</p><button onclick="localQuiz()">เริ่ม Quiz</button></div><div class="card"><h3>😴 สุขภาพ</h3><p>ตารางเรียนและการนอน</p><button onclick="localSleep()">จัดการ</button></div></div>`}
+ function localGames(){document.getElementById('localView').innerHTML='<h2>🎮 Game Center</h2><div class="grid"><div class="card"><h3>⚡ Tap Challenge</h3><p>กดปุ่มให้ได้คะแนนสูงสุดใน 10 วินาที</p><button onclick="alert(&quot;เริ่มเกม! กดปุ่มซ้ำเพื่อทำคะแนน&quot;)">เล่น</button></div><div class="card"><h3>🏃 Runner</h3><p>โหมดเกมพื้นฐาน</p><button onclick="alert(&quot;เกมพร้อมใช้งาน&quot;)">เล่น</button></div></div>'}
+ function localQuiz(){document.getElementById('localView').innerHTML='<h2>🎯 Quiz</h2><p>ตอบคำถามเพื่อรับ XP และ Coins</p><button onclick="alert(&quot;ตอบถูก! +10 XP&quot;)">คำถามตัวอย่าง: ควรนอนกี่ชั่วโมง? → 8 ชั่วโมง</button>'}
+ function localRpg(){document.getElementById('localView').innerHTML='<h2>🧙 Character RPG</h2><p>❤️ HP 100 &nbsp; 🔷 MP 50 &nbsp; ⚔️ ATK 10 &nbsp; 🛡️ DEF 10</p><button onclick="alert(&quot;โจมตีบอส!&quot;)">⚔️ โจมตี</button> <button onclick="alert(&quot;ป้องกันสำเร็จ!&quot;)">🛡️ ป้องกัน</button>'}
+ function localSchedule(){document.getElementById('localView').innerHTML='<h2>🗓️ ตารางเวลา</h2><input id="lsn" class="input" placeholder="กิจกรรม"><input id="lst" class="input" type="time"><button onclick="alert(&quot;บันทึกตารางแล้ว&quot;)">💾 บันทึก</button>'}
+ function localSleep(){document.getElementById('localView').innerHTML='<h2>😴 การนอน</h2><p>ตั้งเวลาเข้านอน</p><input class="input" type="time" value="22:00"><button onclick="alert(&quot;ตั้งเวลาเข้านอนแล้ว&quot;)">🔔 บันทึก</button>'}
+ function localAdmin(){document.getElementById('localView').innerHTML='<h2>🛡️ Admin Dashboard</h2><p>บัญชีแอดมิน: <b>admin</b></p><div class="grid"><div class="card"><h3>👥 ผู้ใช้</h3><p>'+Object.keys(accounts()).length+' บัญชีในเครื่อง</p></div><div class="card"><h3>📊 ระบบ</h3><p>Local mode พร้อมใช้งาน</p></div></div>'}
+ function localLogout(){localStorage.removeItem('health_hub_current_user');location.reload()}
+ window.localHome=localHome;window.localGames=localGames;window.localQuiz=localQuiz;window.localRpg=localRpg;window.localSchedule=localSchedule;window.localSleep=localSleep;window.localAdmin=localAdmin;window.localLogout=localLogout;
+ window.enterHub=localEnterHub;
  function enter(name){enterHub(name)}
  function reg(){const u=document.getElementById('regUser').value.trim(),p=document.getElementById('regPass').value,p2=document.getElementById('regPass2').value;if(u.length<3)return msg('ชื่อผู้ใช้ต้องมีอย่างน้อย 3 ตัวอักษร',1);if(p.length<4)return msg('รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร',1);if(p!==p2)return msg('รหัสผ่านไม่ตรงกัน',1);const a=accounts();if(a[u])return msg('ชื่อผู้ใช้นี้มีแล้ว ลองเข้าสู่ระบบ',1);a[u]={password:p};localStorage.setItem(KEY,JSON.stringify(a));enter(u)}
  function log(){const u=document.getElementById('loginUser').value.trim(),p=document.getElementById('loginPass').value,a=accounts();if(u==='admin'&&p==='HHadmin2026!')return enter(u);if(!a[u]||a[u].password!==p)return msg('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง',1);enter(u)}
@@ -48,11 +66,11 @@ animation:snowFall 12s linear infinite;opacity:.9}
 (async()=>{
 try{
 
-import {initializeApp} from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js';
-import {getAuth,onAuthStateChanged,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,updateProfile} from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js';
-import {getDatabase,ref,set,push,onValue,update,remove} from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js';
-import {getFirestore,doc,setDoc,collection,query,where,onSnapshot,addDoc,deleteDoc} from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js';
-import {getMessaging,getToken,onMessage} from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-messaging.js';
+const {initializeApp}=await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js');
+const {getAuth,onAuthStateChanged,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,updateProfile}=await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js');
+const {getDatabase,ref,set,push,onValue,update,remove}=await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js');
+const {getFirestore,doc,setDoc,collection,query,where,onSnapshot,addDoc,deleteDoc}=await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js');
+const {getMessaging,getToken,onMessage}=await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-messaging.js');
 const savedCfg=JSON.parse(localStorage.getItem('hh_firebase_config')||'{}'); const cfg=Object.keys(savedCfg).length?savedCfg:(window.FIREBASE_CONFIG||{}); const configured=!!cfg.apiKey&&!String(cfg.apiKey).startsWith('YOUR_'); const BACKEND_URL=localStorage.getItem('hh_backend')||'https://YOUR_BACKEND_DOMAIN'; const VAPID_KEY=localStorage.getItem('hh_vapid')||'YOUR_FIREBASE_WEB_PUSH_VAPID_KEY';
 let app,auth,rt,fs,messaging,user=null,roomsUnsub=null; let reminders=[]; let aiHist=[];
 const A=document.getElementById('app');
@@ -320,7 +338,7 @@ function enterHub(name){
  localStorage.setItem('health_hub_current_user',name);
  document.getElementById('entryGate').classList.add('hide');
  user={displayName:name,email:name+'@local.healthhub',uid:'local-'+name};
- if(configured && auth){ home(); } else { A.innerHTML=shell('<section class="card"><h1>สวัสดี '+esc(name)+' 👋</h1><p class="muted">เข้าสู่ Health Hub แล้ว พร้อมใช้งานโหมดในเครื่อง</p><div class="grid"><div class="card"><h3>🎮 เกม</h3><p>ระบบเกมและ RPG อยู่ในเมนูด้านบน</p></div><div class="card"><h3>📚 เรียน</h3><p>Quiz และด่าน Boss</p></div><div class="card"><h3>😴 สุขภาพ</h3><p>ตารางและการนอน</p></div></div></section>'); }
+ if(configured && auth){ home(); } else { localEnterHub(name); }
 }
 function registerGate(){
  const u=document.getElementById('regUser').value.trim();
