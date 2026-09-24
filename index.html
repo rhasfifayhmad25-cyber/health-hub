@@ -5,82 +5,986 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Health Hub V14</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#07111f;color:#eef7ff;font-family:system-ui,-apple-system,sans-serif}
-.wrap{max-width:1100px;margin:auto;padding:18px}.hero{display:flex;justify-content:space-between;align-items:center;gap:12px}
-h1{margin:0}.muted{color:#9bb0c7}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-.card{background:#0d1b2e;border:1px solid #21415e;border-radius:16px;padding:16px}.page{display:none}.page.active{display:block}
-nav{display:flex;gap:8px;overflow:auto;padding:12px 0;position:sticky;top:0;background:#07111fee}button{border:0;border-radius:10px;padding:10px 13px;background:#173451;color:white;font-weight:700;cursor:pointer}
-.primary{background:#267fd3}input,select{width:100%;padding:10px;margin:5px 0 10px;border-radius:9px;border:1px solid #31536e;background:#081522;color:white}
-.stat{font-size:30px;font-weight:800}.bar{height:9px;background:#183047;border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:#49d7ff;width:0}
-.timer{text-align:center;font-size:45px;font-weight:900;padding:18px}.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1}.list{display:grid;gap:8px}.item{padding:10px;background:#0a1929;border:1px solid #1b3b55;border-radius:10px}
-.answers{display:grid;gap:8px}.answers button{text-align:left}.boss{text-align:center;font-size:55px}.toast{display:none;position:fixed;right:15px;bottom:15px;background:#12314b;padding:13px;border-radius:12px}
-@media(max-width:750px){.grid,.grid2{grid-template-columns:1fr}}
+*{box-sizing:border-box}
+body{margin:0;background:#07111f;color:#eef7ff;font-family:system-ui,-apple-system,sans-serif}
+.wrap{max-width:1100px;margin:auto;padding:18px}
+.hero{display:flex;justify-content:space-between;align-items:center;gap:12px}
+h1{margin:0}.muted{color:#9bb0c7}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.card{background:#0d1b2e;border:1px solid #21415e;border-radius:16px;padding:16px}
+.page{display:none}.page.active{display:block}
+nav{display:flex;gap:8px;overflow:auto;padding:12px 0;position:sticky;top:0;background:#07111fee}
+button{border:0;border-radius:10px;padding:10px 13px;background:#173451;color:white;font-weight:700;cursor:pointer}
+.primary{background:#267fd3}
+input,select{width:100%;padding:10px;margin:5px 0 10px;border-radius:9px;border:1px solid #31536e;background:#081522;color:white}
+.stat{font-size:30px;font-weight:800}
+.bar{height:9px;background:#183047;border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:#49d7ff;width:0}
+.timer{text-align:center;font-size:45px;font-weight:900;padding:18px}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.row>*{flex:1}
+.list{display:grid;gap:8px}
+.item{padding:10px;background:#0a1929;border:1px solid #1b3b55;border-radius:10px}
+.answers{display:grid;gap:8px}
+.answers button{text-align:left}
+.boss{text-align:center;font-size:55px}
+.toast{display:none;position:fixed;right:15px;bottom:15px;background:#12314b;padding:13px;border-radius:12px}
+@media(max-width:750px){
+.grid,.grid2{grid-template-columns:1fr}
+}
 </style>
 </head>
+
 <body>
 <div class="wrap">
-<header class="hero"><div><h1>⚡ Health Hub V14</h1><p class="muted">เรียน • เล่นเกม • นอน • Quiz • RPG</p></div><b>Lv.<span id="level">1</span> 🪙 <span id="coins">0</span></b></header>
+
+<header class="hero">
+<div>
+<h1>⚡ Health Hub V14</h1>
+<p class="muted">เรียน • เล่นเกม • นอน • Quiz • RPG</p>
+</div>
+<b>Lv.<span id="level">1</span> 🪙 <span id="coins">0</span></b>
+</header>
+
 <nav>
-<button onclick="show('home')">🏠 หน้าแรก</button><button onclick="show('game')">🎮 เกม</button><button onclick="show('sleep')">😴 นอน</button><button onclick="show('study')">📚 ตาราง</button><button onclick="show('quiz')">🧠 Quiz/RPG</button><button onclick="show('room')">⚔️ ห้องแข่ง</button><button onclick="show('settings')">⚙️ ตั้งค่า</button>
+<button onclick="show('home')">🏠 หน้าแรก</button>
+<button onclick="show('game')">🎮 เกม</button>
+<button onclick="show('sleep')">😴 นอน</button>
+<button onclick="show('study')">📚 ตาราง</button>
+<button onclick="show('quiz')">🧠 Quiz/RPG</button>
+<button onclick="show('room')">⚔️ ห้องแข่ง</button>
+<button onclick="show('settings')">⚙️ ตั้งค่า</button>
 </nav>
 
 <section id="home" class="page active">
 <div class="grid">
-<div class="card"><h3>ระดับ</h3><div class="stat">Lv.<span id="lv">1</span></div><div class="bar"><i id="xpbar"></i></div><p class="muted"><span id="xp">0</span> XP</p></div>
-<div class="card"><h3>เกมวันนี้</h3><div class="stat"><span id="today">0</span> นาที</div><p class="muted">เป้าหมาย <span id="goalText">120</span> นาที</p></div>
-<div class="card"><h3>การนอน</h3><div class="stat" id="sleepStat">ยังไม่มี</div></div>
+
+<div class="card">
+<h3>ระดับ</h3>
+<div class="stat">Lv.<span id="lv">1</span></div>
+<div class="bar"><i id="xpbar"></i></div>
+<p class="muted"><span id="xp">0</span> XP</p>
 </div>
-<div class="grid2" style="margin-top:14px"><div class="card"><h2>📌 วันนี้</h2><div id="todayList" class="list"></div></div><div class="card"><h2>💡 สุขภาพ</h2><p>แบ่งเวลาเรียน เล่นเกม และพักให้สมดุล</p><button class="primary" onclick="show('settings')">ตั้งแจ้งเตือน</button></div></div>
+
+<div class="card">
+<h3>เกมวันนี้</h3>
+<div class="stat"><span id="today">0</span> นาที</div>
+<p class="muted">เป้าหมาย <span id="goalText">120</span> นาที</p>
+</div>
+
+<div class="card">
+<h3>การนอน</h3>
+<div class="stat" id="sleepStat">ยังไม่มี</div>
+</div>
+
+</div>
+
+<div class="grid2" style="margin-top:14px">
+
+<div class="card">
+<h2>📌 วันนี้</h2>
+<div id="todayList" class="list"></div>
+</div>
+
+<div class="card">
+<h2>💡 สุขภาพ</h2>
+<p>แบ่งเวลาเรียน เล่นเกม และพักให้สมดุล</p>
+<button class="primary" onclick="show('settings')">
+ตั้งแจ้งเตือน
+</button>
+</div>
+
+</div>
 </section>
 
-<section id="game" class="page"><div class="grid2">
-<div class="card"><h2>🎮 Game Timer</h2><input id="gameName" placeholder="ชื่อเกม"><div class="timer" id="timer">00:00:00</div><div class="row"><button class="primary" onclick="start()">▶ เริ่ม</button><button onclick="stop()">⏹ หยุด</button><button onclick="resetTimer()">รีเซ็ต</button></div><label>เป้าหมาย/วัน</label><input id="goal" type="number" value="120" onchange="saveGoal()"></div>
-<div class="card"><h2>📜 ประวัติ</h2><div id="history" class="list"></div></div>
-</div></section>
+<section id="game" class="page">
+<div class="grid2">
 
-<section id="sleep" class="page"><div class="grid2">
-<div class="card"><h2>😴 บันทึกการนอน</h2><label>เข้านอน</label><input id="bed" type="time"><label>ตื่น</label><input id="wake" type="time"><button class="primary" onclick="saveSleep()">บันทึก</button></div>
-<div class="card"><h2>⏰ เตือนนอน</h2><input id="bedGoal" type="time" value="22:30"><button onclick="setBed()">เปิดแจ้งเตือน</button><p class="muted">ต้องอนุญาต Notification ในเบราว์เซอร์</p></div>
-</div></section>
+<div class="card">
+<h2>🎮 Game Timer</h2>
 
-<section id="study" class="page"><div class="grid2">
-<div class="card"><h2>📚 เพิ่มตาราง</h2><input id="subject" placeholder="วิชา/กิจกรรม"><div class="row"><input id="st" type="time"><input id="en" type="time"></div><select id="type"><option>เรียน</option><option>พัก</option><option>เล่นเกม</option><option>นอน</option></select><button class="primary" onclick="addSchedule()">เพิ่ม</button></div>
-<div class="card"><h2>🗓 ตาราง</h2><div id="schedule" class="list"></div></div>
-</div></section>
+<input id="gameName" placeholder="ชื่อเกม">
 
-<section id="quiz" class="page"><div class="grid2">
-<div class="card"><h2>🧠 Quiz Boss</h2><div class="boss">👹</div><p>Boss HP: <b id="hp">100</b>/100</p><div class="bar"><i id="hpbar" style="width:100%"></i></div><h3 id="q">กดเริ่ม</h3><div id="answers" class="answers"></div><button class="primary" onclick="nextQ()">⚔️ เริ่ม/ข้อถัดไป</button></div>
-<div class="card"><h2>⚔️ Character RPG</h2><p>❤️ HP 100　💧 MP 50</p><p>⚔️ ATK <b id="atk">10</b>　🛡 DEF <b id="def">5</b></p><button onclick="buy(50,'ดาบ +5 ATK')">🗡️ ดาบ 50 🪙</button><button onclick="buy(70,'เกราะ +20 HP')">🛡️ เกราะ 70 🪙</button></div>
-</div></section>
+<div class="timer" id="timer">00:00:00</div>
 
-<section id="room" class="page"><div class="grid2">
-<div class="card"><h2>⚔️ ห้องแข่ง</h2><input id="roomName" placeholder="ชื่อห้อง"><div class="row"><button class="primary" onclick="createRoom()">สร้างห้อง</button><button onclick="joinRoom()">เข้าห้อง</button></div><p id="roomStatus" class="muted">ยังไม่มีห้อง</p></div>
-<div class="card"><h2>🏆 ผู้เล่น</h2><div class="item">คุณ — <span id="score">0</span> คะแนน</div></div>
-</div></section>
+<div class="row">
+<button class="primary" onclick="start()">▶ เริ่ม</button>
+<button onclick="stop()">⏹ หยุด</button>
+<button onclick="resetTimer()">รีเซ็ต</button>
+</div>
 
-<section id="settings" class="page"><div class="grid2">
-<div class="card"><h2>⚙️ แจ้งเตือน</h2><input id="custom" placeholder="ข้อความแจ้งเตือน"><label>เวลา</label><input id="notifyTime" type="time"><button class="primary" onclick="saveNotify()">บันทึก</button><button onclick="permission()">อนุญาตแจ้งเตือน</button></div>
-<div class="card"><h2>👤 บัญชี</h2><input id="user" placeholder="ชื่อผู้ใช้"><input id="pass" type="password" placeholder="รหัสผ่าน"><button class="primary" onclick="login()">เข้าสู่ระบบ</button><p id="loginStatus" class="muted">ข้อมูลโหมดนี้เก็บในเครื่อง</p><button onclick="clearData()">ล้างข้อมูล</button></div>
-</div></section>
-</div><div id="toast" class="toast"></div>
+<label>เป้าหมาย/วัน</label>
+<input id="goal" type="number" value="120" onchange="saveGoal()">
+
+</div>
+
+<div class="card">
+<h2>📜 ประวัติ</h2>
+<div id="history" class="list"></div>
+</div>
+
+</div>
+</section>
+
+<section id="sleep" class="page">
+<div class="grid2">
+
+<div class="card">
+<h2>😴 บันทึกการนอน</h2>
+
+<label>เข้านอน</label>
+<input id="bed" type="time">
+
+<label>ตื่น</label>
+<input id="wake" type="time">
+
+<button class="primary" onclick="saveSleep()">
+บันทึก
+</button>
+</div>
+
+<div class="card">
+<h2>⏰ เตือนนอน</h2>
+
+<input id="bedGoal" type="time" value="22:30">
+
+<button onclick="setBed()">
+เปิดแจ้งเตือน
+</button>
+
+<p class="muted">
+ต้องอนุญาต Notification ในเบราว์เซอร์
+</p>
+
+</div>
+
+</div>
+</section>
+
+<section id="study" class="page">
+<div class="grid2">
+
+<div class="card">
+<h2>📚 เพิ่มตาราง</h2>
+
+<input id="subject" placeholder="วิชา/กิจกรรม">
+
+<div class="row">
+<input id="st" type="time">
+<input id="en" type="time">
+</div>
+
+<select id="type">
+<option>เรียน</option>
+<option>พัก</option>
+<option>เล่นเกม</option>
+<option>นอน</option>
+</select>
+
+<button class="primary" onclick="addSchedule()">
+เพิ่ม
+</button>
+
+</div>
+
+<div class="card">
+<h2>🗓 ตาราง</h2>
+<div id="schedule" class="list"></div>
+</div>
+
+</div>
+</section>
+
+<section id="quiz" class="page">
+<div class="grid2">
+
+<div class="card">
+<h2>🧠 Quiz Boss</h2>
+
+<div class="boss">👹</div>
+
+<p>
+Boss HP:
+<b id="hp">100</b>/100
+</p>
+
+<div class="bar">
+<i id="hpbar" style="width:100%"></i>
+</div>
+
+<h3 id="q">กดเริ่ม</h3>
+
+<div id="answers" class="answers"></div>
+
+<button class="primary" onclick="nextQ()">
+⚔️ เริ่ม/ข้อถัดไป
+</button>
+
+</div>
+
+<div class="card">
+<h2>⚔️ Character RPG</h2>
+
+<p>❤️ HP 100　💧 MP 50</p>
+
+<p>
+⚔️ ATK <b id="atk">10</b>
+　🛡 DEF <b id="def">5</b>
+</p>
+
+<button onclick="buy(50,'ดาบ +5 ATK')">
+🗡️ ดาบ 50 🪙
+</button>
+
+<button onclick="buy(70,'เกราะ +20 HP')">
+🛡️ เกราะ 70 🪙
+</button>
+
+</div>
+
+</div>
+</section>
+
+<section id="room" class="page">
+<div class="grid2">
+
+<div class="card">
+<h2>⚔️ ห้องแข่ง</h2>
+
+<input id="roomName" placeholder="ชื่อห้อง">
+
+<div class="row">
+<button class="primary" onclick="createRoom()">
+สร้างห้อง
+</button>
+
+<button onclick="joinRoom()">
+เข้าห้อง
+</button>
+</div>
+
+<p id="roomStatus" class="muted">
+ยังไม่มีห้อง
+</p>
+
+</div>
+
+<div class="card">
+<h2>🏆 ผู้เล่น</h2>
+
+<div class="item">
+คุณ — <span id="score">0</span> คะแนน
+</div>
+
+</div>
+
+</div>
+</section>
+
+<section id="settings" class="page">
+<div class="grid2">
+
+<div class="card">
+<h2>⚙️ แจ้งเตือน</h2>
+
+<input id="custom" placeholder="ข้อความแจ้งเตือน">
+
+<label>เวลา</label>
+<input id="notifyTime" type="time">
+
+<button class="primary" onclick="saveNotify()">
+บันทึก
+</button>
+
+<button onclick="permission()">
+อนุญาตแจ้งเตือน
+</button>
+
+</div>
+
+<div class="card">
+<h2>👤 บัญชี</h2>
+
+<input id="user" placeholder="ชื่อผู้ใช้">
+
+<input id="pass" type="password" placeholder="รหัสผ่าน">
+
+<button class="primary" onclick="login()">
+เข้าสู่ระบบ
+</button>
+
+<p id="loginStatus" class="muted">
+ข้อมูลโหมดนี้เก็บในเครื่อง
+</p>
+
+<button onclick="clearData()">
+ล้างข้อมูล
+</button>
+
+</div>
+
+</div>
+</section>
+
+</div>
+
+<div id="toast" class="toast"></div>
 
 <script>
-const K='healthhub_v14';let S=JSON.parse(localStorage.getItem(K)||'null')||{level:1,xp:0,coins:0,goal:120,games:[],sleep:[],schedule:[],room:''};
-const $=id=>document.getElementById(id), save=()=>{localStorage.setItem(K,JSON.stringify(S));render()};
-function show(id){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$(id).classList.add('active');render()}
-function toast(t){$('toast').textContent=t;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',1800)}
-function addXP(n){S.xp+=n;S.coins+=Math.floor(n/10);while(S.xp>=S.level*100){S.xp-=S.level*100;S.level++;S.coins+=25;toast('🎉 Level Up!')}save()}
-function render(){let d=new Date().toDateString(),m=S.games.filter(x=>x.d===d).reduce((a,x)=>a+x.m,0);$('level').textContent=S.level;$('lv').textContent=S.level;$('coins').textContent=S.coins;$('xp').textContent=S.xp;$('xpbar').style.width=Math.min(100,S.xp/(S.level*100)*100)+'%';$('today').textContent=m;$('goalText').textContent=S.goal;$('goal').value=S.goal;$('history').innerHTML=S.games.slice(-12).reverse().map(x=>'<div class="item">🎮 '+esc(x.n)+' — '+x.m+' นาที</div>').join('')||'<span class="muted">ยังไม่มี</span>';$('sleepStat').textContent=S.sleep.length?S.sleep.at(-1).b+' → '+S.sleep.at(-1).w:'ยังไม่มี';$('schedule').innerHTML=S.schedule.map(x=>'<div class="item">🕐 '+x.s+'–'+x.e+' · '+esc(x.t)+' · '+esc(x.sub)+'</div>').join('')||'<span class="muted">ยังไม่มี</span>';$('todayList').innerHTML='<div class="item">🎮 '+m+'/'+S.goal+' นาที</div><div class="item">📚 '+S.schedule.length+' รายการ</div><div class="item">🪙 '+S.coins+' Coins</div>';$('atk').textContent=10+Math.floor(S.level/2);$('def').textContent=5+Math.floor(S.level/3)}
-function esc(x){return String(x||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-let startAt=0,int=null;function start(){if(int)return;startAt=Date.now();int=setInterval(()=>{$('timer').textContent=fmt((Date.now()-startAt)/1000)},500);toast('เริ่มจับเวลาแล้ว')}function stop(){if(!int)return;clearInterval(int);int=null;let m=Math.max(1,Math.round((Date.now()-startAt)/60000));S.games.push({n:$('gameName').value||'เกม',m,d:new Date().toDateString()});addXP(Math.min(20,m));toast('บันทึก '+m+' นาที')}function resetTimer(){if(int)clearInterval(int);int=null;$('timer').textContent='00:00:00'}function fmt(s){s=Math.floor(s);return [Math.floor(s/3600),Math.floor(s%3600/60),s%60].map(x=>String(x).padStart(2,'0')).join(':')}function saveGoal(){S.goal=Math.max(1,+$('goal').value||120);save()}
-function saveSleep(){S.sleep.push({b:$('bed').value||'22:30',w:$('wake').value||'06:30'});addXP(10);toast('บันทึกแล้ว')}function setBed(){permission();toast('ตั้งเวลา '+$('bedGoal').value)}
-function addSchedule(){if(!$('subject').value)return toast('ใส่ชื่อก่อน');S.schedule.push({sub:$('subject').value,s:$('st').value||'--',e:$('en').value||'--',t:$('type').value});save();toast('เพิ่มแล้ว')}
-const Q=[['การนอนที่เพียงพอช่วยอะไร',['การเรียนรู้และการฟื้นตัว','ไม่ต้องพัก','ไม่ต้องกิน','ไม่ต้องออกกำลัง'],0],['พักสายตาช่วยอะไร',['ลดความล้าของตา','เพิ่มคะแนนเกม','ทำให้นอนน้อย','ไม่มีประโยชน์'],0],['ก่อนนอนควรทำอะไร',['ลดแสงและกิจกรรมกระตุ้น','เล่นเกมต่อ','ดื่มคาเฟอีน','เปิดจอสว่าง'],0],['เล่นเกินเป้าหมายควรทำอย่างไร',['หยุดพักและปรับตาราง','เล่นต่อทั้งคืน','ข้ามการนอน','ไม่ดูเวลา'],0]];let qi=-1,bhp=100;
-function nextQ(){qi=(qi+1)%Q.length;let q=Q[qi];$('q').textContent=q[0];$('answers').innerHTML=q[1].map((a,i)=>'<button onclick="ans('+i+','+q[2]+')">'+String.fromCharCode(65+i)+'. '+a+'</button>').join('')}
-function ans(i,c){if(i===c){bhp-=25;addXP(20);toast('⚔️ โจมตีสำเร็จ +20 XP')}else toast('💥 Boss โจมตี');if(bhp<=0){bhp=100;S.coins+=100;toast('🏆 ชนะ Boss +100 Coins');save()}$('hp').textContent=bhp;$('hpbar').style.width=bhp+'%'}
-function buy(cost,name){if(S.coins<cost)return toast('Coins ไม่พอ');S.coins-=cost;save();toast('ซื้อ '+name)}
-function createRoom(){S.room=$('roomName').value||'Health Room';save();$('roomStatus').textContent='สร้างห้อง '+S.room+' แล้ว';toast('สร้างห้องแล้ว')}function joinRoom(){if(!S.room)return toast('ยังไม่มีห้อง');$('roomStatus').textContent='เข้าห้อง '+S.room+' แล้ว'}
-function permission(){if('Notification'in window)Notification.requestPermission().then(x=>toast(x==='granted'?'เปิดแจ้งเตือนแล้ว':'ยังไม่ได้อนุญาต'));else toast('ไม่รองรับ')}function saveNotify(){S.notify={t:$('notifyTime').value,m:$('custom').value};save();toast('บันทึกแล้ว')}function login(){let u=$('user').value||'ผู้ใช้';$('loginStatus').textContent='เข้าสู่ระบบเป็น '+u;toast('เข้าสู่ระบบแล้ว')}function clearData(){if(confirm('ล้างข้อมูลทั้งหมด?')){localStorage.removeItem(K);location.reload()}}
+
+const K='healthhub_v14';
+
+const DEFAULT={
+level:1,
+xp:0,
+coins:0,
+goal:120,
+games:[],
+sleep:[],
+schedule:[],
+room:'',
+notify:{t:'',m:''}
+};
+
+let S=DEFAULT;
+
+try{
+
+const raw=localStorage.getItem(K);
+
+if(raw){
+
+const old=JSON.parse(raw);
+
+S=Object.assign({},DEFAULT,old);
+
+S.games=Array.isArray(old.games)?old.games:[];
+
+S.sleep=Array.isArray(old.sleep)?old.sleep:[];
+
+S.schedule=Array.isArray(old.schedule)?old.schedule:[];
+
+S.level=Number.isFinite(Number(old.level))
+?Number(old.level):1;
+
+S.xp=Number.isFinite(Number(old.xp))
+?Number(old.xp):0;
+
+S.coins=Number.isFinite(Number(old.coins))
+?Number(old.coins):0;
+
+S.goal=
+Number.isFinite(Number(old.goal)) &&
+Number(old.goal)>0
+?Number(old.goal)
+:120;
+
+}
+
+}catch(e){
+
+S=Object.assign({},DEFAULT);
+
+try{
+localStorage.removeItem(K);
+}catch(_){}
+
+}
+
+function $(id){
+return document.getElementById(id);
+}
+
+function save(){
+
+try{
+
+localStorage.setItem(K,JSON.stringify(S));
+
+}catch(e){
+
+console.log('save error',e);
+
+}
+
 render();
+
+}
+
+function show(id){
+
+document.querySelectorAll('.page')
+.forEach(x=>x.classList.remove('active'));
+
+const page=$(id);
+
+if(page){
+page.classList.add('active');
+}
+
+render();
+
+}
+
+function toast(t){
+
+const el=$('toast');
+
+if(!el)return;
+
+el.textContent=t;
+el.style.display='block';
+
+setTimeout(()=>{
+el.style.display='none';
+},1800);
+
+}
+
+function addXP(n){
+
+S.xp+=n;
+
+S.coins+=Math.floor(n/10);
+
+while(S.xp>=S.level*100){
+
+S.xp-=S.level*100;
+
+S.level++;
+
+S.coins+=25;
+
+toast('🎉 Level Up!');
+
+}
+
+save();
+
+}
+
+function render(){
+
+try{
+
+const d=new Date().toDateString();
+
+const m=S.games
+.filter(x=>x && x.d===d)
+.reduce((a,x)=>a+(Number(x.m)||0),0);
+
+$('level').textContent=S.level;
+$('lv').textContent=S.level;
+$('coins').textContent=S.coins;
+$('xp').textContent=S.xp;
+
+$('xpbar').style.width=
+Math.min(
+100,
+S.xp/(S.level*100)*100
+)+'%';
+
+$('today').textContent=m;
+$('goalText').textContent=S.goal;
+
+$('goal').value=S.goal;
+
+$('history').innerHTML=
+S.games
+.slice(-12)
+.reverse()
+.map(x=>
+'<div class="item">🎮 '+
+esc(x.n)+
+' — '+
+x.m+
+' นาที</div>'
+)
+.join('')
+||
+'<span class="muted">ยังไม่มี</span>';
+
+const lastSleep=
+S.sleep.length
+?S.sleep[S.sleep.length-1]
+:null;
+
+$('sleepStat').textContent=
+lastSleep
+?
+(lastSleep.b||'--')+
+' → '+
+(lastSleep.w||'--')
+:
+'ยังไม่มี';
+
+$('schedule').innerHTML=
+S.schedule
+.map(x=>
+'<div class="item">🕐 '+
+x.s+
+'–'+
+x.e+
+' · '+
+esc(x.t)+
+' · '+
+esc(x.sub)+
+'</div>'
+)
+.join('')
+||
+'<span class="muted">ยังไม่มี</span>';
+
+$('todayList').innerHTML=
+'<div class="item">🎮 '+
+m+
+'/'+
+S.goal+
+' นาที</div>'+
+'<div class="item">📚 '+
+S.schedule.length+
+' รายการ</div>'+
+'<div class="item">🪙 '+
+S.coins+
+' Coins</div>';
+
+$('atk').textContent=
+10+Math.floor(S.level/2);
+
+$('def').textContent=
+5+Math.floor(S.level/3);
+
+}catch(e){
+
+console.log('render error',e);
+
+}
+
+}
+
+function esc(x){
+
+return String(x||'')
+.replace(
+/[&<>"']/g,
+c=>({
+'&':'&amp;',
+'<':'&lt;',
+'>':'&gt;',
+'"':'&quot;',
+"'":'&#39;'
+}[c])
+);
+
+}
+
+let startAt=0;
+let int=null;
+
+function start(){
+
+if(int)return;
+
+startAt=Date.now();
+
+int=setInterval(()=>{
+
+$('timer').textContent=
+fmt(
+(Date.now()-startAt)/1000
+);
+
+},500);
+
+toast('เริ่มจับเวลาแล้ว');
+
+}
+
+function stop(){
+
+if(!int)return;
+
+clearInterval(int);
+int=null;
+
+let m=Math.max(
+1,
+Math.round(
+(Date.now()-startAt)/60000
+)
+);
+
+S.games.push({
+
+n:$('gameName').value||'เกม',
+
+m:m,
+
+d:new Date().toDateString()
+
+});
+
+addXP(Math.min(20,m));
+
+toast('บันทึก '+m+' นาที');
+
+}
+
+function resetTimer(){
+
+if(int)clearInterval(int);
+
+int=null;
+
+$('timer').textContent='00:00:00';
+
+}
+
+function fmt(s){
+
+s=Math.floor(s);
+
+return [
+Math.floor(s/3600),
+Math.floor(s%3600/60),
+s%60
+]
+.map(x=>String(x).padStart(2,'0'))
+.join(':');
+
+}
+
+function saveGoal(){
+
+S.goal=Math.max(
+1,
++$('goal').value||120
+);
+
+save();
+
+}
+
+function saveSleep(){
+
+S.sleep.push({
+
+b:$('bed').value||'22:30',
+
+w:$('wake').value||'06:30'
+
+});
+
+addXP(10);
+
+toast('บันทึกแล้ว');
+
+}
+
+function setBed(){
+
+permission();
+
+toast(
+'ตั้งเวลา '+
+$('bedGoal').value
+);
+
+}
+
+function addSchedule(){
+
+if(!$('subject').value){
+
+return toast('ใส่ชื่อก่อน');
+
+}
+
+S.schedule.push({
+
+sub:$('subject').value,
+
+s:$('st').value||'--',
+
+e:$('en').value||'--',
+
+t:$('type').value
+
+});
+
+save();
+
+toast('เพิ่มแล้ว');
+
+}
+
+const Q=[
+
+[
+'การนอนที่เพียงพอช่วยอะไร',
+[
+'การเรียนรู้และการฟื้นตัว',
+'ไม่ต้องพัก',
+'ไม่ต้องกิน',
+'ไม่ต้องออกกำลัง'
+],
+0
+],
+
+[
+'พักสายตาช่วยอะไร',
+[
+'ลดความล้าของตา',
+'เพิ่มคะแนนเกม',
+'ทำให้นอนน้อย',
+'ไม่มีประโยชน์'
+],
+0
+],
+
+[
+'ก่อนนอนควรทำอะไร',
+[
+'ลดแสงและกิจกรรมกระตุ้น',
+'เล่นเกมต่อ',
+'ดื่มคาเฟอีน',
+'เปิดจอสว่าง'
+],
+0
+],
+
+[
+'เล่นเกินเป้าหมายควรทำอย่างไร',
+[
+'หยุดพักและปรับตาราง',
+'เล่นต่อทั้งคืน',
+'ข้ามการนอน',
+'ไม่ดูเวลา'
+],
+0
+]
+
+];
+
+let qi=-1;
+let bhp=100;
+
+function nextQ(){
+
+qi=(qi+1)%Q.length;
+
+let q=Q[qi];
+
+$('q').textContent=q[0];
+
+$('answers').innerHTML=
+q[1]
+.map(
+(a,i)=>
+'<button onclick="ans('+
+i+
+','+
+q[2]+
+')">'+
+String.fromCharCode(65+i)+
+'. '+
+a+
+'</button>'
+)
+.join('');
+
+}
+
+function ans(i,c){
+
+if(i===c){
+
+bhp-=25;
+
+addXP(20);
+
+toast('⚔️ โจมตีสำเร็จ +20 XP');
+
+}else{
+
+toast('💥 Boss โจมตี');
+
+}
+
+if(bhp<=0){
+
+bhp=100;
+
+S.coins+=100;
+
+toast('🏆 ชนะ Boss +100 Coins');
+
+save();
+
+}
+
+$('hp').textContent=bhp;
+
+$('hpbar').style.width=
+bhp+'%';
+
+}
+
+function buy(cost,name){
+
+if(S.coins<cost){
+
+return toast('Coins ไม่พอ');
+
+}
+
+S.coins-=cost;
+
+save();
+
+toast('ซื้อ '+name);
+
+}
+
+function createRoom(){
+
+S.room=
+$('roomName').value||
+'Health Room';
+
+save();
+
+$('roomStatus').textContent=
+'สร้างห้อง '+
+S.room+
+' แล้ว';
+
+toast('สร้างห้องแล้ว');
+
+}
+
+function joinRoom(){
+
+if(!S.room){
+
+return toast('ยังไม่มีห้อง');
+
+}
+
+$('roomStatus').textContent=
+'เข้าห้อง '+
+S.room+
+' แล้ว';
+
+}
+
+function permission(){
+
+if(!('Notification' in window)){
+
+return toast(
+'เบราว์เซอร์นี้ไม่รองรับแจ้งเตือน'
+);
+
+}
+
+try{
+
+Notification
+.requestPermission()
+.then(x=>{
+
+toast(
+x==='granted'
+?
+'เปิดแจ้งเตือนแล้ว'
+:
+'ยังไม่ได้อนุญาต'
+);
+
+})
+.catch(()=>{
+
+toast('เปิดแจ้งเตือนไม่สำเร็จ');
+
+});
+
+}catch(e){
+
+toast('เปิดแจ้งเตือนไม่สำเร็จ');
+
+}
+
+}
+
+function saveNotify(){
+
+S.notify={
+
+t:$('notifyTime').value,
+
+m:$('custom').value
+
+};
+
+save();
+
+toast('บันทึกแล้ว');
+
+}
+
+function login(){
+
+let u=$('user').value||'ผู้ใช้';
+
+$('loginStatus').textContent=
+'เข้าสู่ระบบเป็น '+
+u;
+
+toast('เข้าสู่ระบบแล้ว');
+
+}
+
+function clearData(){
+
+if(
+confirm('ล้างข้อมูลทั้งหมด?')
+){
+
+try{
+
+localStorage.removeItem(K);
+
+}catch(e){}
+
+location.reload();
+
+}
+
+}
+
+try{
+
+render();
+
+}catch(e){
+
+document.body.innerHTML=
+'<div style="font-family:system-ui;padding:30px;color:white;background:#07111f;min-height:100vh">'+
+'<h2>Health Hub</h2>'+
+'<p>กำลังรีเซ็ตข้อมูลที่เสียหาย…</p>'+
+'</div>';
+
+try{
+
+localStorage.removeItem(K);
+
+}catch(_){}
+
+}
+
 </script>
-</body></html>
+
+</body>
+</html>
