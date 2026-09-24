@@ -1,990 +1,460 @@
-<!doctype html>
-<html lang="th">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Health Hub V14</title>
-<style>
-*{box-sizing:border-box}
-body{margin:0;background:#07111f;color:#eef7ff;font-family:system-ui,-apple-system,sans-serif}
-.wrap{max-width:1100px;margin:auto;padding:18px}
-.hero{display:flex;justify-content:space-between;align-items:center;gap:12px}
-h1{margin:0}.muted{color:#9bb0c7}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-.card{background:#0d1b2e;border:1px solid #21415e;border-radius:16px;padding:16px}
-.page{display:none}.page.active{display:block}
-nav{display:flex;gap:8px;overflow:auto;padding:12px 0;position:sticky;top:0;background:#07111fee}
-button{border:0;border-radius:10px;padding:10px 13px;background:#173451;color:white;font-weight:700;cursor:pointer}
-.primary{background:#267fd3}
-input,select{width:100%;padding:10px;margin:5px 0 10px;border-radius:9px;border:1px solid #31536e;background:#081522;color:white}
-.stat{font-size:30px;font-weight:800}
-.bar{height:9px;background:#183047;border-radius:99px;overflow:hidden}
-.bar i{display:block;height:100%;background:#49d7ff;width:0}
-.timer{text-align:center;font-size:45px;font-weight:900;padding:18px}
-.row{display:flex;gap:8px;flex-wrap:wrap}
-.row>*{flex:1}
-.list{display:grid;gap:8px}
-.item{padding:10px;background:#0a1929;border:1px solid #1b3b55;border-radius:10px}
-.answers{display:grid;gap:8px}
-.answers button{text-align:left}
-.boss{text-align:center;font-size:55px}
-.toast{display:none;position:fixed;right:15px;bottom:15px;background:#12314b;padding:13px;border-radius:12px}
-@media(max-width:750px){
-.grid,.grid2{grid-template-columns:1fr}
-}
-</style>
-</head>
-
-<body>
+<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Health Hub V13</title><style>
+:root{--bg:#06101d;--card:#0d1b2c;--line:#24425f;--txt:#eef7ff;--muted:#91a9c2;--a:#5eead4;--b:#60a5fa;--bad:#fb7185}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#123653,#050a12 65%);color:var(--txt);font-family:system-ui,-apple-system,sans-serif}button,input,select{font:inherit}button{border:0;border-radius:12px;padding:10px 14px;background:#17324f;color:#fff;cursor:pointer}button:hover{filter:brightness(1.1)}.primary{background:linear-gradient(135deg,#14b8a6,#3b82f6)}.danger{background:#7f1d2d}.hidden{display:none!important}.wrap{max-width:1200px;margin:auto;padding:20px}.card{background:#0d1b2ee8;border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 12px 30px #0005}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}.row{display:flex;gap:10px;flex-wrap:wrap}.row>*{flex:1}input,select{width:100%;padding:11px;border-radius:10px;border:1px solid var(--line);background:#071522;color:white;margin:5px 0 10px}.tabs{display:flex;gap:8px;overflow:auto;padding:10px 0;position:sticky;top:0;background:#06101dee;z-index:10}.tab{white-space:nowrap}.page{display:none}.page.active{display:block}.muted{color:var(--muted)}.stat{font-size:30px;font-weight:900}.bar{height:10px;background:#183047;border-radius:20px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,#5eead4,#60a5fa);width:0}.item{background:#091827;border:1px solid #193650;border-radius:12px;padding:10px;margin:7px 0}.list{max-height:330px;overflow:auto}.hero{display:flex;align-items:center;justify-content:space-between;gap:15px}.hero h1{margin:0}.pill{display:inline-block;padding:5px 9px;border-radius:999px;background:#153450;color:#a9dfff}.boss{font-size:72px;text-align:center}.answers{display:grid;gap:9px}.answers button{text-align:left}.shop{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}.shop .item{margin:0}.small{font-size:13px}.dangerText{color:#fb7185}.good{color:#5eead4}.modal{position:fixed;inset:0;background:#0009;display:none;align-items:center;justify-content:center;padding:20px;z-index:50}.modal.show{display:flex}.modalbox{max-width:520px;width:100%;background:#0d1b2c;border:1px solid var(--line);border-radius:18px;padding:20px}@media(max-width:700px){.wrap{padding:12px}.hero{align-items:flex-start;flex-direction:column}}
+</style></head><body>
 <div class="wrap">
-
 <header class="hero">
-<div>
-<h1>⚡ Health Hub V14</h1>
-<p class="muted">เรียน • เล่นเกม • นอน • Quiz • RPG</p>
-</div>
-<b>Lv.<span id="level">1</span> 🪙 <span id="coins">0</span></b>
+<div><h1>⚡ Health Hub</h1><div class="muted">ระบบจัดสรรเวลาเรียน • เกม • พัก • นอน • Quiz RPG</div></div>
+<div><span class="pill">Lv.<b id="topLevel">1</b></span> <span class="pill">🪙 <b id="topCoins">0</b></span></div>
 </header>
 
-<nav>
-<button onclick="show('home')">🏠 หน้าแรก</button>
-<button onclick="show('game')">🎮 เกม</button>
-<button onclick="show('sleep')">😴 นอน</button>
-<button onclick="show('study')">📚 ตาราง</button>
-<button onclick="show('quiz')">🧠 Quiz/RPG</button>
-<button onclick="show('room')">⚔️ ห้องแข่ง</button>
-<button onclick="show('settings')">⚙️ ตั้งค่า</button>
+<nav class="tabs">
+<button class="tab primary" onclick="page('home')">🏠 หน้าแรก</button>
+<button class="tab" onclick="page('games')">🎮 เกม</button>
+<button class="tab" onclick="page('sleep')">😴 การนอน</button>
+<button class="tab" onclick="page('study')">📚 เรียน</button>
+<button class="tab" onclick="page('quiz')">🧠 Quiz Boss</button>
+<button class="tab" onclick="page('rpg')">⚔️ RPG</button>
+<button class="tab" onclick="page('multi')">👥 Multiplayer</button>
+<button class="tab" onclick="page('admin')">⚙️ Admin</button>
 </nav>
 
 <section id="home" class="page active">
 <div class="grid">
-
-<div class="card">
-<h3>ระดับ</h3>
-<div class="stat">Lv.<span id="lv">1</span></div>
-<div class="bar"><i id="xpbar"></i></div>
-<p class="muted"><span id="xp">0</span> XP</p>
+<div class="card"><div class="muted">Level</div><div class="stat">Lv.<span id="level">1</span></div><div class="bar"><i id="xpBar"></i></div><small><span id="xp">0</span> XP</small></div>
+<div class="card"><div class="muted">เกมวันนี้</div><div class="stat"><span id="todayGame">0</span> นาที</div><small>เป้าหมาย <span id="goalShow">120</span> นาที</small></div>
+<div class="card"><div class="muted">สุขภาพ</div><div class="stat" id="healthScore">100</div><small>/ 100</small></div>
 </div>
-
-<div class="card">
-<h3>เกมวันนี้</h3>
-<div class="stat"><span id="today">0</span> นาที</div>
-<p class="muted">เป้าหมาย <span id="goalText">120</span> นาที</p>
-</div>
-
-<div class="card">
-<h3>การนอน</h3>
-<div class="stat" id="sleepStat">ยังไม่มี</div>
-</div>
-
-</div>
-
-<div class="grid2" style="margin-top:14px">
-
-<div class="card">
-<h2>📌 วันนี้</h2>
-<div id="todayList" class="list"></div>
-</div>
-
-<div class="card">
-<h2>💡 สุขภาพ</h2>
-<p>แบ่งเวลาเรียน เล่นเกม และพักให้สมดุล</p>
-<button class="primary" onclick="show('settings')">
-ตั้งแจ้งเตือน
-</button>
-</div>
-
+<div class="grid" style="margin-top:14px">
+<div class="card"><h2>📊 สรุปวันนี้</h2><div id="summary"></div></div>
+<div class="card"><h2>💡 คำแนะนำ</h2><div id="advice"></div></div>
 </div>
 </section>
 
-<section id="game" class="page">
-<div class="grid2">
-
+<section id="games" class="page">
+<div class="grid">
 <div class="card">
 <h2>🎮 Game Timer</h2>
-
-<input id="gameName" placeholder="ชื่อเกม">
-
-<div class="timer" id="timer">00:00:00</div>
-
-<div class="row">
-<button class="primary" onclick="start()">▶ เริ่ม</button>
-<button onclick="stop()">⏹ หยุด</button>
-<button onclick="resetTimer()">รีเซ็ต</button>
+<input id="gameName" placeholder="ชื่อเกม เช่น Roblox">
+<label>เป้าหมายเล่นต่อวัน (นาที)</label>
+<input id="gameGoal" type="number" value="120">
+<div class="stat" style="text-align:center;margin:20px" id="gameTimer">00:00:00</div>
+<div class="row"><button class="primary" onclick="startGame()">▶ เริ่ม</button><button onclick="stopGame()">⏹ หยุด</button><button onclick="resetGameTimer()">↻ รีเซ็ต</button></div>
 </div>
-
-<label>เป้าหมาย/วัน</label>
-<input id="goal" type="number" value="120" onchange="saveGoal()">
-
-</div>
-
-<div class="card">
-<h2>📜 ประวัติ</h2>
-<div id="history" class="list"></div>
-</div>
-
+<div class="card"><h2>📜 ประวัติการเล่น</h2><div class="list" id="gameHistory"></div></div>
 </div>
 </section>
 
 <section id="sleep" class="page">
-<div class="grid2">
-
-<div class="card">
-<h2>😴 บันทึกการนอน</h2>
-
-<label>เข้านอน</label>
-<input id="bed" type="time">
-
-<label>ตื่น</label>
-<input id="wake" type="time">
-
-<button class="primary" onclick="saveSleep()">
-บันทึก
-</button>
+<div class="grid">
+<div class="card"><h2>😴 บันทึกการนอน</h2>
+<label>เวลาเข้านอน</label><input id="bed" type="time">
+<label>เวลาตื่น</label><input id="wake" type="time">
+<button class="primary" onclick="saveSleep()">บันทึกการนอน</button>
 </div>
-
-<div class="card">
-<h2>⏰ เตือนนอน</h2>
-
-<input id="bedGoal" type="time" value="22:30">
-
-<button onclick="setBed()">
-เปิดแจ้งเตือน
-</button>
-
-<p class="muted">
-ต้องอนุญาต Notification ในเบราว์เซอร์
-</p>
-
+<div class="card"><h2>⏰ ตั้งเวลาเข้านอน</h2>
+<input id="sleepReminder" type="time" value="22:30">
+<button onclick="requestNotify()">🔔 อนุญาตแจ้งเตือน</button>
+<button class="primary" onclick="saveReminder()">บันทึกเวลา</button>
+<p class="muted">การแจ้งเตือนของเบราว์เซอร์ต้องได้รับอนุญาตก่อน</p>
 </div>
-
+<div class="card"><h2>📈 ประวัติการนอน</h2><div class="list" id="sleepHistory"></div></div>
 </div>
 </section>
 
 <section id="study" class="page">
-<div class="grid2">
-
-<div class="card">
-<h2>📚 เพิ่มตาราง</h2>
-
-<input id="subject" placeholder="วิชา/กิจกรรม">
-
-<div class="row">
-<input id="st" type="time">
-<input id="en" type="time">
+<div class="grid">
+<div class="card"><h2>📚 ตารางเรียน/พัก</h2>
+<input id="subject" placeholder="วิชา เช่น คณิตศาสตร์">
+<div class="row"><input id="studyStart" type="time"><input id="studyEnd" type="time"></div>
+<select id="studyType"><option>เรียน</option><option>พัก</option><option>เล่นเกม</option><option>นอน</option></select>
+<button class="primary" onclick="addSchedule()">เพิ่มตาราง</button>
 </div>
-
-<select id="type">
-<option>เรียน</option>
-<option>พัก</option>
-<option>เล่นเกม</option>
-<option>นอน</option>
-</select>
-
-<button class="primary" onclick="addSchedule()">
-เพิ่ม
-</button>
-
-</div>
-
-<div class="card">
-<h2>🗓 ตาราง</h2>
-<div id="schedule" class="list"></div>
-</div>
-
+<div class="card"><h2>🗓 ตารางของฉัน</h2><div class="list" id="scheduleList"></div></div>
 </div>
 </section>
 
 <section id="quiz" class="page">
-<div class="grid2">
-
+<div class="grid">
 <div class="card">
 <h2>🧠 Quiz Boss</h2>
-
-<div class="boss">👹</div>
-
-<p>
-Boss HP:
-<b id="hp">100</b>/100
-</p>
-
-<div class="bar">
-<i id="hpbar" style="width:100%"></i>
+<div class="boss" id="bossEmoji">👹</div>
+<div>Boss HP <b id="bossHp">100</b>/100</div>
+<div class="bar"><i id="bossBar" style="width:100%"></i></div>
+<h3 id="question">กด “เริ่ม Quiz” เพื่อเริ่ม</h3>
+<div class="answers" id="answers"></div>
+<button class="primary" onclick="nextQuestion()">⚔️ เริ่ม Quiz / ข้อถัดไป</button>
 </div>
-
-<h3 id="q">กดเริ่ม</h3>
-
-<div id="answers" class="answers"></div>
-
-<button class="primary" onclick="nextQ()">
-⚔️ เริ่ม/ข้อถัดไป
-</button>
-
-</div>
-
-<div class="card">
-<h2>⚔️ Character RPG</h2>
-
-<p>❤️ HP 100　💧 MP 50</p>
-
-<p>
-⚔️ ATK <b id="atk">10</b>
-　🛡 DEF <b id="def">5</b>
-</p>
-
-<button onclick="buy(50,'ดาบ +5 ATK')">
-🗡️ ดาบ 50 🪙
-</button>
-
-<button onclick="buy(70,'เกราะ +20 HP')">
-🛡️ เกราะ 70 🪙
-</button>
-
-</div>
-
+<div class="card"><h2>🏆 คะแนน</h2><div class="stat" id="quizScore">0</div><p>ตอบถูกจะได้รับ XP และ Coins</p></div>
 </div>
 </section>
 
-<section id="room" class="page">
-<div class="grid2">
+<section id="rpg" class="page">
+<div class="grid">
+<div class="card"><h2>🧙 Character</h2>
+<div class="stat">Lv.<span id="rpgLevel">1</span></div>
+<p>❤️ HP <b id="rpgHp">100</b></p>
+<p>💧 MP <b id="rpgMp">50</b></p>
+<p>⚔️ ATK <b id="rpgAtk">10</b></p>
+<p>🛡️ DEF <b id="rpgDef">5</b></p>
+<p>🎯 Critical <b id="rpgCrit">5%</b></p>
+</div>
+<div class="card"><h2>✨ Skills</h2>
+<div class="item">⚔️ Focus Strike — โจมตีแรง</div>
+<div class="item">💚 Study Heal — ฟื้น HP</div>
+<div class="item">🛡️ Smart Shield — เพิ่ม DEF</div>
+<div class="item">🎯 Critical Mind — เพิ่ม Critical</div>
+</div>
+</div>
 
-<div class="card">
-<h2>⚔️ ห้องแข่ง</h2>
+<div class="card" style="margin-top:14px"><h2>🛒 Shop</h2>
+<div class="shop" id="shop"></div></div>
+</section>
 
+<section id="multi" class="page">
+<div class="grid">
+<div class="card"><h2>👥 Multiplayer Arena</h2>
 <input id="roomName" placeholder="ชื่อห้อง">
-
-<div class="row">
-<button class="primary" onclick="createRoom()">
-สร้างห้อง
-</button>
-
-<button onclick="joinRoom()">
-เข้าห้อง
-</button>
+<div class="row"><button class="primary" onclick="createRoom()">สร้างห้อง</button><button onclick="joinRoom()">เข้าห้อง</button></div>
+<div id="roomStatus" class="muted">ยังไม่ได้เข้าห้อง</div>
 </div>
-
-<p id="roomStatus" class="muted">
-ยังไม่มีห้อง
-</p>
-
-</div>
-
-<div class="card">
-<h2>🏆 ผู้เล่น</h2>
-
-<div class="item">
-คุณ — <span id="score">0</span> คะแนน
-</div>
-
-</div>
-
+<div class="card"><h2>🏆 ผู้เล่น</h2><div id="players"></div></div>
 </div>
 </section>
 
-<section id="settings" class="page">
-<div class="grid2">
-
-<div class="card">
-<h2>⚙️ แจ้งเตือน</h2>
-
-<input id="custom" placeholder="ข้อความแจ้งเตือน">
-
-<label>เวลา</label>
+<section id="admin" class="page">
+<div class="grid">
+<div class="card"><h2>⚙️ ตั้งค่าบัญชี</h2>
+<input id="username" placeholder="Username">
+<input id="password" type="password" placeholder="Password">
+<button class="primary" onclick="login()">เข้าสู่ระบบ</button>
+<div id="loginResult" class="muted"></div>
+</div>
+<div class="card"><h2>🔔 ข้อความแจ้งเตือน</h2>
+<input id="notifyText" placeholder="เช่น ถึงเวลาเรียนแล้ว">
 <input id="notifyTime" type="time">
-
-<button class="primary" onclick="saveNotify()">
-บันทึก
-</button>
-
-<button onclick="permission()">
-อนุญาตแจ้งเตือน
-</button>
-
+<button class="primary" onclick="saveNotification()">บันทึก</button>
 </div>
-
-<div class="card">
-<h2>👤 บัญชี</h2>
-
-<input id="user" placeholder="ชื่อผู้ใช้">
-
-<input id="pass" type="password" placeholder="รหัสผ่าน">
-
-<button class="primary" onclick="login()">
-เข้าสู่ระบบ
-</button>
-
-<p id="loginStatus" class="muted">
-ข้อมูลโหมดนี้เก็บในเครื่อง
-</p>
-
-<button onclick="clearData()">
-ล้างข้อมูล
-</button>
-
-</div>
-
 </div>
 </section>
 
 </div>
 
-<div id="toast" class="toast"></div>
-
+<div class="modal" id="modal"><div class="modalbox"><h2 id="modalTitle"></h2><p id="modalText"></p><button onclick="closeModal()">ปิด</button></div></div>
 <script>
-
-const K='healthhub_v14';
+const KEY='health_hub_v135_fixed';
 
 const DEFAULT={
-level:1,
-xp:0,
-coins:0,
-goal:120,
-games:[],
-sleep:[],
-schedule:[],
-room:'',
-notify:{t:'',m:''}
+level:1,xp:0,coins:0,goal:120,
+games:[],sleep:[],schedule:[],
+quizScore:0,room:null,players:[],
+inventory:[],
+notify:{time:'',text:''},
+rpg:{hp:100,mp:50,atk:10,def:5,crit:5}
 };
 
-let S=DEFAULT;
+let S;
 
 try{
+S=JSON.parse(localStorage.getItem(KEY)||'null');
+}catch(e){S=null}
 
-const raw=localStorage.getItem(K);
+if(!S)S=structuredClone(DEFAULT);
 
-if(raw){
-
-const old=JSON.parse(raw);
-
-S=Object.assign({},DEFAULT,old);
-
-S.games=Array.isArray(old.games)?old.games:[];
-
-S.sleep=Array.isArray(old.sleep)?old.sleep:[];
-
-S.schedule=Array.isArray(old.schedule)?old.schedule:[];
-
-S.level=Number.isFinite(Number(old.level))
-?Number(old.level):1;
-
-S.xp=Number.isFinite(Number(old.xp))
-?Number(old.xp):0;
-
-S.coins=Number.isFinite(Number(old.coins))
-?Number(old.coins):0;
-
-S.goal=
-Number.isFinite(Number(old.goal)) &&
-Number(old.goal)>0
-?Number(old.goal)
-:120;
-
+function normalize(){
+if(!Array.isArray(S.games))S.games=[];
+if(!Array.isArray(S.sleep))S.sleep=[];
+if(!Array.isArray(S.schedule))S.schedule=[];
+if(!Array.isArray(S.inventory))S.inventory=[];
+if(!Array.isArray(S.players))S.players=[];
+if(!S.rpg)S.rpg={...DEFAULT.rpg};
+if(!S.notify)S.notify={time:'',text:''};
+S.level=Number(S.level)||1;
+S.xp=Number(S.xp)||0;
+S.coins=Number(S.coins)||0;
+S.goal=Number(S.goal)||120;
+S.quizScore=Number(S.quizScore)||0;
 }
-
-}catch(e){
-
-S=Object.assign({},DEFAULT);
-
-try{
-localStorage.removeItem(K);
-}catch(_){}
-
-}
-
-function $(id){
-return document.getElementById(id);
-}
+normalize();
 
 function save(){
-
-try{
-
-localStorage.setItem(K,JSON.stringify(S));
-
-}catch(e){
-
-console.log('save error',e);
-
-}
-
+try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}
 render();
-
 }
 
-function show(id){
-
-document.querySelectorAll('.page')
-.forEach(x=>x.classList.remove('active'));
-
-const page=$(id);
-
-if(page){
-page.classList.add('active');
-}
-
+function page(id){
+document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+const el=document.getElementById(id);
+if(el)el.classList.add('active');
 render();
-
 }
 
-function toast(t){
-
-const el=$('toast');
-
-if(!el)return;
-
-el.textContent=t;
-el.style.display='block';
-
-setTimeout(()=>{
-el.style.display='none';
-},1800);
-
+function esc(s){
+return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
 function addXP(n){
-
 S.xp+=n;
-
-S.coins+=Math.floor(n/10);
-
+S.coins+=Math.max(1,Math.floor(n/5));
 while(S.xp>=S.level*100){
-
 S.xp-=S.level*100;
-
 S.level++;
-
 S.coins+=25;
-
-toast('🎉 Level Up!');
-
+alert('🎉 Level Up! Level '+S.level);
 }
-
 save();
-
 }
 
 function render(){
+normalize();
 
-try{
+document.getElementById('level').textContent=S.level;
+document.getElementById('topLevel').textContent=S.level;
+document.getElementById('rpgLevel').textContent=S.level;
+document.getElementById('xp').textContent=S.xp;
+document.getElementById('topCoins').textContent=S.coins;
+document.getElementById('xpBar').style.width=Math.min(100,S.xp/(S.level*100)*100)+'%';
 
-const d=new Date().toDateString();
+const today=new Date().toDateString();
+const mins=S.games.filter(x=>x.date===today).reduce((a,x)=>a+Number(x.minutes||0),0);
 
-const m=S.games
-.filter(x=>x && x.d===d)
-.reduce((a,x)=>a+(Number(x.m)||0),0);
+document.getElementById('todayGame').textContent=mins;
+document.getElementById('goalShow').textContent=S.goal;
+document.getElementById('gameGoal').value=S.goal;
 
-$('level').textContent=S.level;
-$('lv').textContent=S.level;
-$('coins').textContent=S.coins;
-$('xp').textContent=S.xp;
+document.getElementById('summary').innerHTML=
+'<div class="item">🎮 เล่นเกมวันนี้: '+mins+' / '+S.goal+' นาที</div>'+
+'<div class="item">😴 บันทึกการนอน: '+S.sleep.length+' ครั้ง</div>'+
+'<div class="item">📚 ตารางเรียน: '+S.schedule.length+' รายการ</div>'+
+'<div class="item">🪙 Coins: '+S.coins+'</div>';
 
-$('xpbar').style.width=
-Math.min(
-100,
-S.xp/(S.level*100)*100
-)+'%';
+let health=100;
+if(mins>S.goal)health-=20;
+if(S.sleep.length){
+const z=S.sleep[S.sleep.length-1];
+if(z.hours && z.hours<7)health-=15;
+}
+document.getElementById('healthScore').textContent=Math.max(0,health);
 
-$('today').textContent=m;
-$('goalText').textContent=S.goal;
+document.getElementById('advice').innerHTML=
+mins>S.goal
+?'⚠️ วันนี้เล่นเกมเกินเป้าหมาย ลองพักและแบ่งเวลาเรียน/นอน'
+:'✅ วันนี้ยังอยู่ในเป้าหมาย ลองรักษาสมดุลต่อไป';
 
-$('goal').value=S.goal;
+document.getElementById('gameHistory').innerHTML=S.games.length?
+S.games.slice().reverse().map(x=>'<div class="item">🎮 '+esc(x.name)+' — '+x.minutes+' นาที <small class="muted">'+esc(x.date)+'</small></div>').join('')
+:'<span class="muted">ยังไม่มีประวัติ</span>';
 
-$('history').innerHTML=
-S.games
-.slice(-12)
-.reverse()
-.map(x=>
-'<div class="item">🎮 '+
-esc(x.n)+
-' — '+
-x.m+
-' นาที</div>'
-)
-.join('')
-||
-'<span class="muted">ยังไม่มี</span>';
+document.getElementById('sleepHistory').innerHTML=S.sleep.length?
+S.sleep.slice().reverse().map(x=>'<div class="item">😴 '+x.bed+' → '+x.wake+' = '+x.hours+' ชั่วโมง</div>').join('')
+:'<span class="muted">ยังไม่มีข้อมูล</span>';
 
-const lastSleep=
-S.sleep.length
-?S.sleep[S.sleep.length-1]
-:null;
+document.getElementById('scheduleList').innerHTML=S.schedule.length?
+S.schedule.map((x,i)=>'<div class="item">🕐 '+esc(x.start)+'–'+esc(x.end)+' · '+esc(x.type)+' · '+esc(x.subject)+'</div>').join('')
+:'<span class="muted">ยังไม่มีตาราง</span>';
 
-$('sleepStat').textContent=
-lastSleep
-?
-(lastSleep.b||'--')+
-' → '+
-(lastSleep.w||'--')
-:
-'ยังไม่มี';
+document.getElementById('quizScore').textContent=S.quizScore;
 
-$('schedule').innerHTML=
-S.schedule
-.map(x=>
-'<div class="item">🕐 '+
-x.s+
-'–'+
-x.e+
-' · '+
-esc(x.t)+
-' · '+
-esc(x.sub)+
-'</div>'
-)
-.join('')
-||
-'<span class="muted">ยังไม่มี</span>';
+document.getElementById('rpgHp').textContent=S.rpg.hp;
+document.getElementById('rpgMp').textContent=S.rpg.mp;
+document.getElementById('rpgAtk').textContent=S.rpg.atk;
+document.getElementById('rpgDef').textContent=S.rpg.def;
+document.getElementById('rpgCrit').textContent=S.rpg.crit+'%';
 
-$('todayList').innerHTML=
-'<div class="item">🎮 '+
-m+
-'/'+
-S.goal+
-' นาที</div>'+
-'<div class="item">📚 '+
-S.schedule.length+
-' รายการ</div>'+
-'<div class="item">🪙 '+
-S.coins+
-' Coins</div>';
+document.getElementById('shop').innerHTML=[
+['🗡️ ดาบฝึกหัด',50,'atk',5],
+['⚔️ ดาบนักรบ',120,'atk',12],
+['🛡️ เกราะฝึกหัด',70,'def',8],
+['💙 เสื้อคลุมเวท',100,'mp',25],
+['💎 เครื่องราง Critical',150,'crit',5]
+].map(x=>'<div class="item"><h3>'+x[0]+'</h3><p>ราคา '+x[1]+' 🪙</p><button class="primary" onclick="buyItem(\''+x[2]+'\','+x[1]+','+x[3]+')">ซื้อ</button></div>').join('');
 
-$('atk').textContent=
-10+Math.floor(S.level/2);
-
-$('def').textContent=
-5+Math.floor(S.level/3);
-
-}catch(e){
-
-console.log('render error',e);
-
+document.getElementById('players').innerHTML=
+'<div class="item">🧙 คุณ — คะแนน '+S.quizScore+'</div>'+
+(S.players||[]).map(p=>'<div class="item">👤 '+esc(p)+'</div>').join('');
 }
 
+let gameStart=null;
+let gameInterval=null;
+
+function updateTimer(){
+if(!gameStart)return;
+let sec=Math.floor((Date.now()-gameStart)/1000);
+let h=Math.floor(sec/3600);
+let m=Math.floor(sec%3600/60);
+let s=sec%60;
+document.getElementById('gameTimer').textContent=
+[h,m,s].map(x=>String(x).padStart(2,'0')).join(':');
 }
 
-function esc(x){
-
-return String(x||'')
-.replace(
-/[&<>"']/g,
-c=>({
-'&':'&amp;',
-'<':'&lt;',
-'>':'&gt;',
-'"':'&quot;',
-"'":'&#39;'
-}[c])
-);
-
+function startGame(){
+if(gameInterval)return;
+S.goal=Number(document.getElementById('gameGoal').value)||120;
+gameStart=Date.now();
+gameInterval=setInterval(updateTimer,500);
 }
 
-let startAt=0;
-let int=null;
+function stopGame(){
+if(!gameStart)return;
+clearInterval(gameInterval);
+gameInterval=null;
 
-function start(){
-
-if(int)return;
-
-startAt=Date.now();
-
-int=setInterval(()=>{
-
-$('timer').textContent=
-fmt(
-(Date.now()-startAt)/1000
-);
-
-},500);
-
-toast('เริ่มจับเวลาแล้ว');
-
-}
-
-function stop(){
-
-if(!int)return;
-
-clearInterval(int);
-int=null;
-
-let m=Math.max(
-1,
-Math.round(
-(Date.now()-startAt)/60000
-)
-);
+let minutes=Math.max(1,Math.round((Date.now()-gameStart)/60000));
 
 S.games.push({
-
-n:$('gameName').value||'เกม',
-
-m:m,
-
-d:new Date().toDateString()
-
+name:document.getElementById('gameName').value||'เกม',
+minutes,
+date:new Date().toDateString()
 });
 
-addXP(Math.min(20,m));
-
-toast('บันทึก '+m+' นาที');
-
+gameStart=null;
+document.getElementById('gameTimer').textContent='00:00:00';
+addXP(Math.min(20,minutes));
 }
 
-function resetTimer(){
-
-if(int)clearInterval(int);
-
-int=null;
-
-$('timer').textContent='00:00:00';
-
-}
-
-function fmt(s){
-
-s=Math.floor(s);
-
-return [
-Math.floor(s/3600),
-Math.floor(s%3600/60),
-s%60
-]
-.map(x=>String(x).padStart(2,'0'))
-.join(':');
-
-}
-
-function saveGoal(){
-
-S.goal=Math.max(
-1,
-+$('goal').value||120
-);
-
-save();
-
+function resetGameTimer(){
+if(gameInterval)clearInterval(gameInterval);
+gameInterval=null;
+gameStart=null;
+document.getElementById('gameTimer').textContent='00:00:00';
 }
 
 function saveSleep(){
+const bed=document.getElementById('bed').value;
+const wake=document.getElementById('wake').value;
+
+if(!bed||!wake){
+return alert('กรุณาใส่เวลาเข้านอนและเวลาตื่น');
+}
+
+let [bh,bm]=bed.split(':').map(Number);
+let [wh,wm]=wake.split(':').map(Number);
+
+let a=bh*60+bm;
+let b=wh*60+wm;
+if(b<=a)b+=1440;
 
 S.sleep.push({
-
-b:$('bed').value||'22:30',
-
-w:$('wake').value||'06:30'
-
+bed,wake,
+hours:((b-a)/60).toFixed(1)
 });
 
 addXP(10);
-
-toast('บันทึกแล้ว');
-
 }
 
-function setBed(){
+function requestNotify(){
+if(!('Notification' in window)){
+return alert('เบราว์เซอร์นี้ไม่รองรับ Notification');
+}
+Notification.requestPermission().then(x=>{
+alert(x==='granted'?'เปิดการแจ้งเตือนแล้ว':'ยังไม่ได้อนุญาต');
+}).catch(()=>alert('ไม่สามารถเปิดแจ้งเตือนได้'));
+}
 
-permission();
-
-toast(
-'ตั้งเวลา '+
-$('bedGoal').value
-);
-
+function saveReminder(){
+S.notify.time=document.getElementById('sleepReminder').value;
+save();
+alert('บันทึกเวลาเข้านอน '+S.notify.time);
 }
 
 function addSchedule(){
+const subject=document.getElementById('subject').value.trim();
+const start=document.getElementById('studyStart').value;
+const end=document.getElementById('studyEnd').value;
+const type=document.getElementById('studyType').value;
 
-if(!$('subject').value){
+if(!subject)return alert('กรุณาใส่ชื่อวิชา/กิจกรรม');
 
-return toast('ใส่ชื่อก่อน');
-
-}
-
-S.schedule.push({
-
-sub:$('subject').value,
-
-s:$('st').value||'--',
-
-e:$('en').value||'--',
-
-t:$('type').value
-
-});
-
+S.schedule.push({subject,start,end,type});
 save();
-
-toast('เพิ่มแล้ว');
-
 }
 
-const Q=[
-
-[
-'การนอนที่เพียงพอช่วยอะไร',
-[
-'การเรียนรู้และการฟื้นตัว',
-'ไม่ต้องพัก',
-'ไม่ต้องกิน',
-'ไม่ต้องออกกำลัง'
-],
-0
-],
-
-[
-'พักสายตาช่วยอะไร',
-[
-'ลดความล้าของตา',
-'เพิ่มคะแนนเกม',
-'ทำให้นอนน้อย',
-'ไม่มีประโยชน์'
-],
-0
-],
-
-[
-'ก่อนนอนควรทำอะไร',
-[
-'ลดแสงและกิจกรรมกระตุ้น',
-'เล่นเกมต่อ',
-'ดื่มคาเฟอีน',
-'เปิดจอสว่าง'
-],
-0
-],
-
-[
-'เล่นเกินเป้าหมายควรทำอย่างไร',
-[
-'หยุดพักและปรับตาราง',
-'เล่นต่อทั้งคืน',
-'ข้ามการนอน',
-'ไม่ดูเวลา'
-],
-0
-]
-
+const questions=[
+['การนอนที่เพียงพอมีประโยชน์อย่างไร',['ช่วยให้ร่างกายและสมองฟื้นตัว','ทำให้ไม่ต้องเรียน','ทำให้ไม่ต้องพัก','ไม่มีประโยชน์'],0],
+['ก่อนนอนควรทำอะไร',['ลดการใช้หน้าจอและผ่อนคลาย','เล่นเกมต่อทั้งคืน','ดื่มคาเฟอีน','เปิดจอสว่างมาก'],0],
+['ถ้าเล่นเกมเกินเป้าหมายควรทำอย่างไร',['หยุดพักและปรับตาราง','เล่นต่อ','อดนอน','ไม่สนใจเวลา'],0],
+['การพักระหว่างเรียนช่วยอะไร',['ลดความล้าและช่วยโฟกัส','ทำให้เรียนแย่ลงเสมอ','ไม่มีผล','ทำให้นอนไม่ได้'],0],
+['อาหารเช้ามีความสำคัญอย่างไร',['ช่วยให้มีพลังงานสำหรับวัน','ทำให้นอนน้อยลง','ไม่มีผล','ทำให้ไม่ต้องดื่มน้ำ'],0]
 ];
 
-let qi=-1;
-let bhp=100;
+let qIndex=-1;
+let bossHP=100;
 
-function nextQ(){
+function nextQuestion(){
+qIndex=(qIndex+1)%questions.length;
+const q=questions[qIndex];
 
-qi=(qi+1)%Q.length;
+document.getElementById('question').textContent=q[0];
 
-let q=Q[qi];
-
-$('q').textContent=q[0];
-
-$('answers').innerHTML=
-q[1]
-.map(
-(a,i)=>
-'<button onclick="ans('+
-i+
-','+
-q[2]+
-')">'+
-String.fromCharCode(65+i)+
-'. '+
-a+
-'</button>'
-)
-.join('');
-
+document.getElementById('answers').innerHTML=q[1].map((a,i)=>
+'<button onclick="answer('+i+','+q[2]+')">'+String.fromCharCode(65+i)+'. '+a+'</button>'
+).join('');
 }
 
-function ans(i,c){
-
+function answer(i,c){
 if(i===c){
-
-bhp-=25;
-
+bossHP-=25;
+S.quizScore++;
 addXP(20);
-
-toast('⚔️ โจมตีสำเร็จ +20 XP');
-
+alert('⚔️ ตอบถูก! Boss เสีย 25 HP');
 }else{
-
-toast('💥 Boss โจมตี');
-
+alert('💥 ตอบผิด! Boss โจมตี');
+S.rpg.hp=Math.max(1,S.rpg.hp-10);
 }
 
-if(bhp<=0){
-
-bhp=100;
-
+if(bossHP<=0){
+bossHP=100;
 S.coins+=100;
+alert('🏆 ชนะ Boss! +100 Coins');
+}
 
-toast('🏆 ชนะ Boss +100 Coins');
-
+document.getElementById('bossHp').textContent=bossHP;
+document.getElementById('bossBar').style.width=bossHP+'%';
 save();
-
 }
 
-$('hp').textContent=bhp;
-
-$('hpbar').style.width=
-bhp+'%';
-
-}
-
-function buy(cost,name){
-
-if(S.coins<cost){
-
-return toast('Coins ไม่พอ');
-
-}
+function buyItem(stat,cost,value){
+if(S.coins<cost)return alert('Coins ไม่พอ');
 
 S.coins-=cost;
 
+if(stat==='atk')S.rpg.atk+=value;
+if(stat==='def')S.rpg.def+=value;
+if(stat==='mp')S.rpg.mp+=value;
+if(stat==='crit')S.rpg.crit+=value;
+
+S.inventory.push(stat);
 save();
-
-toast('ซื้อ '+name);
-
+alert('ซื้อสำเร็จ!');
 }
 
 function createRoom(){
-
-S.room=
-$('roomName').value||
-'Health Room';
-
+const name=document.getElementById('roomName').value.trim()||'Health Room';
+S.room=name;
+S.players=[];
+document.getElementById('roomStatus').textContent='สร้างห้อง '+name+' สำเร็จ';
 save();
-
-$('roomStatus').textContent=
-'สร้างห้อง '+
-S.room+
-' แล้ว';
-
-toast('สร้างห้องแล้ว');
-
 }
 
 function joinRoom(){
-
-if(!S.room){
-
-return toast('ยังไม่มีห้อง');
-
-}
-
-$('roomStatus').textContent=
-'เข้าห้อง '+
-S.room+
-' แล้ว';
-
-}
-
-function permission(){
-
-if(!('Notification' in window)){
-
-return toast(
-'เบราว์เซอร์นี้ไม่รองรับแจ้งเตือน'
-);
-
-}
-
-try{
-
-Notification
-.requestPermission()
-.then(x=>{
-
-toast(
-x==='granted'
-?
-'เปิดแจ้งเตือนแล้ว'
-:
-'ยังไม่ได้อนุญาต'
-);
-
-})
-.catch(()=>{
-
-toast('เปิดแจ้งเตือนไม่สำเร็จ');
-
-});
-
-}catch(e){
-
-toast('เปิดแจ้งเตือนไม่สำเร็จ');
-
-}
-
-}
-
-function saveNotify(){
-
-S.notify={
-
-t:$('notifyTime').value,
-
-m:$('custom').value
-
-};
-
+if(!S.room)return alert('ยังไม่มีห้อง ให้สร้างห้องก่อน');
+document.getElementById('roomStatus').textContent='เข้าห้อง '+S.room+' แล้ว';
 save();
-
-toast('บันทึกแล้ว');
-
 }
 
 function login(){
-
-let u=$('user').value||'ผู้ใช้';
-
-$('loginStatus').textContent=
-'เข้าสู่ระบบเป็น '+
-u;
-
-toast('เข้าสู่ระบบแล้ว');
-
+const u=document.getElementById('username').value.trim();
+if(!u)return alert('กรุณาใส่ Username');
+document.getElementById('loginResult').textContent='เข้าสู่ระบบเป็น '+u;
 }
 
-function clearData(){
-
-if(
-confirm('ล้างข้อมูลทั้งหมด?')
-){
-
-try{
-
-localStorage.removeItem(K);
-
-}catch(e){}
-
-location.reload();
-
+function saveNotification(){
+S.notify={
+time:document.getElementById('notifyTime').value,
+text:document.getElementById('notifyText').value
+};
+save();
+alert('บันทึกแจ้งเตือนแล้ว');
 }
-
-}
-
-try{
 
 render();
-
-}catch(e){
-
-document.body.innerHTML=
-'<div style="font-family:system-ui;padding:30px;color:white;background:#07111f;min-height:100vh">'+
-'<h2>Health Hub</h2>'+
-'<p>กำลังรีเซ็ตข้อมูลที่เสียหาย…</p>'+
-'</div>';
-
-try{
-
-localStorage.removeItem(K);
-
-}catch(_){}
-
-}
-
-</script>
-
-</body>
-</html>
+</script></body></html>
