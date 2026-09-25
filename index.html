@@ -6,7 +6,7 @@
 <title>Health Hub V100 MAX</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#f3f6fa;color:#172033}
-button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:12px;padding:10px 14px;font-weight:700;background:#172033;color:#fff}
+button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:12px;padding:10px 14px;font-weight:700;background:#172033;color:#fff}.musicbar{position:sticky;top:0;z-index:50;background:#fff;border:1px solid #e1e6ee;border-radius:14px;padding:10px 12px;margin:12px auto;max-width:1100px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}.musicbar select{width:auto;margin:0}.musicbar button{padding:8px 11px}
 .wrap{max-width:1100px;margin:auto;padding:20px}.hide{display:none!important}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
 .card{background:#fff;border:1px solid #e1e6ee;border-radius:18px;padding:18px}.muted{color:#64748b}.danger{background:#dc2626}.alt{background:#e5e7eb;color:#172033}
 header{background:#172033;color:#fff;padding:14px 18px;display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}.brand{font-weight:900;font-size:20px}.nav{display:flex;gap:7px;flex-wrap:wrap}.nav button{background:#334155;font-size:13px}
@@ -18,7 +18,7 @@ input,select,textarea{width:100%;padding:11px;border:1px solid #cbd5e1;border-ra
 #fab{position:fixed;right:18px;bottom:18px;z-index:9999;border-radius:999px}
 table{width:100%;border-collapse:collapse}td,th{padding:9px;border-bottom:1px solid #e5e7eb;text-align:left}
 @media(max-width:600px){.wrap{padding:12px}.big{font-size:30px}}
-</style>
+.badge{display:inline-block;padding:6px 10px;border-radius:999px;background:#eef6ff;color:#24527a;font-weight:700;font-size:13px}.row{display:flex;gap:8px;flex-wrap:wrap}</style>
 </head>
 <body>
 <div id="gate" class="wrap">
@@ -38,6 +38,7 @@ table{width:100%;border-collapse:collapse}td,th{padding:9px;border-bottom:1px so
   </div>
 </div>
 <div id="app" class="hide"></div>
+<div id="musicbar" class="musicbar hide"><b>🎵 เพลง Health Hub</b><select id="musicTrack"><option value="calm">🌙 Night Calm</option><option value="focus">📚 Focus Pulse</option><option value="game">🎮 Game Energy</option></select><button onclick="hhToggleMusic()" id="musicBtn">▶️ เปิดเพลง</button><button onclick="hhStopMusic()" class="alt">⏹ หยุด</button><span id="musicStatus" class="muted">เพลงปิด</span></div>
 <button id="fab" class="hide" onclick="dashboard()">🚀 V100</button>
 
 <script>
@@ -67,12 +68,26 @@ function login(){
  if(!a[u]||a[u].password!==p){msg.textContent="ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง";return}
  enter(u)
 }
-function enter(u){currentUser=u;gate.classList.add("hide");app.classList.remove("hide");fab.classList.remove("hide");home()}
+let hhAudio=null,hhGain=null,hhTimer=null,hhPlaying=false,hhStep=0;
+const HH_MUSIC={calm:[261.63,329.63,392.00,329.63,293.66,349.23,440.00,349.23],focus:[220,261.63,329.63,392,329.63,261.63,246.94,293.66],game:[329.63,392,523.25,659.25,523.25,392,587.33,783.99]};
+function hhStartMusic(){
+  try{
+    if(!hhAudio) hhAudio=new (window.AudioContext||window.webkitAudioContext)();
+    if(hhAudio.state==='suspended') hhAudio.resume();
+    if(hhTimer) clearInterval(hhTimer);
+    hhGain=hhAudio.createGain(); hhGain.gain.value=.055; hhGain.connect(hhAudio.destination);
+    hhPlaying=true; hhStep=0; document.getElementById('musicBtn').textContent='⏸️ พักเพลง'; document.getElementById('musicStatus').textContent='กำลังเล่นเพลง';
+    const play=()=>{if(!hhPlaying)return; const track=document.getElementById('musicTrack')?.value||'calm'; const notes=HH_MUSIC[track]; const f=notes[hhStep++%notes.length]; const o=hhAudio.createOscillator(); const g=hhAudio.createGain(); o.type=track==='game'?'square':'sine'; o.frequency.value=f; g.gain.setValueAtTime(.0001,hhAudio.currentTime); g.gain.exponentialRampToValueAtTime(.18,hhAudio.currentTime+.03); g.gain.exponentialRampToValueAtTime(.0001,hhAudio.currentTime+.42); o.connect(g); g.connect(hhGain); o.start(); o.stop(hhAudio.currentTime+.45);}; play(); hhTimer=setInterval(play,500);
+  }catch(e){alert('เบราว์เซอร์นี้ไม่รองรับเสียงเพลง')} }
+function hhToggleMusic(){if(hhPlaying){hhPlaying=false;if(hhTimer)clearInterval(hhTimer);document.getElementById('musicBtn').textContent='▶️ เปิดเพลง';document.getElementById('musicStatus').textContent='เพลงหยุดชั่วคราว';}else hhStartMusic()}
+function hhStopMusic(){hhPlaying=false;if(hhTimer)clearInterval(hhTimer);if(hhGain)hhGain.gain.setTargetAtTime(.0001,hhAudio?.currentTime||0,.03);document.getElementById('musicBtn').textContent='▶️ เปิดเพลง';document.getElementById('musicStatus').textContent='เพลงปิด'}
+
+function enter(u){currentUser=u;gate.classList.add("hide");app.classList.remove("hide");fab.classList.remove("hide");document.getElementById("musicbar").classList.remove("hide");home()}
 function logout(){currentUser="";app.classList.add("hide");fab.classList.add("hide");gate.classList.remove("hide")}
 
 function layout(body){
  app.innerHTML=`<header><div class="brand">💚 Health Hub V100</div><div class="nav">
- <button onclick="home()">🏠 Home</button><button onclick="games()">🎮 เกม</button><button onclick="health()">❤️ สุขภาพ</button><button onclick="schedule()">🗓️ ตาราง</button><button onclick="rpg()">🧙 RPG</button><button onclick="admin()">🛡️ Admin</button><button onclick="logout()">🚪 ออก</button>
+ <button onclick="home()">🏠 Home</button><button onclick="aiTutor()">🤖 AI เรียน</button><button onclick="games()">🎮 เกม</button><button onclick="health()">❤️ สุขภาพ</button><button onclick="schedule()">🗓️ ตาราง</button><button onclick="rpg()">🧙 RPG</button><button onclick="projectInfo()">📘 โครงงาน</button><button onclick="admin()">🛡️ Admin</button><button onclick="logout()">🚪 ออก</button>
  </div></header><main class="wrap">${body}</main>`
 }
 
@@ -91,6 +106,23 @@ function home(){
  <div class="card" style="margin-top:14px"><h2>🚀 V100 MAX</h2><p class="muted">Game Center + สุขภาพ + XP + Achievement + Admin</p><button onclick="games()">🎮 เล่นเกม</button> <button onclick="health()" class="alt">📝 บันทึกสุขภาพ</button></div>`)
 }
 function dashboard(){home()}
+
+function projectInfo(){
+ layout(`<div class="card"><h2>📘 Health Hub — โครงงาน</h2><p class="muted">ระบบหลังบ้านสำหรับติดตามเวลาเล่นเกมและแจ้งเตือนเวลานอน เพื่อช่วยนักเรียนจัดสรรเวลาเล่นเกม การเรียน และการนอน</p></div>
+ <div class="grid" style="margin-top:14px">
+  <div class="card"><h3>🎯 วัตถุประสงค์</h3><ol><li>พัฒนาระบบหลังบ้านสำหรับบันทึกและติดตามเวลาเล่นเกม</li><li>สร้างระบบแจ้งเตือนและแดชบอร์ดสรุปสถิติเวลาเล่นเกมและการนอน</li><li>ส่งเสริมให้นักเรียนจัดสรรเวลาเล่นเกม การเรียน และการนอนได้อย่างมีประสิทธิภาพ</li></ol></div>
+  <div class="card"><h3>👨‍🎓 กลุ่มเป้าหมาย</h3><p>นักเรียนระดับชั้นมัธยมศึกษา</p><h3>⏱️ ระยะเวลา</h3><p>4 สัปดาห์ หรือปรับตามระยะเวลาจริงของรายวิชา</p></div>
+ </div>
+ <div class="grid" style="margin-top:14px">
+  <div class="card"><h3>🗄️ ระบบหลังบ้าน</h3><p>ใช้ <b>Google Sheets / Firebase</b> สำหรับบันทึกข้อมูลเวลาเล่นเกม เวลานอน และข้อมูลกิจกรรมของผู้ใช้</p></div>
+  <div class="card"><h3>📊 การแสดงผล</h3><p>สร้าง Dashboard สำหรับสรุปเวลาเล่นเกม เวลานอน และแนวโน้มการจัดสรรเวลา โดยสามารถนำข้อมูลไปแสดงผ่าน <b>Looker Studio</b></p></div>
+  <div class="card"><h3>🔔 ระบบแจ้งเตือน</h3><p>ตั้งเวลาเตือนหยุดเล่นเกมและเตรียมตัวนอน โดยเชื่อมแนวทางการแจ้งเตือนกับ <b>Google Tasks</b> หรือระบบแจ้งเตือนในเว็บ</p></div>
+ </div>
+ <div class="card" style="margin-top:14px"><h3>📅 แผนการดำเนินงาน 4 สัปดาห์</h3><table><tr><th>สัปดาห์</th><th>งาน</th></tr><tr><td>1</td><td>วิเคราะห์ปัญหา ออกแบบฐานข้อมูล และออกแบบหน้าเว็บ</td></tr><tr><td>2</td><td>พัฒนาระบบบันทึกเวลาเล่นเกมและข้อมูลการนอน</td></tr><tr><td>3</td><td>พัฒนา Dashboard ระบบแจ้งเตือน และทดสอบการใช้งาน</td></tr><tr><td>4</td><td>เก็บผลการทดลอง ปรับปรุงระบบ และจัดทำเอกสารโครงงาน</td></tr></table></div>
+ <div class="grid" style="margin-top:14px">
+  <div class="card"><h3>📚 เอกสารประกอบ</h3><ul><li>คู่มือ Google Sheets API</li><li>คู่มือ Looker Studio</li><li>Backend Documentation</li><li>บทความวิจัยเกี่ยวกับการจัดสรรเวลาและการนอนของวัยเรียน</li></ul></div>
+  <div class="card"><h3>💡 ปัญหาที่ต้องการแก้</h3><p>ตื่นสาย ไปโรงเรียนไม่ทัน ลืมส่งการบ้าน นอนดึกเพราะเล่นโทรศัพท์เพลิน และลืมจัดกระเป๋านักเรียนในตอนเย็น</p><p><b>แนวทาง:</b> ตั้งปลุก 2 เวลา วางโทรศัพท์ห่างจากเตียง กำหนดเวลาเลิกใช้โทรศัพท์ไม่เกิน 22:00 น. และจัดกระเป๋าตั้งแต่ช่วงเย็น</p></div>
+ </div>`)}
 
 function water(){let d=data();touch(d);d.water=Math.min(d.waterGoal,d.water+1);d.xp+=10;d.coins+=2;achievement("water","Hydration Hero",d.water>=d.waterGoal);save(d);home()}
 function checkin(){let d=data();touch(d);if(!d.checkin){d.checkin=true;d.xp+=50;d.coins+=10;achievement("checkin","Daily Check-in",true);save(d)}home()}
@@ -124,6 +156,131 @@ function memory(){let vals=["🍎","🍌","🍇","🍉","🥝","🍓","🥑","�
 
 function rpg(){let d=data();layout(`<div class="card"><h2>🧙 Health RPG</h2><p>❤️ HP 100 · 🔷 MP 50 · ⚔️ ATK 10 · 🛡️ DEF 10</p><div class="grid"><div class="card"><h3>😴 Sleep Demon</h3><p>HP 300</p><button onclick="bossHit(30)">⚔️ Focus Strike</button></div><div class="card"><h3>📚 Knowledge Titan</h3><p>HP 500</p><button onclick="bossHit(50)">⚔️ Study Attack</button></div></div><p id="bossLog"></p></div>`)}
 let bossHP=300;function bossHit(n){bossHP-=n;reward(10,2);bossLog.textContent=bossHP>0?`โจมตีสำเร็จ! บอสเหลือ ${bossHP} HP`:"🏆 Boss defeated! +100 XP";if(bossHP<=0){reward(100,25);bossHP=300}}
+
+
+function aiTutor(){
+ layout(`<section class="card">
+   <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap">
+     <div><h2 style="margin:0">🤖 AI Tutor — ผู้ช่วยการเรียน</h2>
+     <p class="muted">ไม่เข้าใจบทเรียน ถามได้เลย เช่น คณิต วิทยาศาสตร์ ภาษาอังกฤษ สังคม หรือช่วยทำความเข้าใจการบ้าน</p></div>
+     <span class="badge">📚 Study AI</span>
+   </div>
+   <div class="grid" style="margin-top:14px">
+     <div>
+       <label>วิชา</label>
+       <select id="aiSubject" class="input">
+         <option>ทั่วไป</option><option>คณิตศาสตร์</option><option>วิทยาศาสตร์</option>
+         <option>ภาษาอังกฤษ</option><option>ภาษาไทย</option><option>สังคมศึกษา</option>
+         <option>คอมพิวเตอร์</option>
+       </select>
+     </div>
+     <div>
+       <label>ระดับชั้น</label>
+       <select id="aiLevel" class="input">
+         <option>มัธยมต้น</option><option>มัธยมปลาย</option>
+       </select>
+     </div>
+   </div>
+   <label style="display:block;margin-top:12px">คำถามของฉัน</label>
+   <textarea id="aiQuestion" class="input" rows="5" placeholder="พิมพ์สิ่งที่ไม่เข้าใจ เช่น “อธิบายสมการกำลังสองให้เข้าใจง่าย ๆ”"></textarea>
+   <div class="row" style="margin-top:10px">
+     <button class="primary" onclick="askAITutor()">✨ ถาม AI</button>
+     <button onclick="aiExample('คณิตศาสตร์','อธิบายวิธีแก้สมการ 2x + 5 = 17 แบบทีละขั้นตอน')">ตัวอย่างคณิต</button>
+     <button onclick="aiExample('วิทยาศาสตร์','อธิบายการสังเคราะห์แสงแบบเข้าใจง่าย พร้อมตัวอย่าง')">ตัวอย่างวิทย์</button>
+     <button onclick="aiExample('ภาษาอังกฤษ','ช่วยอธิบายความแตกต่างระหว่าง Present Simple กับ Present Continuous')">ตัวอย่างอังกฤษ</button>
+   </div>
+   <div id="aiStatus" class="muted" style="margin-top:10px"></div>
+ </section>
+ <section class="card" style="margin-top:14px">
+   <h3>💬 คำตอบ AI</h3>
+   <div id="aiAnswer" style="white-space:pre-wrap;line-height:1.75">ถามคำถามด้านบนได้เลย 👆</div>
+ </section>
+ <section class="card" style="margin-top:14px"><h3>🤖 AI พร้อมใช้งาน</h3><p class="muted">ระบบช่วยเรียนแบบไม่ต้องใช้ API Key ผู้ใช้เปิดแล้วถามได้เลย</p></section>`);
+ const k=localStorage.getItem("hh_gemini_key")||"";
+ const input=document.getElementById("geminiKey"); if(input) input.value=k;
+}
+function aiExample(subject,q){
+ const s=document.getElementById("aiSubject"); const t=document.getElementById("aiQuestion");
+ if(s)s.value=subject; if(t)t.value=q;
+}
+function saveGeminiKey(){
+ const k=(document.getElementById("geminiKey")?.value||"").trim();
+ if(!k)return alert("กรุณาใส่ API Key");
+ localStorage.setItem("hh_gemini_key",k);
+ alert("บันทึก Gemini API Key แล้ว ✅");
+}
+function clearGeminiKey(){
+ localStorage.removeItem("hh_gemini_key");
+ const e=document.getElementById("geminiKey"); if(e)e.value="";
+ alert("ลบ API Key แล้ว");
+}
+async function askAITutor(){
+ const q=(document.getElementById("aiQuestion")?.value||"").trim();
+ const subject=document.getElementById("aiSubject")?.value||"ทั่วไป";
+ const answer=document.getElementById("aiAnswer");
+ const status=document.getElementById("aiStatus");
+ if(!q){alert("พิมพ์คำถามก่อนนะครับ");return}
+ status.textContent="🧠 กำลังค้นหาคำอธิบายจากบทเรียนในระบบ...";
+ const s=q.toLowerCase();
+ let out="";
+ if(subject==="คณิตศาสตร์" || /สมการ|เศษส่วน|ร้อยละ|พื้นที่|พีทาโกรัส|พีชคณิต|คณิต/.test(s)){
+   out="📘 แนวทางเรียนคณิตศาสตร์\\n\\n1. อ่านโจทย์และจดสิ่งที่โจทย์ให้มา\\n2. ระบุสิ่งที่โจทย์ต้องการหา\\n3. เลือกสูตรหรือวิธีที่เกี่ยวข้อง\\n4. แทนค่าและคำนวณทีละขั้น\\n5. ตรวจคำตอบอีกครั้ง\\n\\n💡 ถ้าส่งโจทย์เต็ม ๆ มา ผมจะช่วยแยกโจทย์และอธิบายวิธีทำทีละขั้นให้ครับ";
+ }else if(subject==="วิทยาศาสตร์" || /แรง|พลังงาน|เซลล์|สังเคราะห์แสง|อะตอม|สาร|วิทย์|วิทยาศาสตร์/.test(s)){
+   out="🔬 แนวทางเรียนวิทยาศาสตร์\\n\\nลองแบ่งเรื่องเป็น 3 ส่วน: “คืออะไร → เกิดขึ้นอย่างไร → มีตัวอย่างอะไร”\\n\\n💡 ถ้าบอกชื่อบทหรือส่งคำถามมา ผมจะช่วยสรุปเป็นภาษาง่าย ๆ พร้อมตัวอย่างให้ครับ";
+ }else if(subject==="ภาษาอังกฤษ" || /english|grammar|อังกฤษ|present|past|tense|verb/.test(s)){
+   out="🇬🇧 แนวทางเรียนภาษาอังกฤษ\\n\\nเริ่มจากดูว่าใครทำอะไร เมื่อไหร่ และประโยคเป็นบอกเล่า/ปฏิเสธ/คำถาม จากนั้นจึงเลือก tense ให้เหมาะสม\\n\\n💡 ส่งประโยคที่ไม่เข้าใจมาได้เลย ผมจะช่วยแปลและอธิบายไวยากรณ์ให้ครับ";
+ }else{
+   out="📚 ผู้ช่วยเรียน Health Hub\\n\\nผมช่วยได้ในเรื่อง:\\n• สรุปบทเรียนให้เข้าใจง่าย\\n• อธิบายคำศัพท์\\n• แยกโจทย์เป็นขั้นตอน\\n• ช่วยตรวจแนวคิดในการทำการบ้าน\\n• ทำตัวอย่างเพื่อฝึกเพิ่มเติม\\n\\nลองพิมพ์คำถามพร้อมชื่อวิชา เช่น “คณิตศาสตร์ ม.2 ช่วยอธิบายสมการเชิงเส้นให้หน่อย”";
+ }
+ answer.textContent=out;
+ status.textContent="✅ พร้อมช่วยเรียนแล้ว";
+ reward(5,1);
+}
+
+function adminAIKeyPanel(){
+ const key=localStorage.getItem("hh_gemini_admin_key")||"";
+ return `<section class="card" style="margin-top:14px">
+   <h3>🔐 AI Key — เฉพาะผู้ดูแลระบบ</h3>
+   <p class="muted">ระบบช่วยเรียนแบบไม่ต้องใช้ API Key</p>
+   <input id="adminGeminiKey" class="input" type="password" value="${escLocal(key)}" placeholder="วาง Gemini API Key ของโครงงาน">
+   <div class="row" style="margin-top:10px">
+     <button class="primary" onclick="saveAdminGeminiKey()">💾 บันทึกคีย์ AI</button>
+     <button onclick="testAdminGeminiKey()">🧪 ทดสอบคีย์</button>
+     <button class="danger" onclick="removeAdminGeminiKey()">🗑️ ลบคีย์</button>
+   </div>
+   <p id="adminKeyStatus" class="muted" style="margin-top:8px">${key?"✅ มีคีย์ AI ตั้งค่าไว้แล้ว":"⚠️ ยังไม่ได้ตั้งค่าคีย์ AI"}</p>
+   <small class="muted">หมายเหตุ: คีย์ที่เก็บในเว็บฝั่งผู้ใช้ยังไม่ใช่การซ่อนคีย์แบบ Backend จริง หากนำขึ้นเว็บสาธารณะ ควรเก็บคีย์ใน Server/Cloud Function และให้เว็บเรียก Backend แทน</small>
+ </section>`;
+}
+function saveAdminGeminiKey(){
+ const k=(document.getElementById("adminGeminiKey")?.value||"").trim();
+ if(!k)return alert("กรุณาใส่ Gemini API Key");
+ localStorage.setItem("hh_gemini_admin_key",k);
+ localStorage.setItem("hh_gemini_key",k);
+ const s=document.getElementById("adminKeyStatus"); if(s)s.textContent="✅ บันทึกคีย์ AI สำหรับเครื่องนี้แล้ว";
+ alert("ตั้งค่า AI Key สำหรับผู้ใช้เครื่องนี้แล้ว ✅");
+}
+function removeAdminGeminiKey(){
+ localStorage.removeItem("hh_gemini_admin_key");
+ localStorage.removeItem("hh_gemini_key");
+ const e=document.getElementById("adminGeminiKey"); if(e)e.value="";
+ const s=document.getElementById("adminKeyStatus"); if(s)s.textContent="⚠️ ลบคีย์ AI แล้ว";
+}
+async function testAdminGeminiKey(){
+ const k=(document.getElementById("adminGeminiKey")?.value||"").trim();
+ const s=document.getElementById("adminKeyStatus");
+ if(!k){if(s)s.textContent="⚠️ กรุณาใส่คีย์ก่อน";return}
+ if(s)s.textContent="⏳ กำลังทดสอบ...";
+ try{
+   const res=await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent",{
+     method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":k},
+     body:JSON.stringify({contents:[{parts:[{text:"ตอบสั้น ๆ ว่า AI Health Hub พร้อมใช้งาน"}]}]})
+   });
+   const data=await res.json();
+   if(!res.ok)throw new Error(data?.error?.message||"คีย์ไม่ผ่าน");
+   if(s)s.textContent="✅ ทดสอบสำเร็จ: AI พร้อมใช้งาน";
+ }catch(e){if(s)s.textContent="❌ ทดสอบไม่สำเร็จ: "+e.message}
+}
 
 function admin(){let d=data(),a=accounts();layout(`<div class="grid"><div class="card"><h2>🛡️ Admin Dashboard</h2><p>บัญชีทั้งหมดในเครื่อง: ${Object.keys(a).length}</p><p>ผู้ใช้ปัจจุบัน: ${esc(currentUser)}</p></div><div class="card"><h3>📊 สถิติผู้ใช้ปัจจุบัน</h3><p>Level ${d.level}</p><p>${d.xp} XP</p><p>${d.games} เกม</p><p>${d.coins} Coins</p></div></div><div class="card" style="margin-top:14px"><h3>👥 Accounts</h3><table><tr><th>Username</th><th>Action</th></tr>${Object.keys(a).map(u=>`<tr><td>${esc(u)}</td><td>${u!=="admin"?`<button class="danger" onclick="deleteAccount('${esc(u)}')">ลบ</button>`:"🔒 protected"}</td></tr>`).join("")}</table></div><div class="card" style="margin-top:14px"><h3>💾 Export</h3><button onclick="exportData()">ดาวน์โหลดข้อมูล JSON</button> <button class="danger" onclick="resetMyData()">รีเซ็ตข้อมูลผู้ใช้</button></div>`)}
 function deleteAccount(u){if(currentUser!=="admin")return alert("เฉพาะ admin");if(confirm("ลบบัญชี "+u+"?")){let a=accounts();delete a[u];localStorage.setItem(ACCOUNT_KEY,JSON.stringify(a));admin()}}
