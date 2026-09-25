@@ -10,7 +10,7 @@ button,input,select,textarea{font:inherit}button{border:0;border-radius:14px;pad
 .cover{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:25px;background:radial-gradient(circle at 20% 20%,#72e8bd66,transparent 35%),linear-gradient(135deg,#087d5a,#20c99a 55%,#7debd0)}
 .cover-card{width:min(700px,100%);padding:50px 30px;text-align:center;color:white;border-radius:35px;background:#ffffff18;border:1px solid #ffffff55;box-shadow:0 25px 70px #005c4338;backdrop-filter:blur(12px)}
 .logo{font-size:65px}.cover h1{font-size:clamp(40px,9vw,75px);margin:8px 0}.cover p{font-size:20px}.next{margin-top:25px;background:white;color:#087d5a;font-size:18px;padding:15px 30px}
-#app{display:none}header{padding:22px;color:white;background:linear-gradient(135deg,#087d5a,#20c99a);box-shadow:0 8px 30px #087d5a44}header h1{margin:0}nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}nav button{background:#ffffff22;color:white}nav button:hover{background:white;color:#087d5a}
+#app{display:block}header{padding:22px;color:white;background:linear-gradient(135deg,#087d5a,#20c99a);box-shadow:0 8px 30px #087d5a44}header h1{margin:0}nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}nav button{background:#ffffff22;color:white}nav button:hover{background:white;color:#087d5a}
 main{max-width:1100px;margin:auto;padding:20px}section{display:none;background:#ffffffee;border:1px solid #cce9df;border-radius:22px;padding:22px;margin-bottom:18px;box-shadow:0 15px 40px #087d5a12}section.active{display:block}
 .primary{background:#087d5a;color:white}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}.card{padding:18px;border-radius:18px;background:#e7fff4;border:1px solid #cce9df}.stats{display:flex;flex-wrap:wrap;gap:8px}.stat{padding:9px 13px;border-radius:20px;background:#e7fff4;font-weight:700}
 input,select,textarea{width:100%;padding:12px;border:1px solid #cce9df;border-radius:12px;margin:6px 0}.board{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px}.game-card{height:110px;font-size:35px;background:#087d5a;color:white}.game-card.open{background:white;color:#12372d;border:1px solid #cce9df}.admin-table{width:100%;border-collapse:collapse}.admin-table th,.admin-table td{padding:9px;border-bottom:1px solid #d8eee6;text-align:left}.small{font-size:13px;color:#52756a}
@@ -18,16 +18,6 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #cce9df;border-ra
 </style>
 </head>
 <body>
-
-<div id="cover" class="cover">
-  <div class="cover-card">
-    <div class="logo">✦</div>
-    <h1>HEALTH HUB</h1>
-    <p>พื้นที่เรียนรู้ สุขภาพ เกม และการดูแลตัวเอง</p>
-    <p>✨ พร้อมแล้วมาเริ่มกันเลย</p>
-    <button class="next" onclick="enterApp()">ถัดไป →</button>
-  </div>
-</div>
 
 <div id="app">
 <header>
@@ -161,7 +151,7 @@ let s=JSON.parse(localStorage.getItem(STATE)||'{"name":"","xp":0,"coins":0,"leve
 let audioCtx=null,osc=null;
 
 function persist(){localStorage.setItem(STATE,JSON.stringify(s));update()}
-function enterApp(){document.getElementById("cover").style.display="none";document.getElementById("app").style.display="block";loadName();update();logUser("เข้าใช้งานเว็บ")}
+function enterApp(){document.getElementById("app").style.display="block";loadName();update();logUser("เข้าใช้งานเว็บ")}
 function openPage(id){document.querySelectorAll("main section").forEach(x=>x.classList.remove("active"));document.getElementById(id).classList.add("active");if(id==="ach")renderAch();if(id==="admin")renderAdmin()}
 function update(){["xp","coins","level","streak","played","water"].forEach(k=>document.getElementById(k).textContent=s[k]);document.getElementById("rpgXp").textContent=s.xp;document.getElementById("rpgLevel").textContent=s.level}
 function loadName(){document.getElementById("username").value=s.name||"";document.getElementById("hello").textContent=s.name?"สวัสดี "+s.name+" 👋":""}
@@ -189,7 +179,7 @@ function renderAdmin(){let users=Object.values(JSON.parse(localStorage.getItem(K
 function esc(x){return String(x).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
 function exportUsers(){let blob=new Blob([JSON.stringify(JSON.parse(localStorage.getItem(KEY)||"{}"),null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="health-hub-users.json";a.click()}
 function clearUsers(){if(confirm("ล้างข้อมูลผู้ใช้ในเครื่องนี้?")){localStorage.removeItem(KEY);renderAdmin()}}
-update();
+loadName();update();logUser("เข้าใช้งานเว็บ");
 </script>
 </body>
 </html>
