@@ -57,33 +57,16 @@ function achievement(id,name,ok){let d=data();if(ok&&!d.achievements.includes(id
 function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
 
 function register(){
-  const u=(document.getElementById("newuser")?.value||"").trim();
-  const p=(document.getElementById("newpass")?.value||"");
-  const out=document.getElementById("msg");
-  if(u.length<3||p.length<4){out.textContent="ชื่อผู้ใช้ต้องมีอย่างน้อย 3 ตัวอักษร และรหัสผ่านอย่างน้อย 4 ตัวอักษร";return}
-  if(u.toLowerCase()==="admin"){out.textContent="ชื่อ admin สงวนไว้สำหรับผู้ดูแลระบบ";return}
-  const a=accounts();
-  if(Object.keys(a).some(x=>x.toLowerCase()===u.toLowerCase())){out.textContent="มีบัญชีนี้แล้ว";return}
-  a[u]={password:p,created:new Date().toISOString()};
-  localStorage.setItem(ACCOUNT_KEY,JSON.stringify(a));
-  currentUser=u;
-  localStorage.setItem("hh_current",u);
-  enter(u);
+ const u=newuser.value.trim(),p=newpass.value;
+ if(u.length<3||p.length<4){msg.textContent="ชื่อผู้ใช้ 3 ตัวอักษร และรหัสผ่าน 4 ตัวอักษรขึ้นไป";return}
+ const a=accounts();if(a[u]){msg.textContent="มีบัญชีนี้แล้ว";return}
+ a[u]={password:p};localStorage.setItem(ACCOUNT_KEY,JSON.stringify(a));enter(u)
 }
 function login(){
-  const u=(document.getElementById("user")?.value||"").trim();
-  const p=(document.getElementById("pass")?.value||"");
-  const out=document.getElementById("msg");
-  if(!u||!p){out.textContent="กรุณากรอกชื่อผู้ใช้และรหัสผ่าน";return}
-  if(u.toLowerCase()==="admin"&&p==="HHadmin2026!"){
-    currentUser="admin";localStorage.setItem("hh_current","admin");enter("admin");return;
-  }
-  const a=accounts();
-  const key=Object.keys(a).find(x=>x.toLowerCase()===u.toLowerCase());
-  if(!key||String(a[key].password)!==p){out.textContent="ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง";return}
-  currentUser=key;
-  localStorage.setItem("hh_current",key);
-  enter(key);
+ const u=user.value.trim(),p=pass.value,a=accounts();
+ if(u==="admin"&&p==="HHadmin2026!"){enter(u);return}
+ if(!a[u]||a[u].password!==p){msg.textContent="ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง";return}
+ enter(u)
 }
 let hhAudio=null,hhGain=null,hhTimer=null,hhPlaying=false,hhStep=0;
 const HH_MUSIC={calm:[261.63,329.63,392.00,329.63,293.66,349.23,440.00,349.23],focus:[220,261.63,329.63,392,329.63,261.63,246.94,293.66],game:[329.63,392,523.25,659.25,523.25,392,587.33,783.99]};
@@ -108,6 +91,33 @@ function layout(body){
  </div></header><main class="wrap">${body}</main>`
 }
 
+
+function hhGetAccounts(){
+  try { return JSON.parse(localStorage.getItem(ACCOUNT_KEY)||"{}"); }
+  catch(e){ return {}; }
+}
+function hhSaveAccounts(a){ localStorage.setItem(ACCOUNT_KEY,JSON.stringify(a)); }
+
+// Compatibility: migrate accounts created by the old duplicate login system.
+function migrateOldAccounts(){
+  try{
+    const old=JSON.parse(localStorage.getItem("hh_accounts")||"[]");
+    const a=accounts();
+    if(Array.isArray(old)){
+      old.forEach(v=>{
+        const u=String(v?.user||"").trim();
+        const pw=String(v?.pass ?? v?.password ?? "");
+        if(u && !a[u] && u.toLowerCase()!=="admin") a[u]={password:pw};
+      });
+      localStorage.setItem(ACCOUNT_KEY,JSON.stringify(a));
+    }
+  }catch(e){}
+}
+function hhBootAuth(){
+  migrateOldAccounts();
+  const u=localStorage.getItem("hh_current");
+  if(u){ currentUser=u; gate.classList.add("hide"); app.classList.remove("hide"); fab.classList.remove("hide"); document.getElementById("musicbar").classList.remove("hide"); home(); }
+}
 
 function home(){
  let d=data();touch(d);save(d);
@@ -456,12 +466,7 @@ function admin(){if(currentUser!=="admin"){alert("🔒 หน้านี้ส�
 function deleteAccount(u){if(currentUser!=="admin")return alert("🔒 เฉพาะ Admin เท่านั้น");if(confirm("ลบบัญชี "+u+"?")){let a=accounts();delete a[u];localStorage.setItem(ACCOUNT_KEY,JSON.stringify(a));admin()}}
 function exportData(){let all={accounts:accounts(),current:data()};let a=document.createElement("a");a.href="data:application/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(all,null,2));a.download="health-hub-admin-export.json";a.click()}
 function resetMyData(){if(confirm("รีเซ็ตข้อมูลผู้ใช้ปัจจุบัน?")){localStorage.removeItem(DATA_KEY+"_"+currentUser);home()}}
-function hhBootAuth(){
-  const u=localStorage.getItem("hh_current");
-  if(u){currentUser=u;enter(u);}else{gate.classList.remove("hide");}
-}
-
-hhBootAuth();
 </script>
+<script>hhBootAuth();</script>
 </body>
 </html>
