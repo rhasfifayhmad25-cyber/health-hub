@@ -1,472 +1,195 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Health Hub V100 MAX</title>
+<title>HEALTH HUB</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#f3f6fa;color:#172033}
-button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:12px;padding:10px 14px;font-weight:700;background:#172033;color:#fff}.musicbar{position:sticky;top:0;z-index:50;background:#fff;border:1px solid #e1e6ee;border-radius:14px;padding:10px 12px;margin:12px auto;max-width:1100px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}.musicbar select{width:auto;margin:0}.musicbar button{padding:8px 11px}
-.wrap{max-width:1100px;margin:auto;padding:20px}.hide{display:none!important}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
-.card{background:#fff;border:1px solid #e1e6ee;border-radius:18px;padding:18px}.muted{color:#64748b}.danger{background:#dc2626}.alt{background:#e5e7eb;color:#172033}
-header{background:#172033;color:#fff;padding:14px 18px;display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}.brand{font-weight:900;font-size:20px}.nav{display:flex;gap:7px;flex-wrap:wrap}.nav button{background:#334155;font-size:13px}
-input,select,textarea{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:10px;margin:5px 0 12px}
-.big{font-size:38px;font-weight:900}.bar{height:10px;background:#e5e7eb;border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:#172033}
-.gamebox{min-height:270px;margin-top:14px;border:1px dashed #b9c3d0;border-radius:16px;padding:16px;background:#fafcff}
-.arena{height:230px;position:relative;background:#eef2f7;border-radius:15px;overflow:hidden}.target{position:absolute;width:52px;height:52px;border-radius:50%;background:#ef4444}
-.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.cards button{height:60px}
-#fab{position:fixed;right:18px;bottom:18px;z-index:9999;border-radius:999px}
-table{width:100%;border-collapse:collapse}td,th{padding:9px;border-bottom:1px solid #e5e7eb;text-align:left}
-@media(max-width:600px){.wrap{padding:12px}.big{font-size:30px}}
-.badge{display:inline-block;padding:6px 10px;border-radius:999px;background:#eef6ff;color:#24527a;font-weight:700;font-size:13px}.row{display:flex;gap:8px;flex-wrap:wrap}</style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,"Noto Sans Thai",sans-serif;background:linear-gradient(135deg,#e8fff7,#eef6ff);color:#12372d}
+button,input,select,textarea{font:inherit}button{border:0;border-radius:14px;padding:12px 16px;font-weight:700;cursor:pointer}
+.cover{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:25px;background:radial-gradient(circle at 20% 20%,#72e8bd66,transparent 35%),linear-gradient(135deg,#087d5a,#20c99a 55%,#7debd0)}
+.cover-card{width:min(700px,100%);padding:50px 30px;text-align:center;color:white;border-radius:35px;background:#ffffff18;border:1px solid #ffffff55;box-shadow:0 25px 70px #005c4338;backdrop-filter:blur(12px)}
+.logo{font-size:65px}.cover h1{font-size:clamp(40px,9vw,75px);margin:8px 0}.cover p{font-size:20px}.next{margin-top:25px;background:white;color:#087d5a;font-size:18px;padding:15px 30px}
+#app{display:none}header{padding:22px;color:white;background:linear-gradient(135deg,#087d5a,#20c99a);box-shadow:0 8px 30px #087d5a44}header h1{margin:0}nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}nav button{background:#ffffff22;color:white}nav button:hover{background:white;color:#087d5a}
+main{max-width:1100px;margin:auto;padding:20px}section{display:none;background:#ffffffee;border:1px solid #cce9df;border-radius:22px;padding:22px;margin-bottom:18px;box-shadow:0 15px 40px #087d5a12}section.active{display:block}
+.primary{background:#087d5a;color:white}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}.card{padding:18px;border-radius:18px;background:#e7fff4;border:1px solid #cce9df}.stats{display:flex;flex-wrap:wrap;gap:8px}.stat{padding:9px 13px;border-radius:20px;background:#e7fff4;font-weight:700}
+input,select,textarea{width:100%;padding:12px;border:1px solid #cce9df;border-radius:12px;margin:6px 0}.board{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px}.game-card{height:110px;font-size:35px;background:#087d5a;color:white}.game-card.open{background:white;color:#12372d;border:1px solid #cce9df}.admin-table{width:100%;border-collapse:collapse}.admin-table th,.admin-table td{padding:9px;border-bottom:1px solid #d8eee6;text-align:left}.small{font-size:13px;color:#52756a}
+@media(max-width:600px){.board{grid-template-columns:repeat(3,1fr)}.cover-card{padding:35px 20px}}
+</style>
 </head>
 <body>
-<div id="gate" class="wrap">
-  <div class="card" style="max-width:500px;margin:60px auto">
-    <h1>💚 Health Hub</h1><p class="muted">V100 MAX — ระบบจัดการเวลา สุขภาพ การเรียน และเกม</p>
-    <h3>เข้าสู่ระบบ</h3>
-    <input id="user" placeholder="ชื่อผู้ใช้">
-    <input id="pass" type="password" placeholder="รหัสผ่าน">
-    <button onclick="login()">เข้าสู่ระบบ</button>
-    <p id="msg" class="muted"></p>
-    <hr>
-    <p>ยังไม่มีบัญชี?</p>
-    <input id="newuser" placeholder="ชื่อผู้ใช้ใหม่">
-    <input id="newpass" type="password" placeholder="รหัสผ่าน">
-    <button onclick="register()" class="alt">สมัครบัญชี</button>
-    <p class="muted" style="font-size:12px">Admin ทดลอง: admin / HHadmin2026!</p>
+
+<div id="cover" class="cover">
+  <div class="cover-card">
+    <div class="logo">✦</div>
+    <h1>HEALTH HUB</h1>
+    <p>พื้นที่เรียนรู้ สุขภาพ เกม และการดูแลตัวเอง</p>
+    <p>✨ พร้อมแล้วมาเริ่มกันเลย</p>
+    <button class="next" onclick="enterApp()">ถัดไป →</button>
   </div>
 </div>
-<div id="app" class="hide"></div>
-<div id="musicbar" class="musicbar hide"><b>🎵 เพลง Health Hub</b><select id="musicTrack"><option value="calm">🌙 Night Calm</option><option value="focus">📚 Focus Pulse</option><option value="game">🎮 Game Energy</option></select><button onclick="hhToggleMusic()" id="musicBtn">▶️ เปิดเพลง</button><button onclick="hhStopMusic()" class="alt">⏹ หยุด</button><span id="musicStatus" class="muted">เพลงปิด</span></div>
-<button id="fab" class="hide" onclick="dashboard()">🚀 V100</button>
+
+<div id="app">
+<header>
+  <h1>✦ HEALTH HUB</h1>
+  <p>เว็บสุขภาพ • เกม • การเรียนรู้</p>
+  <nav>
+    <button onclick="openPage('home')">🏠 หน้าหลัก</button>
+    <button onclick="openPage('health')">❤️ สุขภาพ</button>
+    <button onclick="openPage('music')">🎵 เพลง</button>
+    <button onclick="openPage('notify')">🔔 แจ้งเตือน</button>
+    <button onclick="openPage('schedule')">🗓️ ตารางเวลา</button>
+    <button onclick="openPage('games')">🎮 Game Center</button>
+    <button onclick="openPage('rpg')">🧙 RPG</button>
+    <button onclick="openPage('ach')">🏆 Achievement</button>
+    <button onclick="openPage('ai')">🤖 AI Tutor</button>
+    <button onclick="openPage('adminLogin')">🛡️ Admin</button>
+  </nav>
+</header>
+
+<main>
+<section id="home" class="active">
+<h2>🏠 Dashboard</h2>
+<div class="grid">
+<div class="card">⭐ Level <h2 id="level">1</h2></div>
+<div class="card">✨ XP <h2 id="xp">0</h2></div>
+<div class="card">🪙 เหรียญ <h2 id="coins">0</h2></div>
+<div class="card">🔥 Streak <h2 id="streak">0</h2></div>
+<div class="card">🎮 เกมที่เล่น <h2 id="played">0</h2></div>
+<div class="card">💧 Water Tracker <h2 id="water">0</h2></div>
+</div>
+<br>
+<div class="card">
+<h3>👤 ชื่อผู้ใช้</h3>
+<input id="username" placeholder="ตั้งชื่อของคุณ">
+<button class="primary" onclick="saveName()">บันทึกชื่อ</button>
+<p id="hello"></p>
+</div>
+<br>
+<button class="primary" onclick="dailyCheckin()">✅ Daily Check-in +10 XP</button>
+<button onclick="focusSprint()">🎯 Focus Sprint</button>
+<p id="homeMsg"></p>
+</section>
+
+<section id="health">
+<h2>❤️ ระบบสุขภาพ</h2>
+<div class="grid">
+<div class="card"><label>😴 ชั่วโมงนอน</label><input id="sleep" type="number" min="0"><button onclick="saveHealth()">บันทึก</button></div>
+<div class="card"><label>👟 จำนวนก้าว</label><input id="steps" type="number" min="0"><button onclick="saveHealth()">บันทึก</button></div>
+<div class="card"><label>📚 เวลาเรียน (นาที)</label><input id="study" type="number" min="0"><button onclick="saveHealth()">บันทึก</button></div>
+<div class="card"><label>🙂 อารมณ์</label><select id="mood"><option>😊 ดี</option><option>🙂 ปกติ</option><option>😐 เฉยๆ</option><option>😟 กังวล</option></select><button onclick="saveHealth()">บันทึก</button></div>
+</div>
+<h3>📔 Diary</h3><textarea id="diary" rows="5" placeholder="เขียนบันทึกของวันนี้"></textarea><button class="primary" onclick="saveHealth()">💾 บันทึกสุขภาพ + XP</button>
+<p id="healthMsg"></p>
+</section>
+
+<section id="music">
+<h2>🎵 Music Lab</h2><p>เสียงสร้างด้วย Web Audio ในเบราว์เซอร์</p>
+<div class="grid">
+<button class="card" onclick="playTone(220)">🌙 Night Calm</button>
+<button class="card" onclick="playTone(440)">📚 Focus Pulse</button>
+<button class="card" onclick="playTone(660)">🎮 Game Energy</button>
+</div><br>
+<button class="primary" onclick="playTone(330)">▶ เปิด</button>
+<button onclick="stopAudio()">⏸ พัก/หยุด</button>
+<p id="musicMsg"></p>
+</section>
+
+<section id="notify">
+<h2>🔔 ระบบแจ้งเตือน</h2>
+<div class="grid">
+<input id="notice" placeholder="เช่น ดื่มน้ำ / ทำการบ้าน">
+<button class="primary" onclick="addNotice()">➕ เพิ่มแจ้งเตือน</button>
+</div>
+<ul id="noticeList"></ul>
+</section>
+
+<section id="schedule">
+<h2>🗓️ ตารางเวลา</h2>
+<input id="eventText" placeholder="กิจกรรม">
+<input id="eventDay" type="date">
+<button class="primary" onclick="addEvent()">➕ เพิ่มกิจกรรม</button>
+<ul id="eventList"></ul>
+</section>
+
+<section id="games">
+<h2>🎮 Game Center</h2>
+<p>เล่นเกมเพื่อสะสม XP และเหรียญ</p>
+<div class="grid">
+<button class="card" onclick="startTap()">⚡ Tap Rush<br><span class="small">กดให้ครบ 10 ครั้ง</span></button>
+<button class="card" onclick="startTarget()">🎯 Target Hunt<br><span class="small">กดเป้าหมาย</span></button>
+<button class="card" onclick="reaction()">⏱️ Reaction<br><span class="small">ทดสอบปฏิกิริยา</span></button>
+<button class="card" onclick="memory()">🧠 Memory<br><span class="small">จำเลข</span></button>
+</div>
+<p id="gameMsg"></p><div id="gameArea"></div>
+</section>
+
+<section id="rpg"><h2>🧙 RPG</h2><div class="card"><h3>นักผจญภัย Health Hub</h3><p>⭐ Level: <span id="rpgLevel">1</span></p><p>✨ XP: <span id="rpgXp">0</span></p><button class="primary" onclick="rpgQuest()">⚔️ ทำภารกิจประจำวัน</button><p id="rpgMsg"></p></div></section>
+
+<section id="ach"><h2>🏆 Achievement</h2><div id="achList" class="grid"></div></section>
+
+<section id="ai"><h2>🤖 AI Tutor</h2><p>ผู้ช่วยตอบคำถามทั่วไปสำหรับการเรียนรู้</p><input id="aiQ" placeholder="ถามคำถาม"><button class="primary" onclick="aiAsk()">ถาม AI</button><p id="aiA"></p><p class="small">Gemini API ควรเก็บคีย์ไว้ในระบบหลังบ้าน ไม่ควรใส่คีย์จริงในโค้ดหน้าเว็บ</p></section>
+
+<section id="adminLogin">
+<h2>🛡️ Admin</h2>
+<input id="adminCode" type="password" placeholder="รหัส Admin">
+<button class="primary" onclick="adminLogin()">🔐 เข้าสู่ระบบ</button>
+<p id="adminMsg"></p>
+</section>
+
+<section id="admin">
+<h2>🛡️ Admin Dashboard</h2>
+<div class="grid">
+<div class="card">👥 ผู้ใช้ทั้งหมด<h2 id="userCount">0</h2></div>
+<div class="card">🟢 ผู้ใช้ล่าสุด<h3 id="lastUser">-</h3></div>
+<div class="card">🎮 เกมทั้งหมด<h2 id="adminPlayed">0</h2></div>
+<div class="card">🪙 เหรียญรวม<h2 id="adminCoins">0</h2></div>
+</div>
+<br>
+<h3>📋 รายชื่อและกิจกรรมผู้ใช้</h3>
+<table class="admin-table"><thead><tr><th>ชื่อ</th><th>XP</th><th>เหรียญ</th><th>เกม</th><th>กิจกรรมล่าสุด</th></tr></thead><tbody id="userTable"></tbody></table>
+<br>
+<button class="primary" onclick="exportUsers()">📤 ส่งออกข้อมูล</button>
+<button onclick="clearUsers()">🗑️ ล้างข้อมูลผู้ใช้ในเครื่องนี้</button>
+</section>
+</main>
+</div>
 
 <script>
-const ACCOUNT_KEY="hh_accounts_v100";
-const DATA_KEY="hh_v100_data";
-const defaultData={xp:0,level:1,coins:0,streak:0,lastDay:"",games:0,best:{},water:0,waterGoal:8,study:0,steps:0,sleep:0,mood:"",diary:"",checkin:false,achievements:[]};
-let currentUser="";
+const KEY="healthhub_users_v3", STATE="healthhub_state_v3";
+let s=JSON.parse(localStorage.getItem(STATE)||'{"name":"","xp":0,"coins":0,"level":1,"streak":0,"played":0,"water":0,"last":"","health":{},"ach":[]}');
+let audioCtx=null,osc=null;
 
-function accounts(){try{return JSON.parse(localStorage.getItem(ACCOUNT_KEY)||"{}")}catch{return{}}}
-function data(){try{return Object.assign({},defaultData,JSON.parse(localStorage.getItem(DATA_KEY+"_"+currentUser)||"{}"))}catch{return Object.assign({},defaultData)}}
-function save(d){localStorage.setItem(DATA_KEY+"_"+currentUser,JSON.stringify(d))}
-function today(){return new Date().toISOString().slice(0,10)}
-function touch(d){let t=today();if(d.lastDay!==t){let y=new Date(Date.now()-86400000).toISOString().slice(0,10);d.streak=d.lastDay===y?d.streak+1:1;d.lastDay=t;d.water=0;d.study=0;d.steps=0;d.sleep=0;d.mood="";d.diary="";d.checkin=false}}
-function reward(x,c){let d=data();touch(d);d.xp+=x;d.coins+=c;d.level=Math.floor(d.xp/500)+1;save(d)}
-function achievement(id,name,ok){let d=data();if(ok&&!d.achievements.includes(id)){d.achievements.push(id);d.xp+=100;d.coins+=25;save(d);alert("🏆 "+name+" +100 XP")}}
-function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
-
-function register(){
- const u=newuser.value.trim(),p=newpass.value;
- if(u.length<3||p.length<4){msg.textContent="ชื่อผู้ใช้ 3 ตัวอักษร และรหัสผ่าน 4 ตัวอักษรขึ้นไป";return}
- const a=accounts();if(a[u]){msg.textContent="มีบัญชีนี้แล้ว";return}
- a[u]={password:p};localStorage.setItem(ACCOUNT_KEY,JSON.stringify(a));enter(u)
-}
-function login(){
- const u=user.value.trim(),p=pass.value,a=accounts();
- if(u==="admin"&&p==="HHadmin2026!"){enter(u);return}
- if(!a[u]||a[u].password!==p){msg.textContent="ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง";return}
- enter(u)
-}
-let hhAudio=null,hhGain=null,hhTimer=null,hhPlaying=false,hhStep=0;
-const HH_MUSIC={calm:[261.63,329.63,392.00,329.63,293.66,349.23,440.00,349.23],focus:[220,261.63,329.63,392,329.63,261.63,246.94,293.66],game:[329.63,392,523.25,659.25,523.25,392,587.33,783.99]};
-function hhStartMusic(){
-  try{
-    if(!hhAudio) hhAudio=new (window.AudioContext||window.webkitAudioContext)();
-    if(hhAudio.state==='suspended') hhAudio.resume();
-    if(hhTimer) clearInterval(hhTimer);
-    hhGain=hhAudio.createGain(); hhGain.gain.value=.055; hhGain.connect(hhAudio.destination);
-    hhPlaying=true; hhStep=0; document.getElementById('musicBtn').textContent='⏸️ พักเพลง'; document.getElementById('musicStatus').textContent='กำลังเล่นเพลง';
-    const play=()=>{if(!hhPlaying)return; const track=document.getElementById('musicTrack')?.value||'calm'; const notes=HH_MUSIC[track]; const f=notes[hhStep++%notes.length]; const o=hhAudio.createOscillator(); const g=hhAudio.createGain(); o.type=track==='game'?'square':'sine'; o.frequency.value=f; g.gain.setValueAtTime(.0001,hhAudio.currentTime); g.gain.exponentialRampToValueAtTime(.18,hhAudio.currentTime+.03); g.gain.exponentialRampToValueAtTime(.0001,hhAudio.currentTime+.42); o.connect(g); g.connect(hhGain); o.start(); o.stop(hhAudio.currentTime+.45);}; play(); hhTimer=setInterval(play,500);
-  }catch(e){alert('เบราว์เซอร์นี้ไม่รองรับเสียงเพลง')} }
-function hhToggleMusic(){if(hhPlaying){hhPlaying=false;if(hhTimer)clearInterval(hhTimer);document.getElementById('musicBtn').textContent='▶️ เปิดเพลง';document.getElementById('musicStatus').textContent='เพลงหยุดชั่วคราว';}else hhStartMusic()}
-function hhStopMusic(){hhPlaying=false;if(hhTimer)clearInterval(hhTimer);if(hhGain)hhGain.gain.setTargetAtTime(.0001,hhAudio?.currentTime||0,.03);document.getElementById('musicBtn').textContent='▶️ เปิดเพลง';document.getElementById('musicStatus').textContent='เพลงปิด'}
-
-function enter(u){currentUser=u;gate.classList.add("hide");app.classList.remove("hide");fab.classList.remove("hide");document.getElementById("musicbar").classList.remove("hide");home()}
-function logout(){currentUser="";app.classList.add("hide");fab.classList.add("hide");gate.classList.remove("hide")}
-
-function layout(body){
- app.innerHTML=`<header><div class="brand">💚 Health Hub V100</div><div class="nav">
- <button onclick="home()">🏠 Home</button><button onclick="aiTutor()">🤖 AI เรียน</button><button onclick="games()">🎮 เกม</button><button onclick="health()">❤️ สุขภาพ</button><button onclick="schedule()">🗓️ ตาราง</button><button onclick="rpg()">🧙 RPG</button><button onclick="projectInfo()">📘 โครงงาน</button><button onclick="admin()">🛡️ Admin</button><button onclick="logout()">🚪 ออก</button>
- </div></header><main class="wrap">${body}</main>`
-}
-
-
-function hhGetAccounts(){
-  try { return JSON.parse(localStorage.getItem(ACCOUNT_KEY)||"{}"); }
-  catch(e){ return {}; }
-}
-function hhSaveAccounts(a){ localStorage.setItem(ACCOUNT_KEY,JSON.stringify(a)); }
-
-// Compatibility: migrate accounts created by the old duplicate login system.
-function migrateOldAccounts(){
-  try{
-    const old=JSON.parse(localStorage.getItem("hh_accounts")||"[]");
-    const a=accounts();
-    if(Array.isArray(old)){
-      old.forEach(v=>{
-        const u=String(v?.user||"").trim();
-        const pw=String(v?.pass ?? v?.password ?? "");
-        if(u && !a[u] && u.toLowerCase()!=="admin") a[u]={password:pw};
-      });
-      localStorage.setItem(ACCOUNT_KEY,JSON.stringify(a));
-    }
-  }catch(e){}
-}
-function hhBootAuth(){
-  migrateOldAccounts();
-  const u=localStorage.getItem("hh_current");
-  if(u){ currentUser=u; gate.classList.add("hide"); app.classList.remove("hide"); fab.classList.remove("hide"); document.getElementById("musicbar").classList.remove("hide"); home(); }
-}
-
-function home(){
- let d=data();touch(d);save(d);
- layout(`<div class="grid">
- <div class="card"><small>LEVEL</small><div class="big">Lv.${d.level}</div><b>${d.xp} XP</b><div class="bar"><i style="width:${(d.xp%500)/5}%"></i></div></div>
- <div class="card"><small>🔥 STREAK</small><div class="big">${d.streak}</div><span>วัน</span></div>
- <div class="card"><small>🪙 COINS</small><div class="big">${d.coins}</div></div>
- <div class="card"><small>🎮 GAMES</small><div class="big">${d.games}</div></div></div>
- <div class="grid" style="margin-top:14px">
- <div class="card"><h3>⚡ Focus Sprint</h3><div id="focusClock" class="big">25:00</div><button onclick="focusTimer(25)">25 นาที</button> <button onclick="focusTimer(50)" class="alt">50 นาที</button></div>
- <div class="card"><h3>💧 Water</h3><p>${d.water}/${d.waterGoal} แก้ว</p><button onclick="water()">+ ดื่มน้ำ</button></div>
- <div class="card"><h3>📋 Check-in</h3><p>${d.checkin?"✅ เช็กอินแล้ว":"ยังไม่ได้เช็กอิน"}</p><button onclick="checkin()">เช็กอิน +50 XP</button></div>
- </div>
- <div class="card" style="margin-top:14px"><h2>🚀 V100 MAX</h2><p class="muted">Game Center + สุขภาพ + XP + Achievement + Admin</p><button onclick="games()">🎮 เล่นเกม</button> <button onclick="health()" class="alt">📝 บันทึกสุขภาพ</button></div>`)
-}
-function dashboard(){home()}
-
-function projectInfo(){
- layout(`<div class="card"><h2>📘 Health Hub — โครงงาน</h2><p class="muted">ระบบหลังบ้านสำหรับติดตามเวลาเล่นเกมและแจ้งเตือนเวลานอน เพื่อช่วยนักเรียนจัดสรรเวลาเล่นเกม การเรียน และการนอน</p></div>
- <div class="grid" style="margin-top:14px">
-  <div class="card"><h3>🎯 วัตถุประสงค์</h3><ol><li>พัฒนาระบบหลังบ้านสำหรับบันทึกและติดตามเวลาเล่นเกม</li><li>สร้างระบบแจ้งเตือนและแดชบอร์ดสรุปสถิติเวลาเล่นเกมและการนอน</li><li>ส่งเสริมให้นักเรียนจัดสรรเวลาเล่นเกม การเรียน และการนอนได้อย่างมีประสิทธิภาพ</li></ol></div>
-  <div class="card"><h3>👨‍🎓 กลุ่มเป้าหมาย</h3><p>นักเรียนระดับชั้นมัธยมศึกษา</p><h3>⏱️ ระยะเวลา</h3><p>4 สัปดาห์ หรือปรับตามระยะเวลาจริงของรายวิชา</p></div>
- </div>
- <div class="grid" style="margin-top:14px">
-  <div class="card"><h3>🗄️ ระบบหลังบ้าน</h3><p>ใช้ <b>Google Sheets / Firebase</b> สำหรับบันทึกข้อมูลเวลาเล่นเกม เวลานอน และข้อมูลกิจกรรมของผู้ใช้</p></div>
-  <div class="card"><h3>📊 การแสดงผล</h3><p>สร้าง Dashboard สำหรับสรุปเวลาเล่นเกม เวลานอน และแนวโน้มการจัดสรรเวลา โดยสามารถนำข้อมูลไปแสดงผ่าน <b>Looker Studio</b></p></div>
-  <div class="card"><h3>🔔 ระบบแจ้งเตือน</h3><p>ตั้งเวลาเตือนหยุดเล่นเกมและเตรียมตัวนอน โดยเชื่อมแนวทางการแจ้งเตือนกับ <b>Google Tasks</b> หรือระบบแจ้งเตือนในเว็บ</p></div>
- </div>
- <div class="card" style="margin-top:14px"><h3>📅 แผนการดำเนินงาน 4 สัปดาห์</h3><table><tr><th>สัปดาห์</th><th>งาน</th></tr><tr><td>1</td><td>วิเคราะห์ปัญหา ออกแบบฐานข้อมูล และออกแบบหน้าเว็บ</td></tr><tr><td>2</td><td>พัฒนาระบบบันทึกเวลาเล่นเกมและข้อมูลการนอน</td></tr><tr><td>3</td><td>พัฒนา Dashboard ระบบแจ้งเตือน และทดสอบการใช้งาน</td></tr><tr><td>4</td><td>เก็บผลการทดลอง ปรับปรุงระบบ และจัดทำเอกสารโครงงาน</td></tr></table></div>
- <div class="grid" style="margin-top:14px">
-  <div class="card"><h3>📚 เอกสารประกอบ</h3><ul><li>คู่มือ Google Sheets API</li><li>คู่มือ Looker Studio</li><li>Backend Documentation</li><li>บทความวิจัยเกี่ยวกับการจัดสรรเวลาและการนอนของวัยเรียน</li></ul></div>
-  <div class="card"><h3>💡 ปัญหาที่ต้องการแก้</h3><p>ตื่นสาย ไปโรงเรียนไม่ทัน ลืมส่งการบ้าน นอนดึกเพราะเล่นโทรศัพท์เพลิน และลืมจัดกระเป๋านักเรียนในตอนเย็น</p><p><b>แนวทาง:</b> ตั้งปลุก 2 เวลา วางโทรศัพท์ห่างจากเตียง กำหนดเวลาเลิกใช้โทรศัพท์ไม่เกิน 22:00 น. และจัดกระเป๋าตั้งแต่ช่วงเย็น</p></div>
- </div>`)}
-
-function water(){let d=data();touch(d);d.water=Math.min(d.waterGoal,d.water+1);d.xp+=10;d.coins+=2;achievement("water","Hydration Hero",d.water>=d.waterGoal);save(d);home()}
-function checkin(){let d=data();touch(d);if(!d.checkin){d.checkin=true;d.xp+=50;d.coins+=10;achievement("checkin","Daily Check-in",true);save(d)}home()}
-let focusInterval;
-function focusTimer(min){clearInterval(focusInterval);let end=Date.now()+min*60000;focusInterval=setInterval(()=>{let left=Math.max(0,end-Date.now()),s=Math.ceil(left/1000),e=document.getElementById("focusClock");if(e)e.textContent=String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");if(!left){clearInterval(focusInterval);reward(150,30);alert("🎉 Focus สำเร็จ +150 XP");home()}},250)}
-
-function health(){let d=data();layout(`<div class="card"><h2>❤️ Daily Health Log</h2>
-<label>😴 ชั่วโมงนอน</label><input id="sleep" type="number" min="0" max="24" step=".5" value="${d.sleep}">
-<label>👟 จำนวนก้าว</label><input id="steps" type="number" min="0" max="100000" value="${d.steps}">
-<label>📚 เรียนวันนี้ (นาที)</label><input id="study" type="number" min="0" max="1440" value="${d.study}">
-<label>🙂 อารมณ์</label><select id="mood"><option>ดีมาก</option><option>ดี</option><option>ปกติ</option><option>เหนื่อย</option><option>เครียด</option></select>
-<label>📔 Diary</label><textarea id="diary" rows="5">${esc(d.diary)}</textarea><button onclick="saveHealth()">💾 บันทึก</button></div>`)}
-function saveHealth(){let d=data();d.sleep=+sleep.value||0;d.steps=+steps.value||0;d.study=+study.value||0;d.mood=mood.value;d.diary=diary.value;d.xp+=40;d.coins+=8;achievement("sleep7","Sleep Logged",d.sleep>=7);achievement("study30","Study 30m",d.study>=30);save(d);home()}
-
-const HH_DAYS=["จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์"];
-
-function getNotifications(){
- return JSON.parse(localStorage.getItem("hh_notifications_"+currentUser)||"[]");
-}
-function saveNotifications(a){localStorage.setItem("hh_notifications_"+currentUser,JSON.stringify(a));}
-function notifications(){
- const a=getNotifications();
- layout(`<div class="card">
- <h2>🔔 การแจ้งเตือน</h2>
- <p class="muted">ตั้งเตือนเรื่องเรียน การบ้าน นอน และจัดกระเป๋าได้จากหน้านี้</p>
- <div class="grid">
-  <div><label>หัวข้อ</label><input id="notTitle" placeholder="เช่น ทำการบ้านคณิต"></div>
-  <div><label>เวลา</label><input id="notTime" type="time"></div>
-  <div><label>ประเภท</label><select id="notType"><option>📚 การเรียน</option><option>📝 การบ้าน</option><option>😴 เวลานอน</option><option>🎒 จัดกระเป๋า</option><option>🎮 หยุดเล่นเกม</option><option>💧 ดื่มน้ำ</option></select></div>
- </div>
- <button onclick="addNotification()">➕ เพิ่มการแจ้งเตือน</button>
- <button class="alt" onclick="requestNotificationPermission()">🔔 เปิดการแจ้งเตือนของเบราว์เซอร์</button>
- </div>
- <div class="card" style="margin-top:14px"><h3>รายการแจ้งเตือน</h3><div id="notificationList"></div></div>`);
- renderNotifications();
-}
-function addNotification(){
- const title=(document.getElementById("notTitle")?.value||"").trim();
- const time=document.getElementById("notTime")?.value||"";
- const type=document.getElementById("notType")?.value||"📚 การเรียน";
- if(!title||!time){alert("กรุณาใส่หัวข้อและเวลา");return}
- const a=getNotifications(); a.push({id:Date.now(),title,time,type,enabled:true,last:""});
- a.sort((x,y)=>x.time.localeCompare(y.time)); saveNotifications(a); notifications();
-}
-function renderNotifications(){
- const box=document.getElementById("notificationList");if(!box)return;
- const a=getNotifications();
- box.innerHTML=a.length?a.map((x,i)=>`<div class="card" style="margin:7px 0;padding:10px"><b>${esc(x.type)} ${esc(x.title)}</b><br>⏰ ${esc(x.time)} · ${x.enabled?"เปิด":"ปิด"}<br><button onclick="toggleNotification(${i})">${x.enabled?"ปิด":"เปิด"}</button> <button class="danger" onclick="deleteNotification(${i})">ลบ</button></div>`).join(""):"<span class='muted'>ยังไม่มีการแจ้งเตือน</span>";
-}
-function toggleNotification(i){const a=getNotifications();a[i].enabled=!a[i].enabled;saveNotifications(a);renderNotifications();}
-function deleteNotification(i){const a=getNotifications();a.splice(i,1);saveNotifications(a);renderNotifications();}
-async function requestNotificationPermission(){
- if(!("Notification" in window)){alert("เบราว์เซอร์นี้ไม่รองรับการแจ้งเตือน");return}
- const r=await Notification.requestPermission();
- alert(r==="granted"?"เปิดการแจ้งเตือนแล้ว ✅":"ยังไม่ได้อนุญาตการแจ้งเตือน");
-}
-function checkNotifications(){
- if(!currentUser)return;
- const now=new Date(), hh=String(now.getHours()).padStart(2,"0"), mm=String(now.getMinutes()).padStart(2,"0");
- const key=now.toISOString().slice(0,10), a=getNotifications();
- let changed=false;
- a.forEach(x=>{
-  if(x.enabled&&x.time===`${hh}:${mm}`&&x.last!==key){
-   x.last=key;changed=true;
-   if("Notification" in window && Notification.permission==="granted") new Notification("Health Hub 🔔",{body:x.title});
-   else alert("🔔 "+x.title);
-  }
- });
- if(changed)saveNotifications(a);
-}
-setInterval(checkNotifications,30000);
-
-function schedule(){
- const a=JSON.parse(localStorage.getItem("hh_timetable_"+currentUser)||"[]");
- layout(`<div class="card">
- <h2>🗓️ ตารางเรียน</h2>
- <p class="muted">จัดตารางเรียนรายสัปดาห์ แยกวัน คาบ เวลา และวิชาได้</p>
- <div class="grid">
-   <div><label>วัน</label><select id="ttDay">${HH_DAYS.map(x=>`<option>${x}</option>`).join("")}</select></div>
-   <div><label>คาบที่</label><input id="ttPeriod" type="number" min="1" max="12" value="1"></div>
-   <div><label>เวลา</label><input id="ttTime" type="text" placeholder="08:30-09:20"></div>
-   <div><label>วิชา</label><input id="ttSubject" placeholder="เช่น คณิตศาสตร์"></div>
-   <div><label>ห้อง</label><input id="ttRoom" placeholder="เช่น 3/2"></div>
- </div>
- <button onclick="addTimetable()">➕ เพิ่มคาบเรียน</button>
- <button class="alt" onclick="clearTimetable()">🧹 ล้างตารางทั้งหมด</button>
- </div>
- <div class="card" style="margin-top:14px"><h3>📚 ตารางประจำสัปดาห์</h3><div id="timetableGrid"></div></div>`);
- renderTimetable();
-}
-function addTimetable(){
- const day=document.getElementById("ttDay").value;
- const period=Math.max(1,Math.min(12,Number(document.getElementById("ttPeriod").value)||1));
- const time=(document.getElementById("ttTime").value||"").trim();
- const subject=(document.getElementById("ttSubject").value||"").trim();
- const room=(document.getElementById("ttRoom").value||"").trim();
- if(!subject){alert("กรุณาใส่ชื่อวิชา");return}
- const key="hh_timetable_"+currentUser;
- const a=JSON.parse(localStorage.getItem(key)||"[]");
- a.push({day,period,time,subject,room});
- a.sort((x,y)=>HH_DAYS.indexOf(x.day)-HH_DAYS.indexOf(y.day)||x.period-y.period);
- localStorage.setItem(key,JSON.stringify(a));
- schedule();
-}
-function renderTimetable(){
- const box=document.getElementById("timetableGrid");
- if(!box)return;
- const a=JSON.parse(localStorage.getItem("hh_timetable_"+currentUser)||"[]");
- const max=Math.max(1,...a.map(x=>Number(x.period)||1));
- box.innerHTML=`<div style="overflow:auto"><table><tr><th>คาบ</th>${HH_DAYS.map(d=>`<th>${d}</th>`).join("")}</tr>${
- Array.from({length:max},(_,i)=>{const p=i+1;return `<tr><td><b>คาบ ${p}</b></td>${HH_DAYS.map(day=>{
-   const x=a.find(z=>z.day===day&&Number(z.period)===p);
-   return `<td>${x?`<b>${esc(x.subject)}</b><br><small>${esc(x.time||"")}${x.room?` · ห้อง ${esc(x.room)}`:""}</small><br><button class="danger" onclick="delTimetable('${day}',${p})">ลบ</button>`:"<span class='muted'>—</span>"}</td>`;
- }).join("")}</tr>`}).join("")}</table></div>`;
-}
-function delTimetable(day,period){
- const key="hh_timetable_"+currentUser;
- let a=JSON.parse(localStorage.getItem(key)||"[]");
- a=a.filter(x=>!(x.day===day&&Number(x.period)===Number(period)));
- localStorage.setItem(key,JSON.stringify(a));renderTimetable();
-}
-function clearTimetable(){
- if(confirm("ล้างตารางเรียนทั้งหมดของบัญชีนี้?")){
-   localStorage.removeItem("hh_timetable_"+currentUser);renderTimetable();
- }
-}
-
-function games(){layout(`<div class="card"><h2>🎮 Game Center</h2><p>เกมสั้น โหลดเร็ว เล่นได้ทันที</p><div class="grid">
-<div class="card"><h3>⚡ Tap Rush</h3><p>กดให้ได้มากที่สุดใน 10 วิ</p><button onclick="tapRush()">เล่น</button></div>
-<div class="card"><h3>🎯 Target Hunt</h3><p>ยิงเป้าใน 20 วิ</p><button onclick="targetHunt()">เล่น</button></div>
-<div class="card"><h3>🧠 Memory Match</h3><p>จับคู่ 4×4</p><button onclick="memory()">เล่น</button></div>
-<div class="card"><h3>⚡ Reaction Test</h3><p>กดเมื่อเปลี่ยนเป็นเขียว</p><button onclick="reaction()">เล่น</button></div></div><div id="game" class="gamebox">เลือกเกมด้านบน</div></div>`)}
-
-function finish(id,score,xp){let d=data();d.games++;d.best[id]=Math.max(d.best[id]||0,score);d.xp+=xp;d.coins+=Math.max(1,Math.floor(xp/10));d.level=Math.floor(d.xp/500)+1;achievement("games10","Game Starter",d.games>=10);save(d);game.innerHTML=`<h2>🎉 จบเกม</h2><div class="big">${score}</div><p>+${xp} XP · Best: ${d.best[id]}</p><button onclick="games()">เกมอื่น</button>`}
-function tapRush(){game.innerHTML='<h2>⚡ TAP RUSH</h2><p id="t">10</p><button id="tap" style="width:100%;height:160px;font-size:32px">TAP!</button>';let n=0,t=10;tap.onclick=()=>n++;let i=setInterval(()=>{t--;document.getElementById("t").textContent=t;if(t<=0){clearInterval(i);finish("tap",n,Math.min(220,30+n*4))}},1000)}
-function targetHunt(){game.innerHTML='<h2>🎯 TARGET HUNT</h2><p id="tc">20</p><div id="arena" class="arena"></div>';let n=0,t=20;function spawn(){let q=document.createElement("button");q.className="target";q.style.left=Math.random()*88+"%";q.style.top=Math.random()*75+"%";q.onclick=()=>{n++;q.remove();spawn()};arena.appendChild(q)}spawn();let i=setInterval(()=>{tc.textContent=--t;if(t<=0){clearInterval(i);finish("target",n,Math.min(240,40+n*5))}},1000)}
-function reaction(){game.innerHTML='<button id="rx" style="width:100%;height:180px;font-size:28px">เริ่ม</button>';let state=0,start=0,to;rx.onclick=()=>{if(!state){state=1;rx.textContent="รอ...";to=setTimeout(()=>{state=2;start=performance.now();rx.textContent="กดเลย!";rx.style.background="#16a34a"},1000+Math.random()*2200)}else if(state===1){clearTimeout(to);state=0;rx.textContent="❌ เร็วไป"}else{let ms=Math.round(performance.now()-start);finish("reaction",Math.max(1,1000-ms),Math.max(30,160-Math.floor(ms/10)))}}}
-function memory(){let vals=["🍎","🍌","🍇","🍉","🥝","🍓","🥑","🍒"].concat(["🍎","🍌","🍇","🍉","🥝","🍓","🥑","🍒"]).sort(()=>Math.random()-.5),open=[],lock=false,m=0;game.innerHTML='<h2>🧠 MEMORY MATCH</h2><div id="cards" class="cards"></div>';vals.forEach(v=>{let q=document.createElement("button");q.textContent="❓";q.onclick=()=>{if(lock||q.done||open.includes(q))return;q.textContent=v;open.push(q);if(open.length===2){lock=true;if(open[0].textContent===open[1].textContent){open.forEach(x=>x.done=true);open=[];lock=false;if(++m===8)finish("memory",8,180)}else setTimeout(()=>{open.forEach(x=>x.textContent="❓");open=[];lock=false},500)}};cards.appendChild(q)})}
-
-function rpg(){let d=data();layout(`<div class="card"><h2>🧙 Health RPG</h2><p>❤️ HP 100 · 🔷 MP 50 · ⚔️ ATK 10 · 🛡️ DEF 10</p><div class="grid"><div class="card"><h3>😴 Sleep Demon</h3><p>HP 300</p><button onclick="bossHit(30)">⚔️ Focus Strike</button></div><div class="card"><h3>📚 Knowledge Titan</h3><p>HP 500</p><button onclick="bossHit(50)">⚔️ Study Attack</button></div></div><p id="bossLog"></p></div>`)}
-let bossHP=300;function bossHit(n){bossHP-=n;reward(10,2);bossLog.textContent=bossHP>0?`โจมตีสำเร็จ! บอสเหลือ ${bossHP} HP`:"🏆 Boss defeated! +100 XP";if(bossHP<=0){reward(100,25);bossHP=300}}
-
-
-
-function getAdminMusic(){return JSON.parse(localStorage.getItem("hh_admin_music")||"[]");}
-function renderAdminMusic(){
- const box=document.getElementById("adminMusicList"); if(!box)return;
- const a=getAdminMusic();
- box.innerHTML=a.length?a.map((x,i)=>`<div class="card" style="margin:7px 0;padding:10px"><b>🎵 ${esc(x.name)}</b><br><audio controls src="${x.data}"></audio><br><button class="danger" onclick="removeAdminMusic(${i})">ลบเพลง</button></div>`).join(""):"<span class='muted'>ยังไม่มีเพลง</span>";
-}
-function addAdminMusic(){
- if(currentUser!=="admin"){alert("🔒 เฉพาะ Admin เท่านั้น");return}
- const input=document.getElementById("adminMusicFile"), files=[...(input?.files||[])];
- if(!files.length){alert("เลือกไฟล์เพลงก่อน");return}
- const a=getAdminMusic(), max=8*1024*1024; let done=0, added=0;
- files.slice(0,10).forEach(file=>{
-  if(file.size>max||!file.type.startsWith("audio/")){done++;return}
-  const r=new FileReader();
-  r.onload=()=>{a.push({name:file.name,data:r.result});added++;done++;if(done===Math.min(files.length,10)){localStorage.setItem("hh_admin_music",JSON.stringify(a));renderAdminMusic();alert("เพิ่มเพลงแล้ว "+added+" เพลง")}};
-  r.onerror=()=>{done++;if(done===Math.min(files.length,10)){localStorage.setItem("hh_admin_music",JSON.stringify(a));renderAdminMusic()}};
-  r.readAsDataURL(file);
- });
-}
-function removeAdminMusic(i){if(currentUser!=="admin")return;const a=getAdminMusic();a.splice(i,1);localStorage.setItem("hh_admin_music",JSON.stringify(a));renderAdminMusic();}
-
-function aiTutor(){
- layout(`<section class="card">
-   <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap">
-     <div><h2 style="margin:0">🤖 AI Tutor — ผู้ช่วยการเรียน</h2>
-     <p class="muted">ไม่เข้าใจบทเรียน ถามได้เลย เช่น คณิต วิทยาศาสตร์ ภาษาอังกฤษ สังคม หรือช่วยทำความเข้าใจการบ้าน</p></div>
-     <span class="badge">📚 Study AI</span>
-   </div>
-   <div class="grid" style="margin-top:14px">
-     <div>
-       <label>วิชา</label>
-       <select id="aiSubject" class="input">
-         <option>ทั่วไป</option><option>คณิตศาสตร์</option><option>วิทยาศาสตร์</option>
-         <option>ภาษาอังกฤษ</option><option>ภาษาไทย</option><option>สังคมศึกษา</option>
-         <option>คอมพิวเตอร์</option>
-       </select>
-     </div>
-     <div>
-       <label>ระดับชั้น</label>
-       <select id="aiLevel" class="input">
-         <option>มัธยมต้น</option><option>มัธยมปลาย</option>
-       </select>
-     </div>
-   </div>
-   <label style="display:block;margin-top:12px">คำถามของฉัน</label>
-   <textarea id="aiQuestion" class="input" rows="5" placeholder="พิมพ์สิ่งที่ไม่เข้าใจ เช่น “อธิบายสมการกำลังสองให้เข้าใจง่าย ๆ”"></textarea>
-   <div class="row" style="margin-top:10px">
-     <button class="primary" onclick="askAITutor()">✨ ถาม AI</button>
-     <button onclick="aiExample('คณิตศาสตร์','อธิบายวิธีแก้สมการ 2x + 5 = 17 แบบทีละขั้นตอน')">ตัวอย่างคณิต</button>
-     <button onclick="aiExample('วิทยาศาสตร์','อธิบายการสังเคราะห์แสงแบบเข้าใจง่าย พร้อมตัวอย่าง')">ตัวอย่างวิทย์</button>
-     <button onclick="aiExample('ภาษาอังกฤษ','ช่วยอธิบายความแตกต่างระหว่าง Present Simple กับ Present Continuous')">ตัวอย่างอังกฤษ</button>
-   </div>
-   <div id="aiStatus" class="muted" style="margin-top:10px"></div>
- </section>
- <section class="card" style="margin-top:14px">
-   <h3>💬 คำตอบ AI</h3>
-   <div id="aiAnswer" style="white-space:pre-wrap;line-height:1.75">ถามคำถามด้านบนได้เลย 👆</div>
- </section>
- <section class="card" style="margin-top:14px"><h3>🤖 AI พร้อมใช้งาน</h3><p class="muted">ระบบช่วยเรียนแบบไม่ต้องใช้ API Key ผู้ใช้เปิดแล้วถามได้เลย</p></section>`);
- const k=localStorage.getItem("hh_gemini_key")||"";
- const input=document.getElementById("geminiKey"); if(input) input.value=k;
-}
-function aiExample(subject,q){
- const s=document.getElementById("aiSubject"); const t=document.getElementById("aiQuestion");
- if(s)s.value=subject; if(t)t.value=q;
-}
-function saveGeminiKey(){
- const k=(document.getElementById("geminiKey")?.value||"").trim();
- if(!k)return alert("กรุณาใส่ API Key");
- localStorage.setItem("hh_gemini_key",k);
- alert("บันทึก Gemini API Key แล้ว ✅");
-}
-function clearGeminiKey(){
- localStorage.removeItem("hh_gemini_key");
- const e=document.getElementById("geminiKey"); if(e)e.value="";
- alert("ลบ API Key แล้ว");
-}
-async function askAITutor(){
- const q=(document.getElementById("aiQuestion")?.value||"").trim();
- const subject=document.getElementById("aiSubject")?.value||"ทั่วไป";
- const answer=document.getElementById("aiAnswer");
- const status=document.getElementById("aiStatus");
- if(!q){alert("พิมพ์คำถามก่อนนะครับ");return}
- status.textContent="🧠 กำลังค้นหาคำอธิบายจากบทเรียนในระบบ...";
- const s=q.toLowerCase();
- let out="";
- if(subject==="คณิตศาสตร์" || /สมการ|เศษส่วน|ร้อยละ|พื้นที่|พีทาโกรัส|พีชคณิต|คณิต/.test(s)){
-   out="📘 แนวทางเรียนคณิตศาสตร์\\n\\n1. อ่านโจทย์และจดสิ่งที่โจทย์ให้มา\\n2. ระบุสิ่งที่โจทย์ต้องการหา\\n3. เลือกสูตรหรือวิธีที่เกี่ยวข้อง\\n4. แทนค่าและคำนวณทีละขั้น\\n5. ตรวจคำตอบอีกครั้ง\\n\\n💡 ถ้าส่งโจทย์เต็ม ๆ มา ผมจะช่วยแยกโจทย์และอธิบายวิธีทำทีละขั้นให้ครับ";
- }else if(subject==="วิทยาศาสตร์" || /แรง|พลังงาน|เซลล์|สังเคราะห์แสง|อะตอม|สาร|วิทย์|วิทยาศาสตร์/.test(s)){
-   out="🔬 แนวทางเรียนวิทยาศาสตร์\\n\\nลองแบ่งเรื่องเป็น 3 ส่วน: “คืออะไร → เกิดขึ้นอย่างไร → มีตัวอย่างอะไร”\\n\\n💡 ถ้าบอกชื่อบทหรือส่งคำถามมา ผมจะช่วยสรุปเป็นภาษาง่าย ๆ พร้อมตัวอย่างให้ครับ";
- }else if(subject==="ภาษาอังกฤษ" || /english|grammar|อังกฤษ|present|past|tense|verb/.test(s)){
-   out="🇬🇧 แนวทางเรียนภาษาอังกฤษ\\n\\nเริ่มจากดูว่าใครทำอะไร เมื่อไหร่ และประโยคเป็นบอกเล่า/ปฏิเสธ/คำถาม จากนั้นจึงเลือก tense ให้เหมาะสม\\n\\n💡 ส่งประโยคที่ไม่เข้าใจมาได้เลย ผมจะช่วยแปลและอธิบายไวยากรณ์ให้ครับ";
- }else{
-   out="📚 ผู้ช่วยเรียน Health Hub\\n\\nผมช่วยได้ในเรื่อง:\\n• สรุปบทเรียนให้เข้าใจง่าย\\n• อธิบายคำศัพท์\\n• แยกโจทย์เป็นขั้นตอน\\n• ช่วยตรวจแนวคิดในการทำการบ้าน\\n• ทำตัวอย่างเพื่อฝึกเพิ่มเติม\\n\\nลองพิมพ์คำถามพร้อมชื่อวิชา เช่น “คณิตศาสตร์ ม.2 ช่วยอธิบายสมการเชิงเส้นให้หน่อย”";
- }
- answer.textContent=out;
- status.textContent="✅ พร้อมช่วยเรียนแล้ว";
- reward(5,1);
-}
-
-function adminAIKeyPanel(){
- const key=localStorage.getItem("hh_gemini_admin_key")||"";
- return `<section class="card" style="margin-top:14px">
-   <h3>🔐 AI Key — เฉพาะผู้ดูแลระบบ</h3>
-   <p class="muted">ระบบช่วยเรียนแบบไม่ต้องใช้ API Key</p>
-   <input id="adminGeminiKey" class="input" type="password" value="${escLocal(key)}" placeholder="วาง Gemini API Key ของโครงงาน">
-   <div class="row" style="margin-top:10px">
-     <button class="primary" onclick="saveAdminGeminiKey()">💾 บันทึกคีย์ AI</button>
-     <button onclick="testAdminGeminiKey()">🧪 ทดสอบคีย์</button>
-     <button class="danger" onclick="removeAdminGeminiKey()">🗑️ ลบคีย์</button>
-   </div>
-   <p id="adminKeyStatus" class="muted" style="margin-top:8px">${key?"✅ มีคีย์ AI ตั้งค่าไว้แล้ว":"⚠️ ยังไม่ได้ตั้งค่าคีย์ AI"}</p>
-   <small class="muted">หมายเหตุ: คีย์ที่เก็บในเว็บฝั่งผู้ใช้ยังไม่ใช่การซ่อนคีย์แบบ Backend จริง หากนำขึ้นเว็บสาธารณะ ควรเก็บคีย์ใน Server/Cloud Function และให้เว็บเรียก Backend แทน</small>
- </section>`;
-<div class="card" style="margin-top:14px">
-<h3>🎵 จัดการเพลง</h3>
-<p class="muted">Admin เลือกไฟล์เพลงจากเครื่องเพื่อเพิ่มเพลงให้ระบบได้</p>
-<input id="adminMusicFile" type="file" accept="audio/*" multiple>
-<button onclick="addAdminMusic()">➕ เพิ่มเพลง</button>
-<div id="adminMusicList" style="margin-top:10px"></div>
-</div>
- renderAdminMusic();
-}
-function saveAdminGeminiKey(){
- const k=(document.getElementById("adminGeminiKey")?.value||"").trim();
- if(!k)return alert("กรุณาใส่ Gemini API Key");
- localStorage.setItem("hh_gemini_admin_key",k);
- localStorage.setItem("hh_gemini_key",k);
- const s=document.getElementById("adminKeyStatus"); if(s)s.textContent="✅ บันทึกคีย์ AI สำหรับเครื่องนี้แล้ว";
- alert("ตั้งค่า AI Key สำหรับผู้ใช้เครื่องนี้แล้ว ✅");
-}
-function removeAdminGeminiKey(){
- localStorage.removeItem("hh_gemini_admin_key");
- localStorage.removeItem("hh_gemini_key");
- const e=document.getElementById("adminGeminiKey"); if(e)e.value="";
- const s=document.getElementById("adminKeyStatus"); if(s)s.textContent="⚠️ ลบคีย์ AI แล้ว";
-}
-async function testAdminGeminiKey(){
- const k=(document.getElementById("adminGeminiKey")?.value||"").trim();
- const s=document.getElementById("adminKeyStatus");
- if(!k){if(s)s.textContent="⚠️ กรุณาใส่คีย์ก่อน";return}
- if(s)s.textContent="⏳ กำลังทดสอบ...";
- try{
-   const res=await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent",{
-     method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":k},
-     body:JSON.stringify({contents:[{parts:[{text:"ตอบสั้น ๆ ว่า AI Health Hub พร้อมใช้งาน"}]}]})
-   });
-   const data=await res.json();
-   if(!res.ok)throw new Error(data?.error?.message||"คีย์ไม่ผ่าน");
-   if(s)s.textContent="✅ ทดสอบสำเร็จ: AI พร้อมใช้งาน";
- }catch(e){if(s)s.textContent="❌ ทดสอบไม่สำเร็จ: "+e.message}
-}
-
-
-function openAdminLogin(){
- const u=prompt("ชื่อผู้ใช้ Admin:");
- if(u===null)return;
- const pw=prompt("รหัสผ่าน Admin:");
- if(u==="admin" && pw==="HHadmin2026!"){
-   currentUser="admin";
-   localStorage.setItem("hh_current","admin");
-   admin();
- }else{
-   alert("❌ ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
- }
-}
-
-function admin(){if(currentUser!=="admin"){alert("🔒 หน้านี้สำหรับ Admin เท่านั้น");return home()}let d=data(),a=accounts();layout(`<div class="grid"><div class="card"><h2>🛡️ Admin Dashboard</h2><p>บัญชีทั้งหมดในเครื่อง: ${Object.keys(a).length}</p><p>ผู้ใช้ปัจจุบัน: ${esc(currentUser)}</p></div><div class="card"><h3>📊 สถิติผู้ใช้ปัจจุบัน</h3><p>Level ${d.level}</p><p>${d.xp} XP</p><p>${d.games} เกม</p><p>${d.coins} Coins</p></div></div><div class="card" style="margin-top:14px"><h3>👥 Accounts</h3><table><tr><th>Username</th><th>Action</th></tr>${Object.keys(a).map(u=>`<tr><td>${esc(u)}</td><td>${u!=="admin"?`<button class="danger" onclick="deleteAccount('${esc(u)}')">ลบ</button>`:"🔒 protected"}</td></tr>`).join("")}</table></div><div class="card" style="margin-top:14px"><h3>💾 Export / จัดการระบบ</h3><button onclick="exportData()">ดาวน์โหลดข้อมูล JSON</button> <button class="danger" onclick="resetMyData()">รีเซ็ตข้อมูลผู้ใช้</button><p class="muted" style="margin-top:10px">🔒 Admin เท่านั้น: จัดการบัญชีและตรวจสอบข้อมูลบนเครื่องนี้</p></div>`)}
-function deleteAccount(u){if(currentUser!=="admin")return alert("🔒 เฉพาะ Admin เท่านั้น");if(confirm("ลบบัญชี "+u+"?")){let a=accounts();delete a[u];localStorage.setItem(ACCOUNT_KEY,JSON.stringify(a));admin()}}
-function exportData(){let all={accounts:accounts(),current:data()};let a=document.createElement("a");a.href="data:application/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(all,null,2));a.download="health-hub-admin-export.json";a.click()}
-function resetMyData(){if(confirm("รีเซ็ตข้อมูลผู้ใช้ปัจจุบัน?")){localStorage.removeItem(DATA_KEY+"_"+currentUser);home()}}
+function persist(){localStorage.setItem(STATE,JSON.stringify(s));update()}
+function enterApp(){document.getElementById("cover").style.display="none";document.getElementById("app").style.display="block";loadName();update();logUser("เข้าใช้งานเว็บ")}
+function openPage(id){document.querySelectorAll("main section").forEach(x=>x.classList.remove("active"));document.getElementById(id).classList.add("active");if(id==="ach")renderAch();if(id==="admin")renderAdmin()}
+function update(){["xp","coins","level","streak","played","water"].forEach(k=>document.getElementById(k).textContent=s[k]);document.getElementById("rpgXp").textContent=s.xp;document.getElementById("rpgLevel").textContent=s.level}
+function loadName(){document.getElementById("username").value=s.name||"";document.getElementById("hello").textContent=s.name?"สวัสดี "+s.name+" 👋":""}
+function saveName(){let n=document.getElementById("username").value.trim();if(!n)return; s.name=n;s.last="ตั้งชื่อผู้ใช้";persist();logUser("ตั้งชื่อผู้ใช้");document.getElementById("hello").textContent="สวัสดี "+n+" 👋"}
+function logUser(action){if(!s.name)return;let users=JSON.parse(localStorage.getItem(KEY)||"{}");users[s.name]={name:s.name,xp:s.xp,coins:s.coins,played:s.played,last:action,time:new Date().toLocaleString("th-TH")};localStorage.setItem(KEY,JSON.stringify(users))}
+function gain(x,c,action){s.xp+=x;s.coins+=c;s.level=Math.floor(s.xp/100)+1;s.last=action;persist();logUser(action)}
+function dailyCheckin(){s.streak++;gain(10,2,"Daily Check-in");document.getElementById("homeMsg").textContent="✅ Check-in สำเร็จ +10 XP"}
+function focusSprint(){gain(15,3,"Focus Sprint");document.getElementById("homeMsg").textContent="🎯 Focus Sprint สำเร็จ +15 XP"}
+function saveHealth(){s.health={sleep:document.getElementById("sleep").value,steps:document.getElementById("steps").value,study:document.getElementById("study").value,mood:document.getElementById("mood").value,diary:document.getElementById("diary").value};gain(10,2,"บันทึกสุขภาพ");document.getElementById("healthMsg").textContent="💚 บันทึกแล้ว +10 XP"}
+function playTone(freq){stopAudio();audioCtx=new (window.AudioContext||window.webkitAudioContext)();osc=audioCtx.createOscillator();osc.frequency.value=freq;osc.type="sine";osc.connect(audioCtx.destination);osc.start();document.getElementById("musicMsg").textContent="▶ กำลังเล่นเสียง"}
+function stopAudio(){if(osc){osc.stop();osc.disconnect();osc=null}if(audioCtx){audioCtx.close();audioCtx=null}document.getElementById("musicMsg").textContent="⏹ หยุดเสียงแล้ว"}
+function addNotice(){let v=document.getElementById("notice").value.trim();if(!v)return;let li=document.createElement("li");li.textContent="🔔 "+v+" ";let b=document.createElement("button");b.textContent="ลบ";b.onclick=()=>li.remove();li.appendChild(b);document.getElementById("noticeList").appendChild(li);document.getElementById("notice").value=""}
+function addEvent(){let t=document.getElementById("eventText").value,d=document.getElementById("eventDay").value;if(!t||!d)return;let li=document.createElement("li");li.textContent="🗓️ "+d+" — "+t;document.getElementById("eventList").appendChild(li);document.getElementById("eventText").value=""}
+function gameDone(name,xp=10,c=2){s.played++;gain(xp,c,name);document.getElementById("gameMsg").textContent="🎉 "+name+" สำเร็จ +"+xp+" XP"}
+function startTap(){let n=0;document.getElementById("gameArea").innerHTML='<button class="game-card" id="tapBtn">⚡ แตะ!</button>';document.getElementById("tapBtn").onclick=()=>{n++;document.getElementById("tapBtn").textContent="⚡ "+n+"/10";if(n>=10){gameDone("Tap Rush");document.getElementById("gameArea").innerHTML=""}}}
+function startTarget(){document.getElementById("gameArea").innerHTML='<button class="game-card" id="target">🎯 เป้า</button>';document.getElementById("target").onclick=()=>{gameDone("Target Hunt");document.getElementById("gameArea").innerHTML=""}}
+function reaction(){let t=Date.now();document.getElementById("gameArea").innerHTML='<button class="game-card" id="react">แตะทันที!</button>';setTimeout(()=>{document.getElementById("react").textContent="⚡ แตะ!";document.getElementById("react").onclick=()=>{gameDone("Reaction",15,3);document.getElementById("gameArea").innerHTML=""}},1000)}
+function memory(){let n=Math.floor(100+Math.random()*900),a=document.getElementById("gameArea");a.innerHTML="<h3>จำเลขนี้: "+n+"</h3><input id='mem'><button class='primary' onclick='checkMem("+n+")'>ตรวจ</button>"}
+function checkMem(n){if(Number(document.getElementById("mem").value)===n)gameDone("Memory",20,4);else document.getElementById("gameMsg").textContent="ยังไม่ถูกครับ"}
+function rpgQuest(){gain(20,5,"RPG Quest");document.getElementById("rpgMsg").textContent="⚔️ ภารกิจสำเร็จ +20 XP"}
+function renderAch(){let a=[["💧","ดื่มน้ำครบ"],["✅","Daily Check-in"],["😴","บันทึกการนอน"],["📚","เรียนอย่างน้อย 30 นาที"]];document.getElementById("achList").innerHTML=a.map(x=>'<div class="card"><h3>'+x[0]+" "+x[1]+'</h3><button onclick="gain(10,2,\\'Achievement: '+x[1]+'\\')">🏆 ปลดล็อก +XP</button></div>').join("")}
+function aiAsk(){let q=document.getElementById("aiQ").value.trim();document.getElementById("aiA").textContent=q?"🤖 คำตอบตัวอย่าง: ลองแบ่งเรื่องนี้เป็นขั้นตอนสั้น ๆ และตรวจสอบข้อมูลจากแหล่งที่น่าเชื่อถือครับ":"กรุณาพิมพ์คำถามครับ"}
+function adminLogin(){if(document.getElementById("adminCode").value==="555666"){sessionStorage.admin="1";openPage("admin");renderAdmin()}else document.getElementById("adminMsg").textContent="❌ รหัสไม่ถูกต้อง"}
+function renderAdmin(){let users=Object.values(JSON.parse(localStorage.getItem(KEY)||"{}"));document.getElementById("userCount").textContent=users.length;document.getElementById("lastUser").textContent=users.at(-1)?.name||"-";document.getElementById("adminPlayed").textContent=users.reduce((a,u)=>a+Number(u.played||0),0);document.getElementById("adminCoins").textContent=users.reduce((a,u)=>a+Number(u.coins||0),0);document.getElementById("userTable").innerHTML=users.map(u=>"<tr><td>"+esc(u.name)+"</td><td>"+u.xp+"</td><td>"+u.coins+"</td><td>"+u.played+"</td><td>"+esc(u.last||"-")+"<br><span class='small'>"+esc(u.time||"")+"</span></td></tr>").join("")}
+function esc(x){return String(x).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function exportUsers(){let blob=new Blob([JSON.stringify(JSON.parse(localStorage.getItem(KEY)||"{}"),null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="health-hub-users.json";a.click()}
+function clearUsers(){if(confirm("ล้างข้อมูลผู้ใช้ในเครื่องนี้?")){localStorage.removeItem(KEY);renderAdmin()}}
+update();
 </script>
-<script>hhBootAuth();</script>
 </body>
 </html>
