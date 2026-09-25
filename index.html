@@ -91,6 +91,74 @@ function layout(body){
  </div></header><main class="wrap">${body}</main>`
 }
 
+
+function hhGetAccounts(){
+  try { return JSON.parse(localStorage.getItem("hh_accounts")||"[]"); }
+  catch(e){ return []; }
+}
+function hhSaveAccounts(a){ localStorage.setItem("hh_accounts",JSON.stringify(a)); }
+function hhEsc(x){return String(x??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));}
+function showLogin(){
+ document.body.innerHTML=`<main style="max-width:520px;margin:50px auto;padding:20px;font-family:system-ui">
+ <div class="card">
+ <h1>🏥 Health Hub</h1>
+ <p>เข้าสู่ระบบเพื่อเริ่มใช้งาน</p>
+ <label>ชื่อผู้ใช้</label><input id="loginUser" autocomplete="username" placeholder="ชื่อผู้ใช้">
+ <label>รหัสผ่าน</label><input id="loginPass" type="password" autocomplete="current-password" placeholder="รหัสผ่าน">
+ <button onclick="hhLogin()">🔐 เข้าสู่ระบบ</button>
+ <button class="alt" onclick="showRegister()">📝 สมัครสมาชิก</button>
+ <p id="authMsg" class="muted"></p>
+ </div></main>`;
+}
+function showRegister(){
+ document.body.innerHTML=`<main style="max-width:520px;margin:50px auto;padding:20px;font-family:system-ui">
+ <div class="card">
+ <h1>📝 สมัครสมาชิก</h1>
+ <label>ชื่อผู้ใช้</label><input id="regUser" autocomplete="username" placeholder="อย่างน้อย 3 ตัวอักษร">
+ <label>รหัสผ่าน</label><input id="regPass" type="password" autocomplete="new-password" placeholder="อย่างน้อย 4 ตัวอักษร">
+ <label>ยืนยันรหัสผ่าน</label><input id="regPass2" type="password" autocomplete="new-password">
+ <button onclick="hhRegister()">สร้างบัญชี</button>
+ <button class="alt" onclick="showLogin()">← กลับเข้าสู่ระบบ</button>
+ <p id="authMsg" class="muted"></p>
+ </div></main>`;
+}
+function hhLogin(){
+ const u=(document.getElementById("loginUser")?.value||"").trim();
+ const pw=document.getElementById("loginPass")?.value||"";
+ const msg=document.getElementById("authMsg");
+ if(!u||!pw){msg.textContent="กรุณากรอกชื่อผู้ใช้และรหัสผ่าน";return}
+ if(u==="admin" && pw==="HHadmin2026!"){
+   currentUser="admin"; localStorage.setItem("hh_current","admin");
+   if(typeof admin==="function") admin(); else if(typeof home==="function") home();
+   return;
+ }
+ const a=hhGetAccounts(), x=a.find(v=>v.user===u);
+ if(!x || x.pass!==pw){msg.textContent="❌ ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง";return}
+ currentUser=u; localStorage.setItem("hh_current",u);
+ if(typeof home==="function") home(); else location.reload();
+}
+function hhRegister(){
+ const u=(document.getElementById("regUser")?.value||"").trim();
+ const p1=document.getElementById("regPass")?.value||"";
+ const p2=document.getElementById("regPass2")?.value||"";
+ const msg=document.getElementById("authMsg");
+ if(u.length<3){msg.textContent="ชื่อผู้ใช้ต้องมีอย่างน้อย 3 ตัวอักษร";return}
+ if(p1.length<4){msg.textContent="รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร";return}
+ if(p1!==p2){msg.textContent="รหัสผ่านไม่ตรงกัน";return}
+ if(u==="admin"){msg.textContent="ชื่อ admin สงวนไว้สำหรับระบบ";return}
+ const a=hhGetAccounts();
+ if(a.some(v=>v.user===u)){msg.textContent="ชื่อผู้ใช้นี้มีอยู่แล้ว";return}
+ a.push({user:u,pass:p1,created:new Date().toISOString()}); hhSaveAccounts(a);
+ localStorage.setItem("hh_data_"+u,localStorage.getItem("hh_data_"+u)||JSON.stringify({xp:0,coins:0,streak:0}));
+ currentUser=u; localStorage.setItem("hh_current",u);
+ if(typeof home==="function") home(); else location.reload();
+}
+function hhBootAuth(){
+ const u=localStorage.getItem("hh_current");
+ if(u){currentUser=u; if(typeof home==="function") home(); return}
+ showLogin();
+}
+
 function home(){
  let d=data();touch(d);save(d);
  layout(`<div class="grid">
@@ -441,3 +509,4 @@ function resetMyData(){if(confirm("รีเซ็ตข้อมูลผู้
 </script>
 </body>
 </html>
+<script>hhBootAuth();</script>
