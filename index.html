@@ -1,406 +1,134 @@
-<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Health Hub V13</title><style>
-:root{--bg:#06101d;--card:#0d1b2c;--line:#24425f;--txt:#eef7ff;--muted:#91a9c2;--a:#5eead4;--b:#60a5fa;--bad:#fb7185}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#123653,#050a12 65%);color:var(--txt);font-family:system-ui,-apple-system,sans-serif}button,input,select{font:inherit}button{border:0;border-radius:12px;padding:10px 14px;background:#17324f;color:#fff;cursor:pointer}button:hover{filter:brightness(1.1)}.primary{background:linear-gradient(135deg,#14b8a6,#3b82f6)}.danger{background:#7f1d2d}.hidden{display:none!important}.wrap{max-width:1200px;margin:auto;padding:20px}.card{background:#0d1b2ee8;border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 12px 30px #0005}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.input{width:100%;padding:11px;border-radius:12px;border:1px solid var(--line);background:#07111f;color:#fff;margin:5px 0 11px}.muted{color:var(--muted)}header{position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:14px 18px;background:#07111fee;backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}.brand{font-size:20px;font-weight:900}.nav{display:flex;gap:6px;flex-wrap:wrap}.big{font-size:34px;font-weight:900}.chat{max-height:55vh;overflow:auto}.msg{padding:11px;border-radius:14px;margin:8px 0;background:#10263d}.me{border-left:3px solid var(--a)}.ai{border-left:3px solid var(--b)}.room{font-size:34px;letter-spacing:6px;font-weight:900}.player{display:flex;justify-content:space-between;padding:9px;border-bottom:1px solid var(--line)}footer{text-align:center;padding:30px;color:var(--muted)}.ok{color:#86efac}.bad{color:#fda4af}.bossbar{height:16px;background:#29131a;border-radius:99px;overflow:hidden;border:1px solid #7f1d2d}.bossfill{height:100%;background:linear-gradient(90deg,#ef4444,#f59e0b);transition:width .25s}.hero{padding:22px;border:1px solid #805d1b;background:linear-gradient(135deg,#27170a,#17101b);border-radius:18px}.xp{font-size:18px;font-weight:800}
-
-/* ===== Modern Welcome / Register Gate ===== */
-#entryGate{position:fixed;inset:0;z-index:9999;overflow:hidden;background:radial-gradient(circle at 50% 15%,#173e63 0%,#071525 48%,#020711 100%);display:flex;align-items:center;justify-content:center;padding:22px}
-#entryGate.hide{display:none}
-.snow{position:absolute;inset:-30px;pointer-events:none;background-image:
-radial-gradient(circle,rgba(255,255,255,.95) 0 2px,transparent 3px),
-radial-gradient(circle,rgba(255,255,255,.8) 0 1.5px,transparent 2.5px),
-radial-gradient(circle,rgba(190,230,255,.75) 0 2px,transparent 3px);
-background-size:95px 95px,145px 145px,210px 210px;
-background-position:0 0,35px 20px,70px 50px;
-animation:snowFall 12s linear infinite;opacity:.9}
-.snow.s2{filter:blur(1px);opacity:.45;transform:scale(1.3);animation-duration:18s}
-@keyframes snowFall{from{background-position:0 -100px,35px -150px,70px -210px}to{background-position:35px 900px,0 850px,110px 790px}}
-.entryGlow{position:absolute;width:650px;height:650px;border-radius:50%;background:#38bdf833;filter:blur(80px);top:-250px;left:50%;transform:translateX(-50%);animation:pulseGlow 4s ease-in-out infinite}
-@keyframes pulseGlow{50%{opacity:.55;transform:translateX(-50%) scale(1.12)}}
-.entryBox{position:relative;width:min(440px,100%);padding:30px;border:1px solid #6ee7ff44;border-radius:28px;background:linear-gradient(145deg,#0d2137eF,#071322ee);box-shadow:0 25px 80px #0009,0 0 45px #38bdf822;backdrop-filter:blur(18px);animation:entryIn .7s ease}
-@keyframes entryIn{from{opacity:0;transform:translateY(25px) scale(.97)}to{opacity:1;transform:none}}
-.entryLogo{font-size:58px;text-align:center;filter:drop-shadow(0 0 18px #5eead4aa);animation:floatLogo 3s ease-in-out infinite}
-@keyframes floatLogo{50%{transform:translateY(-7px)}}
-.entryTitle{text-align:center;font-size:32px;margin:3px 0;background:linear-gradient(90deg,#fff,#7dd3fc,#5eead4);-webkit-background-clip:text;background-clip:text;color:transparent}
-.entrySub{text-align:center;color:#a9c2da;margin:0 0 22px;font-size:14px}
-.entryTabs{display:flex;gap:7px;background:#06111e;padding:5px;border-radius:14px;margin-bottom:16px}
-.entryTabs button{flex:1;background:transparent;color:#9db5cc}
-.entryTabs button.active{background:linear-gradient(135deg,#0ea5e9,#14b8a6);color:white}
-.entryForm{display:none}.entryForm.active{display:block}
-.entryInput{margin:7px 0!important;background:#06111d!important;border:1px solid #31506c!important}
-.entryBtn{width:100%;padding:13px;margin-top:5px;font-weight:800;background:linear-gradient(135deg,#06b6d4,#2563eb);box-shadow:0 8px 25px #0ea5e955}
-.entryNote{text-align:center;color:#7892aa;font-size:12px;margin-top:15px}
-.entryMsg{text-align:center;min-height:20px;color:#5eead4;font-size:13px;margin-top:9px}
-</style></head><body><div id="entryGate"><div class="snow"></div><div class="snow s2"></div><div class="entryGlow"></div><div class="entryBox"><div class="entryLogo">💚</div><h1 class="entryTitle">Health Hub</h1><p class="entrySub">เรียน • เล่นเกม • พัก • นอน อย่างสมดุล</p><div class="entryTabs"><button id="tabReg" class="active" onclick="entryTab('reg')">สมัครสมาชิก</button><button id="tabLogin" onclick="entryTab('login')">เข้าสู่ระบบ</button></div><div id="entryReg" class="entryForm active"><input id="regUser" class="input entryInput" placeholder="ชื่อผู้ใช้"><input id="regPass" class="input entryInput" type="password" placeholder="รหัสผ่าน"><input id="regPass2" class="input entryInput" type="password" placeholder="ยืนยันรหัสผ่าน"><button class="entryBtn" onclick="registerGate()">🚀 สร้างบัญชี</button></div><div id="entryLogin" class="entryForm"><input id="loginUser" class="input entryInput" placeholder="ชื่อผู้ใช้"><input id="loginPass" class="input entryInput" type="password" placeholder="รหัสผ่าน"><button class="entryBtn" onclick="loginGate()">🔐 เข้าสู่ Health Hub</button></div><p id="entryMsg" class="entryMsg"></p><p class="entryNote">บัญชีนี้ใช้บนเครื่องนี้ก่อน • เชื่อม Firebase ได้ภายหลัง</p></div></div><div id="app"></div>
-<script>
-/* Health Hub emergency local fallback: keeps the welcome/login buttons working even if Firebase modules are unavailable. */
-(function(){
- const KEY='health_hub_accounts_v1';
- function accounts(){try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return {}}}
- function msg(t,bad){const e=document.getElementById('entryMsg');if(e){e.textContent=t;e.style.color=bad?'#fb7185':'#5eead4'}}
- function tab(w){document.getElementById('entryReg').classList.toggle('active',w==='reg');document.getElementById('entryLogin').classList.toggle('active',w==='login');document.getElementById('tabReg').classList.toggle('active',w==='reg');document.getElementById('tabLogin').classList.toggle('active',w==='login');msg('')}
- function localEnterHub(name){
-   localStorage.setItem('health_hub_current_user',name);
-   const gate=document.getElementById('entryGate'); if(gate) gate.classList.add('hide');
-   const app=document.getElementById('app');
-   const isAdmin=name==='admin';
-   app.innerHTML=`<header><div class="brand">💚 Health Hub V13</div><div class="nav"><button onclick="localHome()">🏠 หน้าหลัก</button><button onclick="localQuiz()">🎯 Quiz</button><button onclick="localRpg()">🧙 RPG</button><button onclick="localSchedule()">🗓️ ตาราง</button><button onclick="localSleep()">😴 การนอน</button><button onclick="localGames()">🎮 เกม</button>${isAdmin?'<button onclick="localAdmin()">🛡️ หลังบ้าน</button>':''}<button onclick="localLogout()">🚪 ออก</button></div></header><main class="wrap"><section id="localView" class="card"></section></main><footer>Health Hub • Offline mode</footer>`;
-   window.localHome();
- }
- function localHome(){document.getElementById('localView').innerHTML=`<h1>สวัสดี ${document.getElementById('localView')?localStorage.getItem('health_hub_current_user'):''} 👋</h1><p class="muted">เข้าสู่ Health Hub แล้ว ระบบโหมดในเครื่องพร้อมใช้งาน</p><div class="grid"><div class="card"><h3>🎮 เกม</h3><p>รวมเกมและระบบ RPG</p><button onclick="localGames()">เข้าเกม</button></div><div class="card"><h3>📚 Quiz</h3><p>ด่านคำถามและ Boss</p><button onclick="localQuiz()">เริ่ม Quiz</button></div><div class="card"><h3>😴 สุขภาพ</h3><p>ตารางเรียนและการนอน</p><button onclick="localSleep()">จัดการ</button></div></div>`}
- function localGames(){document.getElementById('localView').innerHTML='<h2>🎮 Game Center</h2><div class="grid"><div class="card"><h3>⚡ Tap Challenge</h3><p>กดปุ่มให้ได้คะแนนสูงสุดใน 10 วินาที</p><button onclick="alert(&quot;เริ่มเกม! กดปุ่มซ้ำเพื่อทำคะแนน&quot;)">เล่น</button></div><div class="card"><h3>🏃 Runner</h3><p>โหมดเกมพื้นฐาน</p><button onclick="alert(&quot;เกมพร้อมใช้งาน&quot;)">เล่น</button></div></div>'}
- function localQuiz(){document.getElementById('localView').innerHTML='<h2>🎯 Quiz</h2><p>ตอบคำถามเพื่อรับ XP และ Coins</p><button onclick="alert(&quot;ตอบถูก! +10 XP&quot;)">คำถามตัวอย่าง: ควรนอนกี่ชั่วโมง? → 8 ชั่วโมง</button>'}
- function localRpg(){document.getElementById('localView').innerHTML='<h2>🧙 Character RPG</h2><p>❤️ HP 100 &nbsp; 🔷 MP 50 &nbsp; ⚔️ ATK 10 &nbsp; 🛡️ DEF 10</p><button onclick="alert(&quot;โจมตีบอส!&quot;)">⚔️ โจมตี</button> <button onclick="alert(&quot;ป้องกันสำเร็จ!&quot;)">🛡️ ป้องกัน</button>'}
- function localSchedule(){document.getElementById('localView').innerHTML='<h2>🗓️ ตารางเวลา</h2><input id="lsn" class="input" placeholder="กิจกรรม"><input id="lst" class="input" type="time"><button onclick="alert(&quot;บันทึกตารางแล้ว&quot;)">💾 บันทึก</button>'}
- function localSleep(){document.getElementById('localView').innerHTML='<h2>😴 การนอน</h2><p>ตั้งเวลาเข้านอน</p><input class="input" type="time" value="22:00"><button onclick="alert(&quot;ตั้งเวลาเข้านอนแล้ว&quot;)">🔔 บันทึก</button>'}
- function localAdmin(){document.getElementById('localView').innerHTML='<h2>🛡️ Admin Dashboard</h2><p>บัญชีแอดมิน: <b>admin</b></p><div class="grid"><div class="card"><h3>👥 ผู้ใช้</h3><p>'+Object.keys(accounts()).length+' บัญชีในเครื่อง</p></div><div class="card"><h3>📊 ระบบ</h3><p>Local mode พร้อมใช้งาน</p></div></div>'}
- function localLogout(){localStorage.removeItem('health_hub_current_user');location.reload()}
- window.localHome=localHome;window.localGames=localGames;window.localQuiz=localQuiz;window.localRpg=localRpg;window.localSchedule=localSchedule;window.localSleep=localSleep;window.localAdmin=localAdmin;window.localLogout=localLogout;
- window.enterHub=localEnterHub;
- function enter(name){enterHub(name)}
- function reg(){const u=document.getElementById('regUser').value.trim(),p=document.getElementById('regPass').value,p2=document.getElementById('regPass2').value;if(u.length<3)return msg('ชื่อผู้ใช้ต้องมีอย่างน้อย 3 ตัวอักษร',1);if(p.length<4)return msg('รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร',1);if(p!==p2)return msg('รหัสผ่านไม่ตรงกัน',1);const a=accounts();if(a[u])return msg('ชื่อผู้ใช้นี้มีแล้ว ลองเข้าสู่ระบบ',1);a[u]={password:p};localStorage.setItem(KEY,JSON.stringify(a));enter(u)}
- function log(){const u=document.getElementById('loginUser').value.trim(),p=document.getElementById('loginPass').value,a=accounts();if(u==='admin'&&p==='HHadmin2026!')return enter(u);if(!a[u]||a[u].password!==p)return msg('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง',1);enter(u)}
- window.entryTab=tab;window.registerGate=reg;window.loginGate=log;
-})();
-</script>
-<script>
-/* Firebase is loaded dynamically so a network/Firebase error cannot disable the whole page. */
-(async()=>{
-try{
-
-const {initializeApp}=await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js');
-const {getAuth,onAuthStateChanged,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,updateProfile}=await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js');
-const {getDatabase,ref,set,push,onValue,update,remove}=await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js');
-const {getFirestore,doc,setDoc,collection,query,where,onSnapshot,addDoc,deleteDoc}=await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js');
-const {getMessaging,getToken,onMessage}=await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-messaging.js');
-const savedCfg=JSON.parse(localStorage.getItem('hh_firebase_config')||'{}'); const cfg=Object.keys(savedCfg).length?savedCfg:(window.FIREBASE_CONFIG||{}); const configured=!!cfg.apiKey&&!String(cfg.apiKey).startsWith('YOUR_'); const BACKEND_URL=localStorage.getItem('hh_backend')||'https://YOUR_BACKEND_DOMAIN'; const VAPID_KEY=localStorage.getItem('hh_vapid')||'YOUR_FIREBASE_WEB_PUSH_VAPID_KEY';
-let app,auth,rt,fs,messaging,user=null,roomsUnsub=null; let reminders=[]; let aiHist=[];
-const A=document.getElementById('app');
-function esc(x){return String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function shell(body){return `<header><div class="brand">💚 Health Hub V13</div><div class="nav"><button onclick="home()">หน้าหลัก</button><button onclick="ai()">🤖 AI</button><button onclick="schedule()">🗓️ ตาราง</button><button onclick="multiplayer()">👥 แข่งกัน</button><button onclick="notify()">🔔 แจ้งเตือน</button><button onclick="sleep()">😴 นอน</button><button onclick="quiz()">🎯 ด่านคำถาม</button><button onclick="character()">🧙 ตัวละคร</button><button onclick="shop135()">🛒 ร้านค้า</button><button onclick="leaderboard()">🏆 Leaderboard</button><button onclick="setup()">⚙️ ตั้งค่า</button><button id="hhMusicBtn" onclick="hhToggleMusic()">🔇 เพลง: ปิด</button><button onclick="logout()">ออก</button></div></header><main class="wrap">${body}</main><footer>V13 • Firebase + AI + Multiplayer + Push Notification</footer>`}
-function setup(){
-A.innerHTML=`<main class="wrap" style="max-width:820px;margin:5vh auto"><div class="card"><h1>⚙️ Firebase / AI Setup Wizard</h1><p class="muted">กรอกค่าจาก Firebase Console แล้วกดบันทึก ระบบจะเก็บค่า config สำหรับเว็บนี้ไว้ในเครื่องนี้</p>
-<div class="grid">
-<div><label>Firebase API Key</label><input id="fc_apiKey" class="input" placeholder="AIza..."></div>
-<div><label>Auth Domain</label><input id="fc_authDomain" class="input" placeholder="your-project.firebaseapp.com"></div>
-<div><label>Realtime Database URL</label><input id="fc_databaseURL" class="input" placeholder="https://your-project-default-rtdb.asia-southeast1.firebasedatabase.app"></div>
-<div><label>Project ID</label><input id="fc_projectId" class="input" placeholder="your-project-id"></div>
-<div><label>Storage Bucket</label><input id="fc_storageBucket" class="input" placeholder="your-project.firebasestorage.app"></div>
-<div><label>Messaging Sender ID</label><input id="fc_messagingSenderId" class="input" placeholder="1234567890"></div>
-<div><label>Firebase App ID</label><input id="fc_appId" class="input" placeholder="1:1234567890:web:..."></div>
-<div><label>VAPID Public Key</label><input id="vapid" class="input" placeholder="B..." ></div>
-<div style="grid-column:1/-1"><label>Backend URL</label><input id="backend" class="input" placeholder="https://your-backend.example.com"></div>
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Health Hub V100 MAX</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#f3f6fa;color:#172033}
+button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:12px;padding:10px 14px;font-weight:700;background:#172033;color:#fff}
+.wrap{max-width:1100px;margin:auto;padding:20px}.hide{display:none!important}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.card{background:#fff;border:1px solid #e1e6ee;border-radius:18px;padding:18px}.muted{color:#64748b}.danger{background:#dc2626}.alt{background:#e5e7eb;color:#172033}
+header{background:#172033;color:#fff;padding:14px 18px;display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}.brand{font-weight:900;font-size:20px}.nav{display:flex;gap:7px;flex-wrap:wrap}.nav button{background:#334155;font-size:13px}
+input,select,textarea{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:10px;margin:5px 0 12px}
+.big{font-size:38px;font-weight:900}.bar{height:10px;background:#e5e7eb;border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:#172033}
+.gamebox{min-height:270px;margin-top:14px;border:1px dashed #b9c3d0;border-radius:16px;padding:16px;background:#fafcff}
+.arena{height:230px;position:relative;background:#eef2f7;border-radius:15px;overflow:hidden}.target{position:absolute;width:52px;height:52px;border-radius:50%;background:#ef4444}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.cards button{height:60px}
+#fab{position:fixed;right:18px;bottom:18px;z-index:9999;border-radius:999px}
+table{width:100%;border-collapse:collapse}td,th{padding:9px;border-bottom:1px solid #e5e7eb;text-align:left}
+@media(max-width:600px){.wrap{padding:12px}.big{font-size:30px}}
+</style>
+</head>
+<body>
+<div id="gate" class="wrap">
+  <div class="card" style="max-width:500px;margin:60px auto">
+    <h1>💚 Health Hub</h1><p class="muted">V100 MAX — ระบบจัดการเวลา สุขภาพ การเรียน และเกม</p>
+    <h3>เข้าสู่ระบบ</h3>
+    <input id="user" placeholder="ชื่อผู้ใช้">
+    <input id="pass" type="password" placeholder="รหัสผ่าน">
+    <button onclick="login()">เข้าสู่ระบบ</button>
+    <p id="msg" class="muted"></p>
+    <hr>
+    <p>ยังไม่มีบัญชี?</p>
+    <input id="newuser" placeholder="ชื่อผู้ใช้ใหม่">
+    <input id="newpass" type="password" placeholder="รหัสผ่าน">
+    <button onclick="register()" class="alt">สมัครบัญชี</button>
+    <p class="muted" style="font-size:12px">Admin ทดลอง: admin / HHadmin2026!</p>
+  </div>
 </div>
-<div class="row"><button class="primary" onclick="saveSetup()">💾 บันทึก Config</button><button onclick="clearSetup()">ล้างค่า</button></div><p id="setupmsg" class="muted"></p>
-<div class="card"><h3>หาแต่ละค่าได้จากไหน?</h3><p>Firebase Console → Project settings → General → Your apps → Web app สำหรับ Firebase config</p><p>VAPID: Project settings → Cloud Messaging → Web Push certificates → Generate key pair</p><p>Backend URL คือ URL ของ server ที่รัน <code>/api/chat</code> และระบบส่ง Push</p></div>
-<button onclick="login()">← กลับหน้าเข้าสู่ระบบ</button></div></main>`;
-const c=JSON.parse(localStorage.getItem('hh_firebase_config')||'{}');
-for(const k of ['apiKey','authDomain','databaseURL','projectId','storageBucket','messagingSenderId','appId']){const e=document.getElementById('fc_'+k);if(e)e.value=c[k]||''}
-document.getElementById('vapid').value=localStorage.getItem('hh_vapid')||'';document.getElementById('backend').value=localStorage.getItem('hh_backend')||'';
-}
-window.saveSetup=()=>{const c={};for(const k of ['apiKey','authDomain','databaseURL','projectId','storageBucket','messagingSenderId','appId'])c[k]=document.getElementById('fc_'+k).value.trim();localStorage.setItem('hh_firebase_config',JSON.stringify(c));localStorage.setItem('hh_vapid',document.getElementById('vapid').value.trim());localStorage.setItem('hh_backend',document.getElementById('backend').value.trim());window.FIREBASE_CONFIG=c;alert('บันทึกแล้ว ✓ กำลังโหลดระบบใหม่');location.reload()};
-window.clearSetup=()=>{localStorage.removeItem('hh_firebase_config');localStorage.removeItem('hh_vapid');localStorage.removeItem('hh_backend');setup()};
-function login(){A.innerHTML=`<main class="wrap" style="max-width:450px;margin:8vh auto"><div class="card"><h1>👋 Health Hub V13</h1><p class="muted">AI จริง • แข่งข้ามเครื่อง • แจ้งเตือนแม้ปิดหน้าเว็บ</p>${!configured?'<div class="card" style="border-color:#fb7185"><b>ยังไม่ได้ตั้งค่า Firebase</b><p class="muted">กดปุ่มตั้งค่าเพื่อกรอก Config / VAPID / Backend URL</p><button onclick="setup()">⚙️ เปิด Setup Wizard</button></div>':''}<input id="email" class="input" placeholder="อีเมล"><input id="pw" class="input" type="password" placeholder="รหัสผ่าน"><input id="name" class="input" placeholder="ชื่อผู้ใช้ (ตอนสมัคร)"><div class="row"><button class="primary" onclick="loginDo()">เข้าสู่ระบบ</button><button onclick="registerDo()">สมัครบัญชี</button><button onclick="setup()">⚙️ ตั้งค่า</button></div><p id="err" class="bad"></p></div></main>`}
-window.loginDo=async()=>{try{await signInWithEmailAndPassword(auth,email.value,pw.value)}catch(e){err.textContent=e.message}};
-window.registerDo=async()=>{try{const c=await createUserWithEmailAndPassword(auth,email.value,pw.value);if(name.value)await updateProfile(c.user,{displayName:name.value});await setDoc(doc(fs,'users',c.user.uid),{uid:c.user.uid,email:c.user.email,displayName:name.value||c.user.email,createdAt:Date.now(),role:'USER'},{merge:true})}catch(e){err.textContent=e.message}};
-window.logout=()=>{localStorage.removeItem('health_hub_current_user');if(auth){signOut(auth).catch(()=>{})}location.reload()};
-function home(){A.innerHTML=shell(`<section class="card"><h1>สวัสดี ${esc(user.displayName||user.email)}</h1><p class="muted">ศูนย์รวม AI, ตารางเรียน, เกม, การนอน และการแข่งขัน</p><div class="grid"><div class="card"><h3>🤖 AI</h3><p>ถามได้ทั้งเรื่องเรียน งาน เขียนโค้ด วางแผน และคำถามทั่วไป</p><button class="primary" onclick="ai()">คุยกับ AI</button></div><div class="card"><h3>👥 Multiplayer</h3><p>สร้างห้อง แชร์รหัส เล่นพร้อมเพื่อน และดูคะแนนสด</p><button onclick="multiplayer()">ไป Arena</button></div><div class="card"><h3>🔔 Push</h3><p>แจ้งเตือนเวลาเรียน พัก เล่นเกม และเข้านอน</p><button onclick="notify()">ตั้งค่า</button></div></div></section>`)}
-window.ai=()=>{A.innerHTML=shell(`<section class="card"><h2>🤖 Health Hub AI</h2><p class="muted">AI เชื่อม backend/OpenAI ไม่ควรใส่ API key ในหน้าเว็บ</p><div id="chat" class="chat"></div><div class="row"><input id="aq" class="input" style="flex:1" placeholder="ถามอะไรก็ได้..." onkeydown="if(event.key==='Enter')ask()"><button class="primary" onclick="ask()">ส่ง</button></div></section>`);renderChat()};
-function renderChat(){document.getElementById('chat').innerHTML=aiHist.map(x=>`<div class="msg ${x.role==='user'?'me':'ai'}"><b>${x.role==='user'?'คุณ':'AI'}</b><br>${esc(x.text).replace(/\n/g,'<br>')}</div>`).join('');document.getElementById('chat').scrollTop=999999}
-window.ask=async()=>{let q=document.getElementById('aq').value.trim();if(!q)return;aiHist.push({role:'user',text:q},{role:'assistant',text:'กำลังคิด...'});renderChat();document.getElementById('aq').value='';try{const r=await fetch((location.hostname==='localhost'?'http://localhost:8787':BACKEND_URL)+'/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:q,history:aiHist.slice(0,-1),user:{uid:user.uid,name:user.displayName,email:user.email}})});const d=await r.json();if(!r.ok)throw Error(d.error||'AI error');aiHist[aiHist.length-1].text=d.answer||'ไม่มีคำตอบ';}catch(e){aiHist[aiHist.length-1].text='เชื่อม AI ไม่สำเร็จ: '+e.message}renderChat()};
-window.schedule=()=>A.innerHTML=shell(`<section class="card"><h2>🗓️ ตารางของฉัน</h2><p class="muted">บันทึกตารางลง Firestore เพื่อใช้ร่วมกับระบบแจ้งเตือน</p><div class="grid"><div><label>ชื่อกิจกรรม</label><input id="sn" class="input" placeholder="เรียนคณิต"></div><div><label>เวลา</label><input id="st" class="input" type="time"></div><div><label>ประเภท</label><select id="sk" class="input"><option>เรียน</option><option>พัก</option><option>เล่นเกม</option><option>นอน</option></select></div></div><button class="primary" onclick="addSchedule()">+ เพิ่มกิจกรรม</button><div id="sched" style="margin-top:14px"></div></section>`);loadSchedule();
-async function addSchedule(){if(!sn.value||!st.value)return alert('กรอกให้ครบ');await addDoc(collection(fs,'schedules'),{uid:user.uid,name:sn.value,time:st.value,kind:sk.value,enabled:true,createdAt:Date.now()});loadSchedule()}
-function loadSchedule(){onSnapshot(query(collection(fs,'schedules'),where('uid','==',user.uid)),s=>{const el=document.getElementById('sched');if(el)el.innerHTML=s.docs.sort((a,b)=>a.data().time.localeCompare(b.data().time)).map(d=>{let x=d.data();return `<div class="card"><b>${x.time}</b> — ${esc(x.name)} <span class="muted">${x.kind}</span></div>`}).join('')||'<p class="muted">ยังไม่มี</p>'})}
-window.multiplayer=()=>A.innerHTML=shell(`<section class="card"><h2>👥 Multiplayer Arena</h2><p class="muted">Firebase Realtime Database ทำให้ผู้เล่นคนละเครื่องเห็นห้องและคะแนนแบบเรียลไทม์</p><div class="row"><button class="primary" onclick="createRoom()">สร้างห้อง</button><input id="rc" class="input" style="max-width:220px" placeholder="รหัสห้อง"><button onclick="joinRoom()">เข้าห้อง</button></div><div id="arena" style="margin-top:14px"></div></section>`);
-window.createRoom=async()=>{const code=Math.random().toString(36).slice(2,8).toUpperCase();await set(ref(rt,'rooms/'+code),{host:user.uid,hostName:user.displayName||user.email,started:false,createdAt:Date.now(),players:{[user.uid]:{name:user.displayName||user.email,score:0,ready:true}}});openRoom(code,true)};
-window.joinRoom=async()=>{const code=rc.value.trim().toUpperCase();if(!code)return;await update(ref(rt,'rooms/'+code+'/players/'+user.uid),{name:user.displayName||user.email,score:0,ready:true});openRoom(code,false)};
-function openRoom(code,host){onValue(ref(rt,'rooms/'+code),snap=>{const r=snap.val();if(!r){arena.innerHTML='<p class="bad">ห้องถูกปิด</p>';return}const ps=Object.entries(r.players||{}).sort((a,b)=>(b[1].score||0)-(a[1].score||0));arena.innerHTML=`<div class="card"><div>ห้อง</div><div class="room">${code}</div><p>${r.started?'🟢 กำลังแข่ง':'🟡 รอเริ่ม'}</p>${ps.map(([id,p],i)=>`<div class="player"><span>${i+1}. ${esc(p.name)}</span><b>${p.score||0}</b></div>`).join('')}<div class="row" style="margin-top:12px">${host&&!r.started?'<button class="primary" onclick="startRoom(\''+code+'\')">เริ่มแข่ง</button>':''}<button onclick="addScore(\''+code+'\')">+ คะแนน</button>${host?'<button class="danger" onclick="remove(ref(rt,\'rooms/'+code+'\'))">ปิดห้อง</button>':''}</div></div>`})}
-window.startRoom=code=>update(ref(rt,'rooms/'+code),{started:true,startAt:Date.now()});window.addScore=async code=>{const p=ref(rt,'rooms/'+code+'/players/'+user.uid);onValue(p,s=>{if(s.exists())update(p,{score:(s.val().score||0)+1})},{onlyOnce:true})};
+<div id="app" class="hide"></div>
+<button id="fab" class="hide" onclick="dashboard()">🚀 V100</button>
 
-const sleepTopics=[
-['โดยทั่วไปวัยรุ่นควรนอนประมาณกี่ชั่วโมงต่อคืน?','8–10 ชั่วโมง','7 ชั่วโมง','5–6 ชั่วโมง','11–13 ชั่วโมง'],
-['การนอนให้เป็นเวลาช่วยเรื่องใดมากที่สุด?','จังหวะนาฬิกาชีวภาพ','ทำให้ไม่ต้องกินอาหาร','ทำให้ไม่ต้องเรียน','เพิ่มเวลาหน้าจอ'],
-['คาเฟอีนช่วงเย็นอาจส่งผลอย่างไร?','ทำให้หลับยากขึ้น','ทำให้หลับทันที','ไม่มีผลเสมอ','ทำให้ร่างกายไม่ต้องนอน'],
-['แสงจากหน้าจอก่อนนอนอาจรบกวนอะไร?','การเตรียมตัวของร่างกายเข้าสู่การนอน','การย่อยอาหารเท่านั้น','การได้ยิน','ส่วนสูง'],
-['หากนอนไม่พอเป็นประจำ สิ่งใดอาจได้รับผลกระทบ?','สมาธิและความจำ','สีตา','กรุ๊ปเลือด','ลายนิ้วมือ'],
-['ห้องนอนที่เหมาะกับการนอนควรเป็นอย่างไร?','มืด เงียบ และอุณหภูมิสบาย','สว่างมากและเสียงดัง','เปิดเกมตลอดคืน','ร้อนจัด'],
-['การงีบช่วงดึกนานเกินไปอาจทำอะไร?','รบกวนการนอนกลางคืน','ทำให้ไม่ต้องนอนกลางคืน','ทำให้เรียนเก่งทันที','ไม่มีผลใดๆ เสมอ'],
-['กิจวัตรก่อนนอนที่สม่ำเสมอมีประโยชน์อย่างไร?','ช่วยให้ร่างกายเรียนรู้เวลาพัก','ทำให้ไม่ต้องพัก','เพิ่มคาเฟอีนในร่างกาย','ทำให้ตื่นทั้งคืน'],
-['เมื่อใกล้เวลานอนควรทำอะไรกับเกมที่ตื่นเต้นมาก?','หยุดหรือผ่อนกิจกรรมลง','เพิ่มความเข้มข้น','เล่นต่อจนเช้า','เพิ่มเสียงให้ดังที่สุด'],
-['ถ้านอนแล้วตื่นไม่สดชื่นบ่อยๆ ควรทำอย่างไร?','ทบทวนเวลาและคุณภาพการนอน และปรึกษาผู้เชี่ยวชาญหากเป็นต่อเนื่อง','เพิ่มเกมก่อนนอน','ดื่มคาเฟอีนทันทีทุกครั้ง','นอนน้อยลง']
-];
-function makeSleepBank(){const out=[];for(let i=0;i<200;i++){const t=sleepTopics[i%sleepTopics.length];let q=t[0];if(i>=10)q+=' (ข้อทบทวน '+(Math.floor(i/10)+1)+')';out.push({id:'S'+(i+1),cat:'การนอน',q,choices:t.slice(1),answer:0,diff:i%4===0?'ง่าย':i%4===1?'ปานกลาง':i%4===2?'ยาก':'ท้าทาย'});}return out}
-function makeStudyBank(){const out=[];const add=(cat,items)=>{for(let i=0;i<50;i++){const t=items[i%items.length];const n=Math.floor(i/items.length);out.push({id:cat+'-'+(i+1),cat,q:n?`${t[0]} (ด่านย่อย ${n+1})`:t[0],choices:t.slice(1),answer:0,diff:i%4===0?'ง่าย':i%4===1?'ปานกลาง':i%4===2?'ยาก':'ท้าทาย'});}};
-add('คณิตศาสตร์',[
-['ถ้า 7×8 เท่ากับเท่าไร?','56','48','64','54'],['25% ของ 200 เท่ากับเท่าไร?','50','25','75','100'],['พื้นที่สี่เหลี่ยมผืนผ้า กว้าง 5 ยาว 8 เท่ากับเท่าไร?','40','13','26','80'],['ถ้า x+9=15 แล้ว x เท่ากับเท่าไร?','6','24','9','5'],['ค่าเฉลี่ยของ 4, 6, 8 คือเท่าไร?','6','5','7','8']]);
-add('วิทยาศาสตร์',[
-['หน่วยพื้นฐานของสิ่งมีชีวิตคืออะไร?','เซลล์','อะตอม','เนื้อเยื่อ','อวัยวะ'],['พืชใช้ก๊าซใดในการสังเคราะห์ด้วยแสง?','คาร์บอนไดออกไซด์','ออกซิเจน','ไนโตรเจน','ฮีเลียม'],['น้ำเดือดที่ระดับน้ำทะเลประมาณกี่องศาเซลเซียส?','100','50','0','212'],['แรงโน้มถ่วงทำให้วัตถุมีแนวโน้มเคลื่อนไปทางใดบนโลก?','เข้าหาศูนย์กลางโลก','ออกจากโลก','ไปทางตะวันออก','ไปทางเหนือ'],['ดาวเคราะห์ดวงใดอยู่ใกล้ดวงอาทิตย์ที่สุด?','ดาวพุธ','โลก','ดาวอังคาร','ดาวพฤหัสบดี']]);
-add('ภาษาไทย',[
-['คำใดเป็นคำกริยา?','วิ่ง','บ้าน','สวย','โต๊ะ'],['คำว่า “รวดเร็ว” มีความหมายใกล้เคียงกับข้อใด?','เร็ว','ช้า','หนัก','ไกล'],['ประโยคใดเป็นประโยคคำถาม?','วันนี้ไปไหน?','วันนี้อากาศดี','ฉันอ่านหนังสือ','เขาวิ่งเร็ว'],['ข้อใดเป็นคำนาม?','โรงเรียน','วิ่ง','สวย','อย่างรวดเร็ว'],['ใจความสำคัญของย่อหน้าคืออะไร?','สาระหลักที่ผู้เขียนต้องการสื่อ','คำสุดท้ายเท่านั้น','ชื่อเรื่องเท่านั้น','จำนวนคำ']]);
-add('ภาษาอังกฤษ',[
-['คำว่า “book” แปลว่าอะไร?','หนังสือ','โต๊ะ','ปากกา','โรงเรียน'],['I ___ a student. ควรเติมอะไร?','am','is','are','be'],['คำตรงข้ามของ “hot” คืออะไร?','cold','fast','big','high'],['“How are you?” ใช้ถามเรื่องใด?','ความเป็นอยู่','อายุ','ที่อยู่','เวลา'],['Past tense ของ “go” คืออะไร?','went','goed','gone','going']]);
-add('สังคมศึกษา',[
-['หน้าที่พื้นฐานของพลเมืองคืออะไร?','เคารพกฎหมายและสิทธิของผู้อื่น','ละเมิดกฎหมาย','ไม่รับผิดชอบต่อสังคม','เผยแพร่ข้อมูลเท็จ'],['เศรษฐศาสตร์ศึกษาเกี่ยวกับอะไรเป็นหลัก?','การจัดสรรทรัพยากรที่มีจำกัด','การวัดอุณหภูมิ','การจำแนกสัตว์','การแต่งกลอน'],['แผนที่ใช้เพื่ออะไร?','แสดงข้อมูลเชิงพื้นที่','วัดน้ำตาลในเลือด','ตรวจเสียง','คำนวณคะแนน'],['ประชาธิปไตยเกี่ยวข้องกับอะไร?','การมีส่วนร่วมของประชาชนในการปกครอง','การห้ามแสดงความคิดเห็น','การยกเลิกกฎหมาย','การไม่มีสิทธิ'],['ภาษีคืออะไร?','เงินที่รัฐจัดเก็บตามกฎหมายเพื่อนำไปใช้ในกิจการสาธารณะ','เงินรางวัล','เงินกู้ส่วนตัว','ค่าโดยสาร']]);
-add('ประวัติศาสตร์',[
-['หลักฐานทางประวัติศาสตร์มีไว้เพื่ออะไร?','ช่วยศึกษาความเป็นมาในอดีต','ทำนายอนาคตแน่นอน','แทนการทดลองวิทยาศาสตร์','ใช้คำนวณพื้นที่'],['โบราณสถานหมายถึงอะไร?','สถานที่หรือสิ่งก่อสร้างที่มีคุณค่าทางประวัติศาสตร์หรือวัฒนธรรม','อาคารใหม่ทุกแห่ง','สถานีรถไฟเท่านั้น','สวนสาธารณะทุกแห่ง'],['การเรียงเหตุการณ์ตามเวลาเรียกว่าอะไร?','ลำดับเหตุการณ์','การสุ่มข้อมูล','การประมาณค่า','การจำแนกชนิด'],['นักประวัติศาสตร์ควรทำอย่างไรเมื่อหลักฐานขัดแย้งกัน?','ตรวจสอบและเปรียบเทียบหลักฐานหลายแหล่ง','เลือกหลักฐานที่ชอบทันที','ละทิ้งทุกหลักฐาน','เดาคำตอบ'],['แหล่งข้อมูลปฐมภูมิคืออะไร?','หลักฐานจากช่วงเวลาหรือผู้เกี่ยวข้องโดยตรงกับเหตุการณ์','บทสรุปจากหนังสือเรียนเสมอ','ความคิดเห็นที่ไม่มีหลักฐาน','โฆษณา']]);
-add('คอมพิวเตอร์',[
-['CPU มีหน้าที่หลักเกี่ยวกับอะไร?','ประมวลผลคำสั่ง','แสดงภาพเท่านั้น','เก็บกระดาษ','ส่งเสียงอย่างเดียว'],['HTML ใช้ทำอะไรเป็นหลัก?','สร้างโครงสร้างหน้าเว็บ','ตัดต่อเสียง','จัดการฐานข้อมูลทั้งหมด','เข้ารหัสไฟล์ทุกชนิด'],['CSS ใช้ทำอะไร?','กำหนดรูปแบบและการแสดงผลเว็บ','คำนวณเลขแทน CPU','ส่งอีเมล','เก็บรหัสผ่าน'],['ฐานข้อมูลมีไว้ทำอะไร?','จัดเก็บและจัดการข้อมูลอย่างเป็นระบบ','เพิ่มความสว่างจอ','ชาร์จแบตเตอรี่','สร้างสัญญาณ Wi-Fi'],['รหัสผ่านที่ดีควรเป็นอย่างไร?','ยาวและเดายาก พร้อมไม่ใช้ซ้ำ','ใช้ชื่อเล่นอย่างเดียว','ใช้ 123456','ใช้รหัสเดียวทุกบริการ']]);
-add('ฟิสิกส์',[
-['หน่วย SI ของแรงคืออะไร?','นิวตัน','จูล','วัตต์','โวลต์'],['ความเร็วคำนวณได้จากอะไร?','ระยะทางหารด้วยเวลา','เวลา/ระยะทาง','มวล×เวลา','แรง/พื้นที่'],['พลังงานจลน์เกี่ยวข้องกับอะไร?','การเคลื่อนที่ของวัตถุ','สีของวัตถุ','อุณหภูมิห้องเท่านั้น','เสียงเท่านั้น'],['กฎข้อที่สามของนิวตันกล่าวถึงอะไร?','แรงกิริยาและปฏิกิริยาคู่กัน','พลังงานหายไป','วัตถุทุกชิ้นหยุดนิ่ง','มวลเท่ากับศูนย์'],['กำลังไฟฟ้ามีหน่วยเป็นอะไร?','วัตต์','เมตร','กิโลกรัม','แอมแปร์']]);
-add('เคมี',[
-['สัญลักษณ์ H คือธาตุใด?','ไฮโดรเจน','ฮีเลียม','เหล็ก','ทองแดง'],['pH ต่ำกว่า 7 โดยทั่วไปหมายถึงสารละลายแบบใด?','เป็นกรด','เป็นกลาง','เป็นเบส','เป็นโลหะ'],['NaCl เป็นชื่อทั่วไปของอะไร?','เกลือแกง','น้ำตาล','แอมโมเนีย','ออกซิเจน'],['อะตอมประกอบด้วยอนุภาคหลักใด?','โปรตอน นิวตรอน อิเล็กตรอน','เซลล์ เนื้อเยื่อ อวัยวะ','น้ำ เกลือ น้ำตาล','แสง เสียง ความร้อน'],['การเปลี่ยนจากของแข็งเป็นของเหลวเรียกว่าอะไร?','การหลอมเหลว','การควบแน่น','การระเหิด','การแข็งตัว']]);
-add('ชีววิทยา',[
-['อวัยวะใดทำหน้าที่สูบฉีดเลือด?','หัวใจ','ปอด','ไต','กระเพาะอาหาร'],['DNA มีบทบาทสำคัญเกี่ยวกับอะไร?','ข้อมูลทางพันธุกรรม','การย่อยอาหารโดยตรง','การสร้างเสียง','การสูบเลือด'],['ปอดเกี่ยวข้องกับกระบวนการใด?','แลกเปลี่ยนก๊าซ','กรองเลือดหลักทั้งหมด','ย่อยไขมันทั้งหมด','สร้างกระดูก'],['ระบบย่อยอาหารมีหน้าที่อะไร?','ย่อยอาหารและดูดซึมสารอาหาร','สูบเลือด','ส่งสัญญาณไฟฟ้าเท่านั้น','สร้างเสียง'],['การสังเคราะห์ด้วยแสงสร้างน้ำตาลจากอะไรเป็นหลัก?','คาร์บอนไดออกไซด์และน้ำโดยใช้พลังงานแสง','เกลือและเหล็ก','ออกซิเจนอย่างเดียว','โปรตีนอย่างเดียว']]);
-return out}
-const SLEEP_BANK=makeSleepBank(), STUDY_BANK=makeStudyBank();
-let quizState=null;
-window.quiz=()=>{A.innerHTML=shell(`<section class="card"><h2>🎯 ด่านคำถาม Health Hub</h2><p class="muted">มีคำถามการนอน 200 ข้อ และคำถามวิชาเรียน 500 ข้อ • เลือกหมวดและระดับความยาก • ทุก 10 ด่านมีบอส 👹</p><div class="grid"><div><label>หมวด</label><select id="qcat" class="input"><option value="sleep">😴 การนอน — 200 ข้อ</option><option value="study">📚 วิชาเรียน — 500 ข้อ</option></select></div><div><label>วิชา</label><select id="qsub" class="input"><option>ทุกวิชา</option><option>คณิตศาสตร์</option><option>วิทยาศาสตร์</option><option>ภาษาไทย</option><option>ภาษาอังกฤษ</option><option>สังคมศึกษา</option><option>ประวัติศาสตร์</option><option>คอมพิวเตอร์</option><option>ฟิสิกส์</option><option>เคมี</option><option>ชีววิทยา</option></select></div><div><label>ความยาก</label><select id="qd" class="input"><option>ทุกระดับ</option><option>ง่าย</option><option>ปานกลาง</option><option>ยาก</option><option>ท้าทาย</option></select></div></div><button class="primary" onclick="startQuiz()">🚀 เริ่มด่าน</button><div id="quizbox" style="margin-top:16px"></div></section>`);document.getElementById('qcat').onchange=()=>document.getElementById('qsub').disabled=document.getElementById('qcat').value==='sleep';};
-window.startQuiz=()=>{let bank=qcat.value==='sleep'?SLEEP_BANK:STUDY_BANK;let sub=qsub.value,d=qd.value;if(sub!=='ทุกวิชา')bank=bank.filter(x=>x.cat===sub);if(d!=='ทุกระดับ')bank=bank.filter(x=>x.diff===d);bank=[...bank].sort(()=>Math.random()-.5);if(!bank.length)return alert('ไม่มีคำถามตามเงื่อนไขนี้');quizState={bank,index:0,score:0,streak:0,bossHp:100};showQuestion()};
-function showQuestion(){const x=quizState.bank[quizState.index%quizState.bank.length];const level=Math.floor(quizState.index/10)+1;const boss=quizState.index%10===9;const hp=boss?quizState.bossHp:100;document.getElementById('quizbox').innerHTML=`<div class="card ${boss?'hero':''}"><div class="row"><b>ด่าน ${level}</b><span class="muted">ข้อ ${quizState.index+1}/${Math.min(quizState.bank.length,30)}</span><span class="xp">⭐ ${quizState.score} XP</span>${boss?'<b style="color:#fbbf24">👹 BOSS BATTLE</b>':''}</div>${boss?`<p><b>👹 บอสประจำด่าน</b> — ตอบถูกเพื่อโจมตีบอส</p><div class="bossbar"><div class="bossfill" style="width:${hp}%"></div></div><p class="muted">HP บอส: ${hp}/100</p>`:''}<h3>${esc(x.q)}</h3><div class="grid">${x.choices.map((c,i)=>`<button onclick="answerQuiz(${i})">${String.fromCharCode(65+i)}. ${esc(c)}</button>`).join('')}</div><p class="muted">${boss?'ถูก = โจมตีบอส 25 HP • ผิด = บอสโจมตีกลับ 10 HP':'ตอบให้ถูกเพื่อสะสม XP และรักษา Streak'}</p></div>`}
-window.answerQuiz=(i)=>{const x=quizState.bank[quizState.index%quizState.bank.length],ok=i===x.answer,boss=quizState.index%10===9;if(ok){const dmg=boss?25:0;quizState.score+=boss?100:10;quizState.streak++;if(boss){quizState.bossHp=Math.max(0,quizState.bossHp-dmg);if(quizState.bossHp===0){alert('👹 BOSS DEFEATED! +100 XP');quizState.bossHp=100;}else alert('⚔️ โจมตีบอสสำเร็จ! -25 HP • +100 XP')}else alert('ถูกต้อง! +10 XP')}else{quizState.streak=0;if(boss){quizState.bossHp=Math.min(100,quizState.bossHp+10);alert('💥 บอสโจมตีกลับ! +10 HP\nคำตอบคือ: '+x.choices[x.answer])}else alert('ยังไม่ถูก คำตอบคือ: '+x.choices[x.answer])}quizState.index++;if(quizState.index>=30){document.getElementById('quizbox').innerHTML=`<div class="card"><h2>🏆 จบด่านชุดนี้!</h2><div class="big">${quizState.score} XP</div><p>Streak สูงสุดในรอบนี้: ${quizState.streak}</p><button class="primary" onclick="quiz()">เล่นชุดใหม่</button></div>`}else showQuestion()};
-window.notify=()=>A.innerHTML=shell(`<section class="card"><h2>🔔 Push Notifications</h2><p class="muted">ระบบนี้ใช้ Firebase Cloud Messaging + service worker เพื่อรับแจ้งเตือนแม้ปิดหน้าเว็บได้ในเบราว์เซอร์ที่รองรับและเมื่อให้สิทธิ์แล้ว</p><button class="primary" onclick="enablePush()">เปิดการแจ้งเตือน</button><div id="nt" style="margin-top:14px"></div></section>`); 
-window.enablePush=async()=>{try{if(!messaging)return alert('Messaging ยังไม่พร้อม');const reg=await navigator.serviceWorker.register('/firebase-messaging-sw.js');const token=await getToken(messaging,{vapidKey:VAPID_KEY,serviceWorkerRegistration:reg});await setDoc(doc(fs,'fcmTokens',token),{uid:user.uid,token,createdAt:Date.now(),timezone:Intl.DateTimeFormat().resolvedOptions().timeZone},{merge:true});nt.innerHTML='<p class="ok">เปิด Push สำเร็จ ✓</p>'}catch(e){nt.innerHTML='<p class="bad">เปิด Push ไม่สำเร็จ: '+esc(e.message)+'</p>'}};
-window.sleep=()=>A.innerHTML=shell(`<section class="card"><h2>😴 เวลานอน</h2><p class="muted">ตั้งเวลานอนแล้วระบบสามารถส่ง Push เตือนจากฝั่งเซิร์ฟเวอร์</p><input id="bt" class="input" type="time" value="22:00"><button class="primary" onclick="saveBed()">บันทึก</button><div id="sleepmsg"></div></section>`);window.saveBed=async()=>{await setDoc(doc(fs,'settings',user.uid),{bedTime:bt.value,timezone:Intl.DateTimeFormat().resolvedOptions().timeZone},{merge:true});sleepmsg.innerHTML='<p class="ok">บันทึกแล้ว ระบบ backend จะตรวจและส่งแจ้งเตือน</p>'};
-function init(){if(!configured){login();return}app=initializeApp(cfg);auth=getAuth(app);rt=getDatabase(app);fs=getFirestore(app);try{messaging=getMessaging(app);onMessage(messaging,p=>{const n=p.notification||{};alert('🔔 '+(n.title||'Health Hub')+'\n'+(n.body||''))})}catch{}onAuthStateChanged(auth,u=>{user=u;if(u)home();else login()})}init();
+<script>
+const ACCOUNT_KEY="hh_accounts_v100";
+const DATA_KEY="hh_v100_data";
+const defaultData={xp:0,level:1,coins:0,streak:0,lastDay:"",games:0,best:{},water:0,waterGoal:8,study:0,steps:0,sleep:0,mood:"",diary:"",checkin:false,achievements:[]};
+let currentUser="";
 
-// ===== V13.4 RPG GAME SYSTEM =====
-const RPG_KEY='hh_rpg_profile';
-const SHOP_ITEMS=[
-{id:'sword1',name:'⚔️ ดาบนักเรียน',type:'weapon',price:100,power:5,desc:'+5 พลังโจมตี'},
-{id:'sword2',name:'🗡️ ดาบสายฟ้า',type:'weapon',price:300,power:15,desc:'+15 พลังโจมตี'},
-{id:'staff',name:'🔮 ไม้เท้านักปราชญ์',type:'weapon',price:500,power:25,desc:'+25 พลังโจมตี'},
-{id:'armor1',name:'🛡️ ชุดนักเรียนฮีโร่',type:'outfit',price:150,hp:20,desc:'+20 HP'},
-{id:'armor2',name:'🥋 ชุดนักสู้',type:'outfit',price:400,hp:50,desc:'+50 HP'},
-{id:'armor3',name:'👑 ชุดราชันความรู้',type:'outfit',price:800,hp:100,desc:'+100 HP'},
-{id:'pet',name:'🐉 มังกรผู้ช่วย',type:'pet',price:600,power:10,desc:'+10 พลังโจมตี'}
-];
-const BOSS_LIST=[
-{name:'👹 Sleep Demon',hp:100,bonus:150}, {name:'🐲 Math Dragon',hp:150,bonus:250},
-{name:'🧪 Chemistry Beast',hp:200,bonus:350}, {name:'🧠 Knowledge Titan',hp:250,bonus:500},
-{name:'🌌 Final Exam Lord',hp:400,bonus:1000}
-];
-function rpg(){let p=JSON.parse(localStorage.getItem(RPG_KEY)||'null');if(!p)p={name:user?.displayName||user?.email?.split('@')[0]||'Player',level:1,xp:0,coins:100,inventory:[],weapon:null,outfit:null,bossWins:0};return p}
-function saveRpg(p){localStorage.setItem(RPG_KEY,JSON.stringify(p))}
-function xpNeed(l){return 100+(l-1)*75}
-function addXP(n){let p=rpg();p.xp+=n;let leveled=[];while(p.xp>=xpNeed(p.level)){p.xp-=xpNeed(p.level);p.level++;p.coins+=50;leveled.push(p.level)}saveRpg(p);if(leveled.length)alert('🎉 Level Up! Lv.'+p.level+'\n💰 +'+(leveled.length*50)+' Coins');return p}
-function addCoins(n){let p=rpg();p.coins+=n;saveRpg(p);return p}
+function accounts(){try{return JSON.parse(localStorage.getItem(ACCOUNT_KEY)||"{}")}catch{return{}}}
+function data(){try{return Object.assign({},defaultData,JSON.parse(localStorage.getItem(DATA_KEY+"_"+currentUser)||"{}"))}catch{return Object.assign({},defaultData)}}
+function save(d){localStorage.setItem(DATA_KEY+"_"+currentUser,JSON.stringify(d))}
+function today(){return new Date().toISOString().slice(0,10)}
+function touch(d){let t=today();if(d.lastDay!==t){let y=new Date(Date.now()-86400000).toISOString().slice(0,10);d.streak=d.lastDay===y?d.streak+1:1;d.lastDay=t;d.water=0;d.study=0;d.steps=0;d.sleep=0;d.mood="";d.diary="";d.checkin=false}}
+function reward(x,c){let d=data();touch(d);d.xp+=x;d.coins+=c;d.level=Math.floor(d.xp/500)+1;save(d)}
+function achievement(id,name,ok){let d=data();if(ok&&!d.achievements.includes(id)){d.achievements.push(id);d.xp+=100;d.coins+=25;save(d);alert("🏆 "+name+" +100 XP")}}
+function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
 
-function shop(){let p=rpg();A.innerHTML=shell(`<section class="card"><div class="row"><h2>🛒 ร้านค้า</h2><span class="xp">💰 ${p.coins} Coins</span></div><p class="muted">ซื้ออาวุธ ชุด และผู้ช่วยเพื่อเพิ่มพลังในการต่อสู้บอส</p><div class="grid">${SHOP_ITEMS.map(i=>{let owned=p.inventory.includes(i.id),eq=p.weapon===i.id||p.outfit===i.id;return `<div class="card"><div style="font-size:38px">${i.name.split(' ')[0]}</div><h3>${esc(i.name)}</h3><p>${esc(i.desc)}</p><b>💰 ${i.price}</b><br><button class="${owned?'':'primary'}" style="margin-top:10px" onclick="buyItem('${i.id}')">${owned?(eq?'สวมใส่อยู่':'สวมใส่'):'ซื้อ'}</button></div>`}).join('')}</div></section>`)}
-window.buyItem=(id)=>{let p=rpg(),i=SHOP_ITEMS.find(x=>x.id===id);if(!i)return;if(!p.inventory.includes(id)){if(p.coins<i.price)return alert('Coins ไม่พอ');p.coins-=i.price;p.inventory.push(id);alert('ซื้อ '+i.name+' สำเร็จ!')}if(i.type==='weapon')p.weapon=id;if(i.type==='outfit')p.outfit=id;saveRpg(p);shop()}
-function leaderboard(){let p=rpg();A.innerHTML=shell(`<section class="card"><h2>🏆 Leaderboard</h2><p class="muted">อันดับ XP/Level สำหรับการแข่งขันกับเพื่อน เมื่อเชื่อม Firebase จะบันทึกคะแนนข้ามเครื่อง</p><div class="row"><button class="primary" onclick="publishScore()">☁️ อัปโหลดคะแนน</button><button onclick="loadLeaderboard()">🔄 รีเฟรช</button></div><div id="lb" style="margin-top:15px"><div class="player"><span>🥇 ${esc(p.name)}</span><b>Lv.${p.level} · ${p.level*100+p.xp} XP</b></div></div></section>`)}
-window.publishScore=async()=>{if(!fs||!user)return alert('ต้องเชื่อม Firebase และเข้าสู่ระบบก่อน');let p=rpg();await setDoc(doc(fs,'leaderboard',user.uid),{uid:user.uid,name:p.name,level:p.level,xp:p.xp,totalXp:(p.level-1)*100+p.xp,coins:p.coins,updatedAt:Date.now()},{merge:true});alert('อัปโหลดคะแนนแล้ว');loadLeaderboard()}
-window.loadLeaderboard=async()=>{if(!fs)return;try{const q=query(collection(fs,'leaderboard'));onSnapshot(q,snap=>{let a=snap.docs.map(d=>d.data()).sort((x,y)=>(y.totalXp||0)-(x.totalXp||0)).slice(0,50);const el=document.getElementById('lb');if(el)el.innerHTML=a.map((x,i)=>`<div class="player"><span>${i<3?['🥇','🥈','🥉'][i]:'#'+(i+1)} ${esc(x.name||'Player')}</span><b>Lv.${x.level||1} · ${x.totalXp||0} XP</b></div>`).join('')||'<p class="muted">ยังไม่มีคะแนน</p>'})}catch(e){alert(e.message)}}
-// Reward quiz results with RPG XP/coins and rotating bosses.
-const _oldStartQuiz=window.startQuiz;
-window.startQuiz=()=>{_oldStartQuiz();if(quizState){quizState.rpgBossWins=0;quizState.rpgCoins=0}};
-const _oldAnswerQuiz=window.answerQuiz;
-window.answerQuiz=(i)=>{const before=quizState?.score||0;const idx=quizState?.index||0;const boss=idx%10===9;const x=quizState?.bank?.[idx%quizState.bank.length];const ok=x&&i===x.answer;_oldAnswerQuiz(i);if(ok){addXP(boss?100:10);addCoins(boss?30:3);if(boss){let p=rpg();p.bossWins++;saveRpg(p)}}};
+function register(){
+ const u=newuser.value.trim(),p=newpass.value;
+ if(u.length<3||p.length<4){msg.textContent="ชื่อผู้ใช้ 3 ตัวอักษร และรหัสผ่าน 4 ตัวอักษรขึ้นไป";return}
+ const a=accounts();if(a[u]){msg.textContent="มีบัญชีนี้แล้ว";return}
+ a[u]={password:p};localStorage.setItem(ACCOUNT_KEY,JSON.stringify(a));enter(u)
+}
+function login(){
+ const u=user.value.trim(),p=pass.value,a=accounts();
+ if(u==="admin"&&p==="HHadmin2026!"){enter(u);return}
+ if(!a[u]||a[u].password!==p){msg.textContent="ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง";return}
+ enter(u)
+}
+function enter(u){currentUser=u;gate.classList.add("hide");app.classList.remove("hide");fab.classList.remove("hide");home()}
+function logout(){currentUser="";app.classList.add("hide");fab.classList.add("hide");gate.classList.remove("hide")}
 
+function layout(body){
+ app.innerHTML=`<header><div class="brand">💚 Health Hub V100</div><div class="nav">
+ <button onclick="home()">🏠 Home</button><button onclick="games()">🎮 เกม</button><button onclick="health()">❤️ สุขภาพ</button><button onclick="schedule()">🗓️ ตาราง</button><button onclick="rpg()">🧙 RPG</button><button onclick="admin()">🛡️ Admin</button><button onclick="logout()">🚪 ออก</button>
+ </div></header><main class="wrap">${body}</main>`
+}
 
-/* ===== V13.5 CHARACTER RPG UPGRADE ===== */
-const RPG135_KEY='hh_rpg_character_v135';
-const RARITY=[
- {id:'Common',label:'Common',mult:1},
- {id:'Uncommon',label:'Uncommon',mult:1.12},
- {id:'Rare',label:'Rare',mult:1.28},
- {id:'Epic',label:'Epic',mult:1.5},
- {id:'Legendary',label:'Legendary',mult:1.85}
-];
-const GEAR135=[
- {id:'wood_sword',name:'⚔️ ดาบไม้ฝึกหัด',slot:'weapon',rarity:'Common',atk:5,price:80},
- {id:'scholar_staff',name:'🔮 คทานักปราชญ์',slot:'weapon',rarity:'Uncommon',atk:12,price:220},
- {id:'storm_blade',name:'⚡ ดาบพายุ',slot:'weapon',rarity:'Rare',atk:24,crit:4,price:500},
- {id:'dragon_staff',name:'🐉 คทามังกรความรู้',slot:'weapon',rarity:'Epic',atk:42,crit:8,price:1000},
- {id:'legend_book',name:'📖 คัมภีร์แห่งตำนาน',slot:'weapon',rarity:'Legendary',atk:70,crit:15,price:2200},
- {id:'school_uniform',name:'🎒 ชุดนักเรียน',slot:'armor',rarity:'Common',hp:20,def:3,price:100},
- {id:'guardian_armor',name:'🛡️ เกราะผู้พิทักษ์',slot:'armor',rarity:'Uncommon',hp:50,def:8,price:300},
- {id:'mage_robe',name:'🧙 เสื้อคลุมนักเวท',slot:'armor',rarity:'Rare',hp:85,def:12,mp:20,price:650},
- {id:'titan_armor',name:'🗿 เกราะไททัน',slot:'armor',rarity:'Epic',hp:150,def:22,price:1300},
- {id:'knowledge_crown',name:'👑 มงกุฎราชันความรู้',slot:'armor',rarity:'Legendary',hp:250,def:35,mp:40,price:2800}
-];
-const SKILLS135=[
- {id:'focus',name:'🎯 Focus Strike',cost:10,desc:'โจมตีแรงขึ้น 60%'},
- {id:'heal',name:'💚 Study Heal',cost:15,desc:'ฟื้น HP 30%'},
- {id:'shield',name:'🛡️ Smart Shield',cost:12,desc:'ลดความเสียหายครั้งถัดไป 50%'},
- {id:'critical',name:'🔥 Critical Mind',cost:20,desc:'เพิ่มโอกาส Critical ชั่วคราว'}
-];
-const BOSS135=[
- {name:'👹 Sleep Demon',hp:180,atk:18,pattern:['sleep','normal','drain'],reward:180},
- {name:'🐲 Math Dragon',hp:260,atk:25,pattern:['normal','crit','counter'],reward:300},
- {name:'🧪 Chemistry Beast',hp:340,atk:31,pattern:['poison','normal','drain'],reward:450},
- {name:'🧠 Knowledge Titan',hp:450,atk:38,pattern:['stun','crit','counter'],reward:650},
- {name:'🌌 Final Exam Lord',hp:650,atk:48,pattern:['drain','crit','stun','counter'],reward:1200}
-];
-function rpg135(){
- let p=JSON.parse(localStorage.getItem(RPG135_KEY)||'null');
- if(!p)p={name:user?.displayName||user?.email?.split('@')[0]||'Player',level:1,xp:0,coins:250,
- hp:120,mp:60,inventory:[],equip:{weapon:null,armor:null},skills:[],wins:0,totalDamage:0};
- return p;
+function home(){
+ let d=data();touch(d);save(d);
+ layout(`<div class="grid">
+ <div class="card"><small>LEVEL</small><div class="big">Lv.${d.level}</div><b>${d.xp} XP</b><div class="bar"><i style="width:${(d.xp%500)/5}%"></i></div></div>
+ <div class="card"><small>🔥 STREAK</small><div class="big">${d.streak}</div><span>วัน</span></div>
+ <div class="card"><small>🪙 COINS</small><div class="big">${d.coins}</div></div>
+ <div class="card"><small>🎮 GAMES</small><div class="big">${d.games}</div></div></div>
+ <div class="grid" style="margin-top:14px">
+ <div class="card"><h3>⚡ Focus Sprint</h3><div id="focusClock" class="big">25:00</div><button onclick="focusTimer(25)">25 นาที</button> <button onclick="focusTimer(50)" class="alt">50 นาที</button></div>
+ <div class="card"><h3>💧 Water</h3><p>${d.water}/${d.waterGoal} แก้ว</p><button onclick="water()">+ ดื่มน้ำ</button></div>
+ <div class="card"><h3>📋 Check-in</h3><p>${d.checkin?"✅ เช็กอินแล้ว":"ยังไม่ได้เช็กอิน"}</p><button onclick="checkin()">เช็กอิน +50 XP</button></div>
+ </div>
+ <div class="card" style="margin-top:14px"><h2>🚀 V100 MAX</h2><p class="muted">Game Center + สุขภาพ + XP + Achievement + Admin</p><button onclick="games()">🎮 เล่นเกม</button> <button onclick="health()" class="alt">📝 บันทึกสุขภาพ</button></div>`)
 }
-function save135(p){localStorage.setItem(RPG135_KEY,JSON.stringify(p));}
-function gear135(id){return GEAR135.find(x=>x.id===id)}
-function stats135(p){
- let w=gear135(p.equip.weapon),a=gear135(p.equip.armor);
- return {maxHp:120+(p.level-1)*12+(a?.hp||0),maxMp:60+(p.level-1)*5+(a?.mp||0),
- atk:10+(p.level-1)*3+(w?.atk||0),def:5+Math.floor((p.level-1)*1.5)+(a?.def||0),
- crit:5+(w?.crit||0)};
-}
-function xpNeed135(l){return 100+((l-1)*80)}
-function gain135(xp,coins){
- let p=rpg135();p.xp+=xp;p.coins+=coins;let ups=0;
- while(p.xp>=xpNeed135(p.level)){p.xp-=xpNeed135(p.level);p.level++;ups++}
- let st=stats135(p);p.hp=Math.min(st.maxHp,p.hp||st.maxHp);p.mp=Math.min(st.maxMp,p.mp||st.maxMp);
- save135(p);if(ups)alert('🎉 LEVEL UP! ตอนนี้ Lv.'+p.level+'\\n💰 โบนัส '+(ups*100)+' Coins');if(ups)p.coins+=ups*100;save135(p);return p;
-}
-function rarityClass(r){return 'rarity-'+r.toLowerCase()}
-function character(){
- const p=rpg135(),st=stats135(p),w=gear135(p.equip.weapon),a=gear135(p.equip.armor);
- A.innerHTML=shell(`<section class="card"><div class="row"><h2>🧙 Character RPG</h2><span class="xp">Lv.${p.level}</span></div>
- <div class="hero"><div style="font-size:68px">🧙‍♂️</div><h2>${esc(p.name)}</h2>
- <p>⭐ XP ${p.xp}/${xpNeed135(p.level)} · 💰 ${p.coins} Coins</p>
- <div class="grid">
- <div class="card"><b>❤️ HP</b><div class="big">${p.hp||st.maxHp}/${st.maxHp}</div></div>
- <div class="card"><b>🔷 MP</b><div class="big">${p.mp||st.maxMp}/${st.maxMp}</div></div>
- <div class="card"><b>⚔️ ATK</b><div class="big">${st.atk}</div></div>
- <div class="card"><b>🛡️ DEF</b><div class="big">${st.def}</div></div>
- <div class="card"><b>🎯 CRIT</b><div class="big">${st.crit}%</div></div>
- </div></div>
- <p>⚔️ อาวุธ: ${w?esc(w.name)+' <span class="'+rarityClass(w.rarity)+'">['+w.rarity+']</span>':'ยังไม่มี'}</p>
- <p>🛡️ ชุด: ${a?esc(a.name)+' <span class="'+rarityClass(a.rarity)+'">['+a.rarity+']</span>':'ยังไม่มี'}</p>
- <p>👹 ชนะบอส ${p.wins} ครั้ง · 💥 Damage รวม ${p.totalDamage}</p>
- <div class="row"><button class="primary" onclick="shop135()">🛒 ร้านค้า RPG</button><button onclick="skills135()">✨ สกิล</button><button onclick="boss135()">👹 Boss Arena</button></div>
- </section>`);
-}
-function shop135(){
- const p=rpg135();A.innerHTML=shell(`<section class="card"><div class="row"><h2>🛒 RPG Shop</h2><b>💰 ${p.coins}</b></div><p class="muted">ไอเทมแบ่งระดับ Common → Legendary</p><div class="grid">${GEAR135.map(i=>`<div class="card"><h3>${esc(i.name)}</h3><b class="${rarityClass(i.rarity)}">${i.rarity}</b><p>${i.atk?`⚔️ +${i.atk} ATK `:''}${i.hp?`❤️ +${i.hp} HP `:''}${i.def?`🛡️ +${i.def} DEF `:''}${i.crit?`🎯 +${i.crit}% CRIT`:''}</p><b>💰 ${i.price}</b><br><button style="margin-top:10px" onclick="buy135('${i.id}')">${p.inventory.includes(i.id)?(p.equip.weapon===i.id||p.equip.armor===i.id?'สวมใส่อยู่':'สวมใส่'):'ซื้อ'}</button></div>`).join('')}</div></section>`);
-}
-window.buy135=id=>{let p=rpg135(),i=gear135(id);if(!i)return;if(!p.inventory.includes(id)){if(p.coins<i.price)return alert('Coins ไม่พอ');p.coins-=i.price;p.inventory.push(id)}p.equip[i.slot]=id;let st=stats135(p);p.hp=Math.min(st.maxHp,p.hp||st.maxHp);p.mp=Math.min(st.maxMp,p.mp||st.maxMp);save135(p);shop135()};
-function skills135(){
- const p=rpg135();A.innerHTML=shell(`<section class="card"><h2>✨ Skill Tree</h2><p class="muted">ปลดล็อกด้วย Coins และใช้ MP ตอนสู้ Boss</p><div class="grid">${SKILLS135.map(k=>`<div class="card"><h3>${k.name}</h3><p>${k.desc}</p><b>🔷 ${k.cost} MP</b><br><button style="margin-top:10px" onclick="unlock135('${k.id}')">${p.skills.includes(k.id)?'ปลดล็อกแล้ว':'ปลดล็อก 150 Coins'}</button></div>`).join('')}</div></section>`);
-}
-window.unlock135=id=>{let p=rpg135();if(p.skills.includes(id))return;if(p.coins<150)return alert('Coins ไม่พอ');p.coins-=150;p.skills.push(id);save135(p);skills135()};
-function boss135(){
- let p=rpg135(),idx=Math.min(Math.floor((p.level-1)/5),BOSS135.length-1),b=BOSS135[idx],st=stats135(p);
- p.hp=Math.min(st.maxHp,p.hp||st.maxHp);p.mp=Math.min(st.maxMp,p.mp||st.maxMp);
- let state={boss:{...b},player:p.hp,pm:p.mp,shield:false,critBoost:0,turn:0};
- A.innerHTML=shell(`<section class="card hero"><div class="row"><h2>👹 Boss Arena</h2><b>${esc(b.name)}</b></div>
- <div class="bossbar"><div id="b135" class="bossfill" style="width:100%"></div></div><p>Boss HP: <b id="bh135">${b.hp}</b>/${b.hp}</p>
- <p>❤️ HP <b id="ph135">${state.player}</b>/${st.maxHp} · 🔷 MP <b id="pm135">${state.pm}</b>/${st.maxMp}</p>
- <div class="row">${SKILLS135.filter(k=>p.skills.includes(k.id)).map(k=>`<button onclick="skillBoss135('${k.id}')">${k.name}</button>`).join('')||'<span class="muted">ไปปลดล็อกสกิลก่อน</span>'}</div>
- <div class="row" style="margin-top:10px"><button class="primary" onclick="attackBoss135()">⚔️ โจมตี</button><button onclick="defendBoss135()">🛡️ ป้องกัน</button></div>
- <p id="log135" class="muted" aria-live="polite">⚔️ ${esc(b.name)} รอการท้าทาย...</p></section>`);
- window._boss135=state;
-}
-function bossRender135(){let s=window._boss135;if(!s)return;const p=rpg135(),st=stats135(p);document.getElementById('b135').style.width=Math.max(0,s.boss.hp/BOSS135[Math.min(Math.floor((p.level-1)/5),4)].hp*100)+'%';document.getElementById('bh135').textContent=Math.max(0,s.boss.hp);document.getElementById('ph135').textContent=Math.max(0,Math.round(s.player));document.getElementById('pm135').textContent=Math.max(0,Math.round(s.pm));}
-function playerHit135(mult=1){let p=rpg135(),st=stats135(p),crit=Math.random()*100<st.crit+(window._boss135.critBoost||0),dmg=Math.round(st.atk*mult*(crit?2:1));if(crit)document.getElementById('log135').textContent='💥 CRITICAL! '+dmg+' ดาเมจ';return dmg}
-function bossTurn135(){let s=window._boss135,p=rpg135(),st=stats135(p),pat=s.boss.pattern[s.turn%s.boss.pattern.length],dmg=s.boss.atk;if(pat==='crit')dmg*=2;if(pat==='drain'){s.player-=Math.round(dmg*.7);s.boss.hp+=Math.round(dmg*.4)}else if(pat==='poison'){s.player-=dmg;s.player-=5}else if(pat==='stun'){s.player-=Math.round(dmg*.7)}else if(pat==='counter'){s.player-=Math.round(dmg*.6)}else s.player-=dmg;if(s.shield){s.player+=Math.round(dmg*.5);s.shield=false}document.getElementById('log135').textContent=(pat==='crit'?'💥 BOSS CRITICAL! ':pat==='drain'?'🩸 บอสดูดพลัง! ':pat==='poison'?'☠️ พิษ! ':pat==='stun'?'💫 สตัน! ':'👹 บอสโจมตี! ')+Math.round(dmg)+' ดาเมจ';s.turn++;bossRender135();if(s.player<=0){alert('💀 แพ้บอส! กลับไปฝึกเพิ่ม Level');character();}}
-window.attackBoss135=()=>{let s=window._boss135;if(!s)return;let dmg=playerHit135();s.boss.hp-=dmg;rpg135().totalDamage+=dmg;save135(rpg135());if(s.boss.hp<=0){let p=rpg135();p.wins++;save135(p);gain135(s.boss.reward,Math.round(s.boss.reward/2));alert('🏆 BOSS DEFEATED!\\n+'+s.boss.reward+' XP');character();return}bossTurn135();};
-window.defendBoss135=()=>{let s=window._boss135;if(!s)return;s.shield=true;s.player+=Math.round(stats135(rpg135()).def*.8);document.getElementById('log135').textContent='🛡️ ตั้งรับ ลดความเสียหายครั้งถัดไป';bossTurn135()};
-window.skillBoss135=id=>{let s=window._boss135,p=rpg135(),k=SKILLS135.find(x=>x.id===id);if(!k||s.pm<k.cost)return alert('MP ไม่พอ');s.pm-=k.cost;if(id==='focus'){let d=playerHit135(1.6);s.boss.hp-=d;document.getElementById('log135').textContent='🎯 Focus Strike! -'+d+' HP'}if(id==='heal'){let st=stats135(p);s.player=Math.min(st.maxHp,s.player+Math.round(st.maxHp*.3));document.getElementById('log135').textContent='💚 ฟื้น HP 30%'}if(id==='shield'){s.shield=true;document.getElementById('log135').textContent='🛡️ Smart Shield เปิดใช้งาน'}if(id==='critical'){s.critBoost=25;document.getElementById('log135').textContent='🔥 Critical Mind: +25% CRIT'}if(s.boss.hp<=0){p.wins++;save135(p);gain135(s.boss.reward,Math.round(s.boss.reward/2));alert('🏆 BOSS DEFEATED!');character();return}bossTurn135();bossRender135()};
+function dashboard(){home()}
 
-/* V13.5 styling */
-(function(){const st=document.createElement('style');st.textContent='.rarity-common{color:#cbd5e1}.rarity-uncommon{color:#86efac}.rarity-rare{color:#60a5fa}.rarity-epic{color:#c084fc}.rarity-legendary{color:#fbbf24;text-shadow:0 0 8px rgba(251,191,36,.3)}';document.head.appendChild(st)})();
+function water(){let d=data();touch(d);d.water=Math.min(d.waterGoal,d.water+1);d.xp+=10;d.coins+=2;achievement("water","Hydration Hero",d.water>=d.waterGoal);save(d);home()}
+function checkin(){let d=data();touch(d);if(!d.checkin){d.checkin=true;d.xp+=50;d.coins+=10;achievement("checkin","Daily Check-in",true);save(d)}home()}
+let focusInterval;
+function focusTimer(min){clearInterval(focusInterval);let end=Date.now()+min*60000;focusInterval=setInterval(()=>{let left=Math.max(0,end-Date.now()),s=Math.ceil(left/1000),e=document.getElementById("focusClock");if(e)e.textContent=String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");if(!left){clearInterval(focusInterval);reward(150,30);alert("🎉 Focus สำเร็จ +150 XP");home()}},250)}
 
+function health(){let d=data();layout(`<div class="card"><h2>❤️ Daily Health Log</h2>
+<label>😴 ชั่วโมงนอน</label><input id="sleep" type="number" min="0" max="24" step=".5" value="${d.sleep}">
+<label>👟 จำนวนก้าว</label><input id="steps" type="number" min="0" max="100000" value="${d.steps}">
+<label>📚 เรียนวันนี้ (นาที)</label><input id="study" type="number" min="0" max="1440" value="${d.study}">
+<label>🙂 อารมณ์</label><select id="mood"><option>ดีมาก</option><option>ดี</option><option>ปกติ</option><option>เหนื่อย</option><option>เครียด</option></select>
+<label>📔 Diary</label><textarea id="diary" rows="5">${esc(d.diary)}</textarea><button onclick="saveHealth()">💾 บันทึก</button></div>`)}
+function saveHealth(){let d=data();d.sleep=+sleep.value||0;d.steps=+steps.value||0;d.study=+study.value||0;d.mood=mood.value;d.diary=diary.value;d.xp+=40;d.coins+=8;achievement("sleep7","Sleep Logged",d.sleep>=7);achievement("study30","Study 30m",d.study>=30);save(d);home()}
 
-/* === V13.5 Audio System: background music + click sounds === */
-let hhAudio=null, hhMusicTimer=null, hhMusicOn=false, hhStep=0;
-function hhAudioInit(){
-  if(!hhAudio) hhAudio=new (window.AudioContext||window.webkitAudioContext)();
-  if(hhAudio.state==='suspended') hhAudio.resume();
-  return hhAudio;
-}
-function hhTone(freq=440,dur=.07,type='sine',vol=.035){
-  try{const c=hhAudioInit(),o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(vol,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+dur);o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+dur)}catch(e){}
-}
-function hhClick(){hhTone(620,.045,'square',.018);setTimeout(()=>hhTone(880,.045,'square',.012),18)}
-const hhMelody=[261.63,329.63,392,523.25,392,329.63,293.66,349.23,440,587.33,440,349.23];
-function hhMusicTick(){if(!hhMusicOn)return;hhTone(hhMelody[hhStep%hhMelody.length],.22,'triangle',.012);hhStep++;}
-function hhToggleMusic(){
-  hhMusicOn=!hhMusicOn;
-  if(hhMusicOn){hhAudioInit();clearInterval(hhMusicTimer);hhMusicTick();hhMusicTimer=setInterval(hhMusicTick,360);}
-  else{clearInterval(hhMusicTimer);hhMusicTimer=null;}
-  const b=document.getElementById('hhMusicBtn');if(b)b.textContent=hhMusicOn?'🎵 เพลง: เปิด':'🔇 เพลง: ปิด';
-}
-document.addEventListener('click',e=>{if(e.target.closest('button'))hhClick()},{capture:true});
-window.addEventListener('keydown',()=>{try{hhAudioInit()}catch(e){}},{once:true});
-window.hhToggleMusic=hhToggleMusic;
+function schedule(){layout(`<div class="card"><h2>🗓️ ตารางวันนี้</h2><input id="activity" placeholder="กิจกรรม เช่น อ่านหนังสือ"><input id="time" type="time"><button onclick="addSchedule()">เพิ่มกิจกรรม</button><div id="scheduleList"></div></div>`);renderSchedule()}
+function addSchedule(){let a=JSON.parse(localStorage.getItem("hh_schedule_"+currentUser)||"[]");a.push({activity:activity.value,time:time.value});localStorage.setItem("hh_schedule_"+currentUser,JSON.stringify(a));renderSchedule()}
+function renderSchedule(){let a=JSON.parse(localStorage.getItem("hh_schedule_"+currentUser)||"[]");scheduleList.innerHTML=a.map((x,i)=>`<p>⏰ ${esc(x.time)} — ${esc(x.activity)} <button class="danger" onclick="delSchedule(${i})">ลบ</button></p>`).join("")||"<p class='muted'>ยังไม่มีรายการ</p>"}
+function delSchedule(i){let a=JSON.parse(localStorage.getItem("hh_schedule_"+currentUser)||"[]");a.splice(i,1);localStorage.setItem("hh_schedule_"+currentUser,JSON.stringify(a));renderSchedule()}
 
-/* ===== Entry / Registration ===== */
-const ENTRY_KEY='health_hub_accounts_v1';
-function getAccounts(){try{return JSON.parse(localStorage.getItem(ENTRY_KEY)||'{}')}catch(e){return {}}}
-function entryMsg(t,bad=false){const e=document.getElementById('entryMsg');e.textContent=t;e.style.color=bad?'#fb7185':'#5eead4'}
-function entryTab(which){
- document.getElementById('entryReg').classList.toggle('active',which==='reg');
- document.getElementById('entryLogin').classList.toggle('active',which==='login');
- document.getElementById('tabReg').classList.toggle('active',which==='reg');
- document.getElementById('tabLogin').classList.toggle('active',which==='login');
- entryMsg('');
-}
-function enterHub(name){
- localStorage.setItem('health_hub_current_user',name);
- document.getElementById('entryGate').classList.add('hide');
- user={displayName:name,email:name+'@local.healthhub',uid:'local-'+name};
- if(configured && auth){ home(); } else { localEnterHub(name); }
-}
-function registerGate(){
- const u=document.getElementById('regUser').value.trim();
- const p=document.getElementById('regPass').value;
- const p2=document.getElementById('regPass2').value;
- if(u.length<3)return entryMsg('ชื่อผู้ใช้ต้องมีอย่างน้อย 3 ตัวอักษร',true);
- if(p.length<4)return entryMsg('รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร',true);
- if(p!==p2)return entryMsg('รหัสผ่านไม่ตรงกัน',true);
- const a=getAccounts();
- if(a[u])return entryMsg('ชื่อผู้ใช้นี้มีแล้ว ลองเข้าสู่ระบบ',true);
- a[u]={password:p,created:new Date().toISOString()};
- localStorage.setItem(ENTRY_KEY,JSON.stringify(a));
- enterHub(u);
-}
-function loginGate(){
- const u=document.getElementById('loginUser').value.trim();
- const p=document.getElementById('loginPass').value;
- const a=getAccounts();
- if(u==='admin' && p==='HHadmin2026!'){enterHub(u);return}
- if(!a[u] || a[u].password!==p)return entryMsg('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง',true);
- enterHub(u);
-}
-/* Expose functions used by inline HTML onclick handlers (module scripts are not global). */
-window.entryTab=entryTab;
-window.registerGate=registerGate;
-window.loginGate=loginGate;
-window.enterHub=enterHub;
-window.home=home;
-window.login=login;
-window.setup=setup;
-window.schedule=schedule;
-window.multiplayer=multiplayer;
-window.notify=notify;
-window.sleep=sleep;
-window.quiz=quiz;
-window.character=character;
-window.shop=shop;
-window.shop135=shop135;
-window.skills135=skills135;
-window.boss135=boss135;
-window.leaderboard=leaderboard;
-window.logout=logout;
-window.addSchedule=addSchedule;
-window.createRoom=createRoom;
-window.joinRoom=joinRoom;
-window.startRoom=startRoom;
-window.addScore=addScore;
-window.startQuiz=startQuiz;
-window.saveSetup=saveSetup;
-window.clearSetup=clearSetup;
-window.addXP=addXP;
-window.addCoins=addCoins;
-window.publishScore=publishScore;
-window.loadLeaderboard=loadLeaderboard;
-(function(){
- const u=localStorage.getItem('health_hub_current_user');
- if(u) enterHub(u);
-})();
-}catch(err){
- console.error('Health Hub Firebase module error:',err);
- const e=document.getElementById('entryMsg');
- if(e && !document.getElementById('entryGate')?.classList.contains('hide')) e.textContent='โหมดออฟไลน์: Firebase ยังไม่พร้อม แต่สามารถเข้าสู่ระบบในเครื่องได้';
-}
-})();
-</script></body></html>
+function games(){layout(`<div class="card"><h2>🎮 Game Center</h2><p>เกมสั้น โหลดเร็ว เล่นได้ทันที</p><div class="grid">
+<div class="card"><h3>⚡ Tap Rush</h3><p>กดให้ได้มากที่สุดใน 10 วิ</p><button onclick="tapRush()">เล่น</button></div>
+<div class="card"><h3>🎯 Target Hunt</h3><p>ยิงเป้าใน 20 วิ</p><button onclick="targetHunt()">เล่น</button></div>
+<div class="card"><h3>🧠 Memory Match</h3><p>จับคู่ 4×4</p><button onclick="memory()">เล่น</button></div>
+<div class="card"><h3>⚡ Reaction Test</h3><p>กดเมื่อเปลี่ยนเป็นเขียว</p><button onclick="reaction()">เล่น</button></div></div><div id="game" class="gamebox">เลือกเกมด้านบน</div></div>`)}
+
+function finish(id,score,xp){let d=data();d.games++;d.best[id]=Math.max(d.best[id]||0,score);d.xp+=xp;d.coins+=Math.max(1,Math.floor(xp/10));d.level=Math.floor(d.xp/500)+1;achievement("games10","Game Starter",d.games>=10);save(d);game.innerHTML=`<h2>🎉 จบเกม</h2><div class="big">${score}</div><p>+${xp} XP · Best: ${d.best[id]}</p><button onclick="games()">เกมอื่น</button>`}
+function tapRush(){game.innerHTML='<h2>⚡ TAP RUSH</h2><p id="t">10</p><button id="tap" style="width:100%;height:160px;font-size:32px">TAP!</button>';let n=0,t=10;tap.onclick=()=>n++;let i=setInterval(()=>{t--;document.getElementById("t").textContent=t;if(t<=0){clearInterval(i);finish("tap",n,Math.min(220,30+n*4))}},1000)}
+function targetHunt(){game.innerHTML='<h2>🎯 TARGET HUNT</h2><p id="tc">20</p><div id="arena" class="arena"></div>';let n=0,t=20;function spawn(){let q=document.createElement("button");q.className="target";q.style.left=Math.random()*88+"%";q.style.top=Math.random()*75+"%";q.onclick=()=>{n++;q.remove();spawn()};arena.appendChild(q)}spawn();let i=setInterval(()=>{tc.textContent=--t;if(t<=0){clearInterval(i);finish("target",n,Math.min(240,40+n*5))}},1000)}
+function reaction(){game.innerHTML='<button id="rx" style="width:100%;height:180px;font-size:28px">เริ่ม</button>';let state=0,start=0,to;rx.onclick=()=>{if(!state){state=1;rx.textContent="รอ...";to=setTimeout(()=>{state=2;start=performance.now();rx.textContent="กดเลย!";rx.style.background="#16a34a"},1000+Math.random()*2200)}else if(state===1){clearTimeout(to);state=0;rx.textContent="❌ เร็วไป"}else{let ms=Math.round(performance.now()-start);finish("reaction",Math.max(1,1000-ms),Math.max(30,160-Math.floor(ms/10)))}}}
+function memory(){let vals=["🍎","🍌","🍇","🍉","🥝","🍓","🥑","🍒"].concat(["🍎","🍌","🍇","🍉","🥝","🍓","🥑","🍒"]).sort(()=>Math.random()-.5),open=[],lock=false,m=0;game.innerHTML='<h2>🧠 MEMORY MATCH</h2><div id="cards" class="cards"></div>';vals.forEach(v=>{let q=document.createElement("button");q.textContent="❓";q.onclick=()=>{if(lock||q.done||open.includes(q))return;q.textContent=v;open.push(q);if(open.length===2){lock=true;if(open[0].textContent===open[1].textContent){open.forEach(x=>x.done=true);open=[];lock=false;if(++m===8)finish("memory",8,180)}else setTimeout(()=>{open.forEach(x=>x.textContent="❓");open=[];lock=false},500)}};cards.appendChild(q)})}
+
+function rpg(){let d=data();layout(`<div class="card"><h2>🧙 Health RPG</h2><p>❤️ HP 100 · 🔷 MP 50 · ⚔️ ATK 10 · 🛡️ DEF 10</p><div class="grid"><div class="card"><h3>😴 Sleep Demon</h3><p>HP 300</p><button onclick="bossHit(30)">⚔️ Focus Strike</button></div><div class="card"><h3>📚 Knowledge Titan</h3><p>HP 500</p><button onclick="bossHit(50)">⚔️ Study Attack</button></div></div><p id="bossLog"></p></div>`)}
+let bossHP=300;function bossHit(n){bossHP-=n;reward(10,2);bossLog.textContent=bossHP>0?`โจมตีสำเร็จ! บอสเหลือ ${bossHP} HP`:"🏆 Boss defeated! +100 XP";if(bossHP<=0){reward(100,25);bossHP=300}}
+
+function admin(){let d=data(),a=accounts();layout(`<div class="grid"><div class="card"><h2>🛡️ Admin Dashboard</h2><p>บัญชีทั้งหมดในเครื่อง: ${Object.keys(a).length}</p><p>ผู้ใช้ปัจจุบัน: ${esc(currentUser)}</p></div><div class="card"><h3>📊 สถิติผู้ใช้ปัจจุบัน</h3><p>Level ${d.level}</p><p>${d.xp} XP</p><p>${d.games} เกม</p><p>${d.coins} Coins</p></div></div><div class="card" style="margin-top:14px"><h3>👥 Accounts</h3><table><tr><th>Username</th><th>Action</th></tr>${Object.keys(a).map(u=>`<tr><td>${esc(u)}</td><td>${u!=="admin"?`<button class="danger" onclick="deleteAccount('${esc(u)}')">ลบ</button>`:"🔒 protected"}</td></tr>`).join("")}</table></div><div class="card" style="margin-top:14px"><h3>💾 Export</h3><button onclick="exportData()">ดาวน์โหลดข้อมูล JSON</button> <button class="danger" onclick="resetMyData()">รีเซ็ตข้อมูลผู้ใช้</button></div>`)}
+function deleteAccount(u){if(currentUser!=="admin")return alert("เฉพาะ admin");if(confirm("ลบบัญชี "+u+"?")){let a=accounts();delete a[u];localStorage.setItem(ACCOUNT_KEY,JSON.stringify(a));admin()}}
+function exportData(){let all={accounts:accounts(),current:data()};let a=document.createElement("a");a.href="data:application/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(all,null,2));a.download="health-hub-admin-export.json";a.click()}
+function resetMyData(){if(confirm("รีเซ็ตข้อมูลผู้ใช้ปัจจุบัน?")){localStorage.removeItem(DATA_KEY+"_"+currentUser);home()}}
+</script>
+</body>
+</html>
