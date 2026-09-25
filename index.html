@@ -123,19 +123,27 @@ function showRegister(){
  </div></main>`;
 }
 function hhLogin(){
- const u=(document.getElementById("loginUser")?.value||"").trim();
- const pw=document.getElementById("loginPass")?.value||"";
+ const u=String(document.getElementById("loginUser")?.value||"").trim();
+ const pw=String(document.getElementById("loginPass")?.value||"");
  const msg=document.getElementById("authMsg");
- if(!u||!pw){msg.textContent="กรุณากรอกชื่อผู้ใช้และรหัสผ่าน";return}
- if(u==="admin" && pw==="HHadmin2026!"){
-   currentUser="admin"; localStorage.setItem("hh_current","admin");
-   if(typeof admin==="function") admin(); else if(typeof home==="function") home();
-   return;
+ if(!u||!pw){if(msg)msg.textContent="กรุณากรอกชื่อผู้ใช้และรหัสผ่าน";return}
+ try{
+   if(u.toLowerCase()==="admin" && pw==="HHadmin2026!"){
+     currentUser="admin"; localStorage.setItem("hh_current","admin");
+     if(typeof admin==="function"){admin();return}
+     if(typeof home==="function"){home();return}
+     location.reload();return;
+   }
+   const a=hhGetAccounts();
+   const x=a.find(v=>String(v.user||"").toLowerCase()===u.toLowerCase() && String(v.pass||v.password||"")===pw);
+   if(!x){if(msg)msg.textContent="❌ ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง";return}
+   currentUser=String(x.user); localStorage.setItem("hh_current",currentUser);
+   if(typeof home==="function"){home();return}
+   location.reload();
+ }catch(e){
+   console.error(e);
+   if(msg)msg.textContent="เกิดข้อผิดพลาดในการเข้าสู่ระบบ กรุณารีเฟรชหน้าแล้วลองใหม่";
  }
- const a=hhGetAccounts(), x=a.find(v=>v.user===u);
- if(!x || x.pass!==pw){msg.textContent="❌ ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง";return}
- currentUser=u; localStorage.setItem("hh_current",u);
- if(typeof home==="function") home(); else location.reload();
 }
 function hhRegister(){
  const u=(document.getElementById("regUser")?.value||"").trim();
